@@ -19,7 +19,9 @@
  '(viper-auto-indent t)
  '(viper-ex-style-editing nil)
  '(viper-insert-state-cursor-color nil)
+ '(viper-parse-sexp-ignore-comments nil)
  '(viper-shift-width 2)
+ '(viper-syntax-preference (quote extended))
  '(viper-want-ctl-h-help t))
 (custom-set-faces
   ;; custom-set-faces was added by Custom.

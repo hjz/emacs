@@ -8,30 +8,12 @@
 (add-to-list 'load-path (concat user-dir "/ensime/elisp"))
 (add-to-list 'load-path (concat user-dir "/vimpulse"))
 (add-to-list 'load-path (concat user-dir "/ecb"))
+(add-to-list 'load-path (concat user-dir "/anything-config"))
 (setq exec-path (append exec-path '("/Users/jz/bin/")))
 (setq exec-path (append exec-path '("/opt/local/bin/")))
 
+(require 'anything-config)
 (require 'tabbar)
-(set-face-attribute
- 'tabbar-default nil
- :background "gray60")
-(set-face-attribute
- 'tabbar-unselected nil
- :background "gray85"
- :foreground "gray30"
- :box nil)
-(set-face-attribute
- 'tabbar-selected nil
- :background "#f2f2f6"
- :foreground "black"
- :box nil)
-(set-face-attribute
- 'tabbar-button nil
- :box '(:line-width 1 :color "gray72" :style released-button))
-(set-face-attribute
- 'tabbar-separator nil
- :height 0.7)
-
 (tabbar-mode 1)
 (define-key global-map [(alt j)] 'tabbar-backward)
 (define-key global-map [(alt k)] 'tabbar-forward)
@@ -43,9 +25,14 @@
 (require 'undo-tree)
 (global-undo-tree-mode)
 (require 'zenburn)
-;(color-theme-zenburn)
+
 (require 'vimpulse)
 (blink-cursor-mode 1)
+
+;;;;;; Camel Case ;;;;;;;
+(autoload 'camelCase-mode "camelCase-mode" nil t)
+;; rebind viper fwd bkwd
+
 (require 'ecb)
 (require 'ido)
 ;; stolen from emacs-fu.blogspot.com
@@ -146,3 +133,4 @@
 ; magit
 (global-set-key (kbd "C-c i") 'magit-status)
 
+(vimpulse-map ";" 'viper-ex)
