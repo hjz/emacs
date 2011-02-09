@@ -1,0 +1,89 @@
+package com.twitter.swiftlet
+
+import com.twitter.http.{Response, TcpConnectionFailed}
+import com.twitter.util.{Duration, Future, Promise, Return, Throw, Time}
+import com.twitter.conversions.time._
+import org.codehaus.jackson.{JsonLocation, JsonParseException}
+import org.specs.mock.Mockito
+import org.specs.Specification
+
+class TimelineCheckerSpec extends Specification with Mockito {
+  val host = Host("foo", 1234, false)
+  val swiftlet = mock[Swiftlet]
+  val executor = mock[SwiftletExecutor]
+  doReturn(executor).when(swiftlet).executor
+  val cred = OAuthCredentials(1, "blorg1", "foo", "bar", "baz", "xxx")
+  val statusId = 1L
+  val callback = mock[Quiz.Callback]
+  val config = new TimeoutConfig {
+    override val pollInterval = 5.milliseconds
+    override val timeout = 1.second
+  }
+
+  val checker = TimelineChecker(host, swiftlet, cred, statusId, callback, config)
+
+  "TimelineChecker.run" should {
+    "success callback" in {
+      doReturn(Future(mock[Response])).when(executor).computeWithRetry(checker, checker.strategy)
+      checker.run()
+      there was one(callback).apply()
+      there were no(callback).fail(any[Throwable])
+    }
+    "failure callback" in {
+      val t = new RuntimeException
+      doReturn(Future(throw t)).when(executor).computeWithRetry(checker, checker.strategy)
+      checker.run()
+      there were no(callback).apply()
+      there was one(callback).fail(t)
+    }
+  }
+
+  "TimelineChecker.apply" should {
+    "pass throw" in {
+      val t = new RuntimeException
+      doReturn(Future(throw t)).when(swiftlet).getResponse(ApiRequest.HomeTimeline(cred, host))
+      checker()() must throwA(t)
+    }
+
+    "pass Throw" in {
+      val t = new RuntimeException
+      val future = new Promise[Response] { update(Throw(t)) }
+      doReturn(future).when(swiftlet).getResponse(ApiRequest.HomeTimeline(cred, host))
+      checker()() must throwA(t)
+    }
+
+    "return None if no response" in {
+      val response = mock[Response]
+      doReturn(Future(response)).when(swiftlet).getResponse(ApiRequest.HomeTimeline(cred, host))
+      doReturn(Return(None)).when(swiftlet).timelineHasStatusId(response, statusId)
+      checker()() must beNone
+    }
+
+    "return None if no statusId" in {
+      val response = mock[Response]
+      doReturn(Future(response)).when(swiftlet).getResponse(ApiRequest.HomeTimeline(cred, host))
+      doReturn(Return(Some(false))).when(swiftlet).timelineHasStatusId(response, statusId)
+      checker()() must beNone
+    }
+
+    "return None for Http exception" in {
+      val t = new TcpConnectionFailed
+      val future = new Promise[Response] { update(Throw(t)) }
+      doReturn(future).when(swiftlet).getResponse(ApiRequest.HomeTimeline(cred, host))
+      checker()() must beNone
+    }
+
+    "return None on JsonParseExecption" in {
+      val future = Future { throw new JsonParseException("foo", mock[JsonLocation]) }
+      doReturn(future).when(swiftlet).getResponse(ApiRequest.HomeTimeline(cred, host))
+      checker()() must beNone
+    }
+
+    "return response if statusId is present" in {
+      val response = mock[Response]
+      doReturn(Future(response)).when(swiftlet).getResponse(ApiRequest.HomeTimeline(cred, host))
+      doReturn(Return(Some(true))).when(swiftlet).timelineHasStatusId(response, statusId)
+      checker()() must beSome()
+    }
+  }
+}
