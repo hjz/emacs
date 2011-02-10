@@ -3,12 +3,15 @@
 
 (setq user-dir (concat dotfiles-dir user-login-name))
 
+(add-to-list 'load-path (concat user-dir "/apel-10.8"))
 (add-to-list 'load-path (concat user-dir "/scala"))
 (add-to-list 'load-path (concat user-dir "/yasnippet"))
 (add-to-list 'load-path (concat user-dir "/ensime/elisp"))
 (add-to-list 'load-path (concat user-dir "/vimpulse"))
 (add-to-list 'load-path (concat user-dir "/ecb"))
 (add-to-list 'load-path (concat user-dir "/anything-config"))
+(add-to-list 'load-path (concat user-dir "/tabbar"))
+(add-to-list 'load-path (concat user-dir "/elscreen-1.4.6"))
 (setq exec-path (append exec-path '("/Users/jz/bin/")))
 (setq exec-path (append exec-path '("/opt/local/bin/")))
 
@@ -31,8 +34,7 @@
 ;;;;;;;;;;;;;;;; CEDET END ;;;;;;;;;;;;;;;;;;
 
 (require 'anything-config)
-(require 'tabbar)
-(tabbar-mode 1)
+
 (define-key global-map [(alt j)] 'tabbar-backward)
 (define-key global-map [(alt k)] 'tabbar-forward)
 
@@ -206,4 +208,18 @@
   (remq 'process-kill-buffer-query-function
          kill-buffer-query-functions))
 
-; enable cedet folding
+; TODO enable cedet folding
+ 
+;; ---------------------------------------
+;; load elscreen
+;; ---------------------------------------
+(load "elscreen" "ElScreen" t)
+
+(require 'elscreen-color-theme)
+;; F9 creates a new elscreen, shift-F9 kills it
+(global-set-key (kbd "<f6>"    ) 'elscreen-create)
+(global-set-key (kbd "S-<f6>"  ) 'elscreen-kill)  
+
+;; Windowskey+PgUP/PgDown switches between elscreens
+(global-set-key (kbd "<s-prior>") 'elscreen-previous) 
+(global-set-key (kbd "<s-next>")  'elscreen-next) 

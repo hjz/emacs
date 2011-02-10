@@ -5,7 +5,7 @@
   ;; If there is more than one, they won't work right.
  '(ecb-auto-activate t)
  '(ecb-eshell-auto-activate nil)
- '(ecb-layout-name "left-analyse")
+ '(ecb-layout-name "rightc2")
  '(ecb-options-version "2.40")
  '(ecb-primary-secondary-mouse-buttons (quote mouse-1--mouse-2))
  '(ecb-source-path (quote (("~/ps/swiftlet/src/test/scala/com/twitter/swiftlet" "swift_test") ("~/ps/swiftlet/src/main/scala/com/twitter/swiftlet" "swift") ("/" "/"))))
@@ -35,4 +35,7 @@
   ;; If you edit it by hand, you could mess it up, so be careful.
   ;; Your init file should contain only one such instance.
   ;; If there is more than one, they won't work right.
- )
+ '(elscreen-tab-background-face ((((class color)) (:background "#282828"))))
+ '(elscreen-tab-control-face ((((class color)) (:background "#1f1f1f" :foreground "white"))))
+ '(elscreen-tab-current-screen-face ((((class color)) (:background "#1f1f1f" :foreground "white"))))
+ '(elscreen-tab-other-screen-face ((((class color)) (:background "#3D3D3D" :foreground "white")))))
