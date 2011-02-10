@@ -55,7 +55,8 @@
 ;; stolen from emacs-fu.blogspot.com
 (ido-mode 'both) ;; for buffers and files
 (setq 
-  ido-save-directory-list-file "~/.emacs.d/cache/ido.last"
+  ido-everwhere t
+  idosave-directory-list-file "~/.emacs.d/cache/ido.last"
 
   ido-ignore-buffers ;; ignore these guys
   '("\\` " "^\*Mess" "^\*Back" ".*Completion" "^\*Ido" "^\*trace"
@@ -67,9 +68,9 @@
   ido-enable-last-directory-history t ; remember last used dirs
   ido-max-work-directory-list 30   ; should be enough
   ido-max-work-file-list      50   ; remember many
-  ido-use-filename-at-point nil    ; don't use filename at point (annoying)
+  ido-use-filename-at-point 'guess ; don't use filename at point (annoying)
   ido-use-url-at-point nil         ; don't use url at point (annoying)
-
+  ido-create-new-buffer 'always    ; create buf for no match
   ido-enable-flex-matching nil     ; don't try to be too smart
   ido-max-prospects 8              ; don't spam my minibuffer
   ido-confirm-unique-completion t) ; wait for RET, even with unique completion
@@ -160,3 +161,47 @@
 ; delete files by moving them to the OS X trash
 (setq delete-by-moving-to-trash t)
 
+; run macro
+(global-set-key [f5] 'call-last-kbd-macro)
+
+(defun move-buffer-file (dir)
+ "Moves both current buffer and file it's visiting to DIR." (interactive "DNew directory: ")
+ (let* ((name (buffer-name))
+         (filename (buffer-file-name))
+         (dir
+         (if (string-match dir "\\(?:/\\|\\\\)$")
+         (substring dir 0 -1) dir))
+         (newname (concat dir "/" name)))
+
+ (if (not filename)
+        (message "Buffer '%s' is not visiting a file!" name)
+ (progn         (copy-file filename newname 1)  (delete-file filename)  (set-visited-file-name newname)         (set-buffer-modified-p nil)))))
+(autoload 'idomenu "idomenu" nil t)
+
+
+(setq recentf-max-saved-items 100)
+
+; nicer naming of buffers with identical names
+(require 'uniquify)
+(setq uniquify-buffer-name-style 'reverse)
+(setq uniquify-separator " • ")
+(setq uniquify-after-kill-buffer-p t)
+(setq uniquify-ignore-buffers-re "^\\*")
+
+; kill ring browsing
+(require 'browse-kill-ring+)
+(browse-kill-ring-default-keybindings)
+
+; automatically clean up old buffers
+(require 'midnight)
+
+; pick up changes to files on disk automatically (ie, after git pull)
+(global-auto-revert-mode 1)
+
+; don't confirm opening non-existant files/buffers
+(setq confirm-nonexistent-file-or-buffer nil)
+
+; yes, I want to kill buffers with processes attached
+(setq kill-buffer-query-functions
+  (remq 'process-kill-buffer-query-function
+         kill-buffer-query-functions))
