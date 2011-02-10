@@ -53,6 +53,8 @@
 ;; rebind viper fwd bkwd
 
 (require 'ecb)
+(setq ecb-tip-of-the-day nil)
+
 (require 'ido)
 ;; stolen from emacs-fu.blogspot.com
 (ido-mode 'both) ;; for buffers and files
@@ -197,6 +199,8 @@
 ; automatically clean up old buffers
 (require 'midnight)
 
+(require 'unbound)
+
 ; pick up changes to files on disk automatically (ie, after git pull)
 (global-auto-revert-mode 1)
 
@@ -223,3 +227,7 @@
 ;; Windowskey+PgUP/PgDown switches between elscreens
 (global-set-key (kbd "<s-prior>") 'elscreen-previous) 
 (global-set-key (kbd "<s-next>")  'elscreen-next) 
+
+;; show column #
+(column-number-mode t)
+

@@ -4,11 +4,17 @@
   ;; Your init file should contain only one such instance.
   ;; If there is more than one, they won't work right.
  '(ecb-auto-activate t)
+ '(ecb-directories-general-face (quote ecb-default-general-face))
+ '(ecb-directory-face (quote font-lock-warning-face))
  '(ecb-eshell-auto-activate nil)
+ '(ecb-history-face (quote font-lock-warning-face))
  '(ecb-layout-name "rightc2")
+ '(ecb-method-face (quote font-lock-warning-face))
  '(ecb-options-version "2.40")
  '(ecb-primary-secondary-mouse-buttons (quote mouse-1--mouse-2))
+ '(ecb-source-face (quote font-lock-warning-face))
  '(ecb-source-path (quote (("~/ps/swiftlet/src/test/scala/com/twitter/swiftlet" "swift_test") ("~/ps/swiftlet/src/main/scala/com/twitter/swiftlet" "swift") ("/" "/"))))
+ '(ecb-tag-header-face (quote font-lock-warning-face))
  '(ecb-use-speedbar-instead-native-tree-buffer nil)
  '(ecb-windows-height 0.2)
  '(ecb-windows-width 0.17)
