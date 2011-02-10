@@ -12,6 +12,24 @@
 (setq exec-path (append exec-path '("/Users/jz/bin/")))
 (setq exec-path (append exec-path '("/opt/local/bin/")))
 
+;;;;;;;;;;;;;;;;; CEDET ;;;;;;;;;;;;;;;;;;;;;;
+(defcustom semantic-ectag-program "/opt/local/bin/ctags" 
+  "The Exuberent CTags program to use."
+  :group 'semantic
+  :type 'program)
+
+(load "jz/cedet-1.0pre7/common/cedet.el")
+(load "jz/cedet-1.0pre7/contrib/semantic-ectag-scala.el")
+(global-ede-mode 1)
+(semantic-load-enable-code-helpers)      ; Enable prototype help and smart completion 
+(global-srecode-minor-mode 1)            ; Enable template insertion menu
+(semantic-load-enable-primary-exuberent-ctags-support)
+(defun my-semantic-hook ()
+  (imenu-add-to-menubar "TAGS"))
+(add-hook 'semantic-init-hooks 'my-semantic-hook)
+
+;;;;;;;;;;;;;;;; CEDET END ;;;;;;;;;;;;;;;;;;
+
 (require 'anything-config)
 (require 'tabbar)
 (tabbar-mode 1)
@@ -21,7 +39,6 @@
 (require 'autopair)
 (autopair-global-mode)
 (setq autopair-autowrap t)
-(highlight-80+-mode)
 (require 'undo-tree)
 (global-undo-tree-mode)
 (require 'zenburn)
@@ -69,6 +86,7 @@
   (lambda ()
     (local-set-key [return] 'reindent-then-newline-and-indent)))
 (add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
+(add-hook 'scala-mode-hook 'highlight-80+-mode)
 (setq ring-bell-function 'ignore)
 (defun me-turn-off-indent-tabs-mode ()
   (setq indent-tabs-mode nil))
@@ -134,3 +152,11 @@
 (global-set-key (kbd "C-c i") 'magit-status)
 
 (vimpulse-map ";" 'viper-ex)
+
+;; os x cust
+; use default Mac browser
+(setq browse-url-browser-function 'browse-url-default-macosx-browser)
+
+; delete files by moving them to the OS X trash
+(setq delete-by-moving-to-trash t)
+

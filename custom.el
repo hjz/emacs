@@ -4,9 +4,16 @@
   ;; Your init file should contain only one such instance.
   ;; If there is more than one, they won't work right.
  '(ecb-auto-activate t)
+ '(ecb-eshell-auto-activate nil)
+ '(ecb-layout-name "left-analyse")
  '(ecb-options-version "2.40")
  '(ecb-primary-secondary-mouse-buttons (quote mouse-1--mouse-2))
  '(ecb-source-path (quote (("~/ps/swiftlet/src/test/scala/com/twitter/swiftlet" "swift_test") ("~/ps/swiftlet/src/main/scala/com/twitter/swiftlet" "swift") ("/" "/"))))
+ '(ecb-use-speedbar-instead-native-tree-buffer nil)
+ '(ecb-windows-height 0.2)
+ '(ecb-windows-width 0.17)
+ '(ensime-auto-connect (quote ask))
+ '(ensime-graphical-tooltips t)
  '(global-hl-line-mode t)
  '(highlight-80+-columns 100)
  '(magit-process-popup-time 30)
