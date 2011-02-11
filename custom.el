@@ -3,6 +3,7 @@
   ;; If you edit it by hand, you could mess it up, so be careful.
   ;; Your init file should contain only one such instance.
   ;; If there is more than one, they won't work right.
+ '(column-number-mode t)
  '(ecb-auto-activate t)
  '(ecb-directories-general-face (quote ecb-default-general-face))
  '(ecb-directory-face (quote font-lock-warning-face))
@@ -24,9 +25,13 @@
  '(highlight-80+-columns 100)
  '(magit-process-popup-time 30)
  '(magit-repo-dirs (quote ("~/ps/" "~/workspace/")))
+ '(save-place t nil (saveplace))
  '(scala-mode-feature:electric-on-per-default nil)
+ '(show-paren-mode t)
  '(standard-indent 2)
  '(tab-always-indent (quote complete))
+ '(tool-bar-mode nil)
+ '(transient-mark-mode nil)
  '(vimpulse-fold-level 3)
  '(viper-ESC-moves-cursor-back t)
  '(viper-auto-indent t)

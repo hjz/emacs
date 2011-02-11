@@ -12,6 +12,8 @@
 (add-to-list 'load-path (concat user-dir "/anything-config"))
 (add-to-list 'load-path (concat user-dir "/tabbar"))
 (add-to-list 'load-path (concat user-dir "/elscreen-1.4.6"))
+(add-to-list 'load-path (concat user-dir "/vimpulse-surround.el"))
+
 (setq exec-path (append exec-path '("/Users/jz/bin/")))
 (setq exec-path (append exec-path '("/opt/local/bin/")))
 
@@ -168,20 +170,7 @@
 ; run macro
 (global-set-key [f5] 'call-last-kbd-macro)
 
-(defun move-buffer-file (dir)
- "Moves both current buffer and file it's visiting to DIR." (interactive "DNew directory: ")
- (let* ((name (buffer-name))
-         (filename (buffer-file-name))
-         (dir
-         (if (string-match dir "\\(?:/\\|\\\\)$")
-         (substring dir 0 -1) dir))
-         (newname (concat dir "/" name)))
-
- (if (not filename)
-        (message "Buffer '%s' is not visiting a file!" name)
- (progn         (copy-file filename newname 1)  (delete-file filename)  (set-visited-file-name newname)         (set-buffer-modified-p nil)))))
 (autoload 'idomenu "idomenu" nil t)
-
 
 (setq recentf-max-saved-items 100)
 
@@ -195,6 +184,10 @@
 ; kill ring browsing
 (require 'browse-kill-ring+)
 (browse-kill-ring-default-keybindings)
+;; popup menu
+(global-set-key "\C-cy" '(lambda ()
+   (interactive)
+   (popup-menu 'yank-menu)))
 
 ; automatically clean up old buffers
 (require 'midnight)
@@ -231,3 +224,40 @@
 ;; show column #
 (column-number-mode t)
 
+;; surround        
+(require 'vimpulse-surround)
+
+(require 'campfire)
+(setq campfire-room-name "API")
+
+(require 'multi-term)
+(setq multi-term-program "/bin/bash")
+(setq term-default-bg-color "#1f1f1f")   
+(setq term-default-fg-color "#dcdccc")
+;; only needed if you use autopair
+(add-hook 'term-mode-hook
+  #'(lambda () (setq autopair-dont-activate t)))
+
+
+(global-set-key (kbd "C-c t") 'multi-term-next)
+(global-set-key (kbd "C-c T") 'multi-term) ;; create a new one
+
+;; cleanup mode line
+(when (require 'diminish nil 'noerror)
+  (eval-after-load "Undo-Tree"
+      '(diminish 'undo-tree-mode "U"))
+  (eval-after-load "pair"
+    '(diminish 'autopair-mode "P"))
+  (eval-after-load "yasnippet"
+    '(diminish 'yas/minor-mode "Y")))
+(add-hook 'emacs-lisp-mode-hook 
+  (lambda()
+    (setq mode-name "el"))) 
+(add-hook 'scala-mode-hook
+  (lambda()
+    (setq mode-name "S"))) 
+
+;; paren mode faces
+(require 'paren)
+(set-face-background 'show-paren-match-face "#0F4E8B")
+(set-face-foreground 'show-paren-match-face "#dcdccc")
