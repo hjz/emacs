@@ -3,3 +3,6 @@
 auto-save-list
 backups/
 anything-c-adaptive-history
+Session.vim
+ede-projects.el
+*campfire-mode.el

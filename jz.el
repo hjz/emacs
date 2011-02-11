@@ -227,9 +227,6 @@
 ;; surround        
 (require 'vimpulse-surround)
 
-(require 'campfire)
-(setq campfire-room-name "API")
-
 (require 'multi-term)
 (setq multi-term-program "/bin/bash")
 (setq term-default-bg-color "#1f1f1f")   
