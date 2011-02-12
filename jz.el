@@ -27,11 +27,10 @@
 (load "jz/cedet-1.0pre7/contrib/semantic-ectag-scala.el")
 (global-ede-mode 1)
 (semantic-load-enable-code-helpers)      ; Enable prototype help and smart completion 
-(global-srecode-minor-mode 1)            ; Enable template insertion menu
 (semantic-load-enable-primary-exuberent-ctags-support)
-(defun my-semantic-hook ()
-  (imenu-add-to-menubar "TAGS"))
-(add-hook 'semantic-init-hooks 'my-semantic-hook)
+;(defun my-semantic-hook ()
+;  (imenu-add-to-menubar "TAGS"))
+;(add-hook 'semantic-init-hooks 'my-semantic-hook)
 
 ;;;;;;;;;;;;;;;; CEDET END ;;;;;;;;;;;;;;;;;;
 
@@ -52,6 +51,7 @@
 
 ;;;;;; Camel Case ;;;;;;;
 (autoload 'camelCase-mode "camelCase-mode" nil t)
+(camelCase-mode 1)
 ;; rebind viper fwd bkwd
 
 (require 'ecb)
@@ -212,7 +212,6 @@
 ;; ---------------------------------------
 (load "elscreen" "ElScreen" t)
 
-(require 'elscreen-color-theme)
 ;; F9 creates a new elscreen, shift-F9 kills it
 (global-set-key (kbd "<f6>"    ) 'elscreen-create)
 (global-set-key (kbd "S-<f6>"  ) 'elscreen-kill)  
@@ -258,3 +257,5 @@
 (require 'paren)
 (set-face-background 'show-paren-match-face "#0F4E8B")
 (set-face-foreground 'show-paren-match-face "#dcdccc")
+
+(define-key (current-global-map) [remap vimpulse-jump-to-tag-at-point] 'semantic-complete-jump)

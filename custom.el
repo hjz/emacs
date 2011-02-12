@@ -36,6 +36,7 @@
  '(show-paren-mode t)
  '(standard-indent 2)
  '(tab-always-indent (quote complete))
+ '(show-paren-delay 0)
  '(tool-bar-mode nil)
  '(transient-mark-mode nil)
  '(vimpulse-fold-level 3)

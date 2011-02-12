@@ -6,7 +6,7 @@
 ;;;### (autoloads (chart-test-it-all) "chart" "chart.el" (19335 11024))
 ;;; Generated autoloads from chart.el
 
-(autoload (quote chart-test-it-all) "chart" "\
+(autoload 'chart-test-it-all "chart" "\
 Test out various charting features.
 
 \(fn)" t nil)
@@ -18,20 +18,20 @@ Test out various charting features.
 ;;;;;;  (19335 11024))
 ;;; Generated autoloads from eieio-datadebug.el
 
-(autoload (quote data-debug-insert-object-slots) "eieio-datadebug" "\
+(autoload 'data-debug-insert-object-slots "eieio-datadebug" "\
 Insert all the slots of OBJECT.
 PREFIX specifies what to insert at the start of each line.
 
 \(fn OBJECT PREFIX)" nil nil)
 
-(autoload (quote data-debug-insert-object-button) "eieio-datadebug" "\
+(autoload 'data-debug-insert-object-button "eieio-datadebug" "\
 Insert a button representing OBJECT.
 PREFIX is the text that preceeds the button.
 PREBUTTONTEXT is some text between PREFIX and the object button.
 
 \(fn OBJECT PREFIX PREBUTTONTEXT)" nil nil)
 
-(autoload (quote data-debug-show) "eieio-datadebug" "\
+(autoload 'data-debug-show "eieio-datadebug" "\
 Run ddebug against any EIEIO object OBJ
 
 \(fn (OBJ eieio-default-superclass))" nil nil)
@@ -43,29 +43,29 @@ Run ddebug against any EIEIO object OBJ
 ;;;;;;  "eieio-opt" "eieio-opt.el" (19335 11024))
 ;;; Generated autoloads from eieio-opt.el
 
-(autoload (quote eieio-browse) "eieio-opt" "\
+(autoload 'eieio-browse "eieio-opt" "\
 Create an object browser window to show all objects.
 If optional ROOT-CLASS, then start with that, otherwise start with
 variable `eieio-default-superclass'.
 
 \(fn &optional ROOT-CLASS)" t nil)
 
-(defalias (quote describe-class) (quote eieio-describe-class))
+(defalias 'describe-class 'eieio-describe-class)
 
-(autoload (quote eieio-describe-class) "eieio-opt" "\
+(autoload 'eieio-describe-class "eieio-opt" "\
 Describe a CLASS defined by a string or symbol.
 If CLASS is actually an object, then also display current values of that obect.
 Optional HEADERFCN should be called to insert a few bits of info first.
 
 \(fn CLASS &optional HEADERFCN)" t nil)
 
-(autoload (quote eieio-describe-constructor) "eieio-opt" "\
+(autoload 'eieio-describe-constructor "eieio-opt" "\
 Describe the constructor function FCN.
 Uses `eieio-describe-class' to describe the class being constructed.
 
 \(fn FCN)" t nil)
 
-(autoload (quote eieio-build-class-alist) "eieio-opt" "\
+(autoload 'eieio-build-class-alist "eieio-opt" "\
 Return an alist of all currently active classes for completion purposes.
 Optional argument CLASS is the class to start with.
 If INSTANTIABLE-ONLY is non nil, only allow names of classes which
@@ -74,13 +74,13 @@ Optional argument BUILDLIST is more list to attach and is used internally.
 
 \(fn &optional CLASS INSTANTIABLE-ONLY BUILDLIST)" nil nil)
 
-(defalias (quote describe-method) (quote eieio-describe-generic))
+(defalias 'describe-method 'eieio-describe-generic)
 
-(defalias (quote describe-generic) (quote eieio-describe-generic))
+(defalias 'describe-generic 'eieio-describe-generic)
 
-(defalias (quote eieio-describe-method) (quote eieio-describe-generic))
+(defalias 'eieio-describe-method 'eieio-describe-generic)
 
-(autoload (quote eieio-describe-generic) "eieio-opt" "\
+(autoload 'eieio-describe-generic "eieio-opt" "\
 Describe the generic function GENERIC.
 Also extracts information about all methods specific to this generic.
 
@@ -92,12 +92,12 @@ Also extracts information about all methods specific to this generic.
 ;;;;;;  "eieio-perftest" "eieio-perftest.el" (19335 11024))
 ;;; Generated autoloads from eieio-perftest.el
 
-(autoload (quote eieio-perftest-methodcall) "eieio-perftest" "\
+(autoload 'eieio-perftest-methodcall "eieio-perftest" "\
 Test and time performance of method invocation.
 
 \(fn)" t nil)
 
-(autoload (quote eieio-perftest-onemethodcall) "eieio-perftest" "\
+(autoload 'eieio-perftest-onemethodcall "eieio-perftest" "\
 Test and time performance of method invocation.
 
 \(fn)" t nil)
@@ -108,7 +108,7 @@ Test and time performance of method invocation.
 ;;;;;;  (19335 11024))
 ;;; Generated autoloads from linemark.el
 
-(autoload (quote enable-visual-studio-bookmarks) "linemark" "\
+(autoload 'enable-visual-studio-bookmarks "linemark" "\
 Bind the viss bookmark functions to F2 related keys.
 \\<global-map>
 \\[viss-bookmark-toggle]     - To=ggle a bookmark on this line.
@@ -124,7 +124,7 @@ Bind the viss bookmark functions to F2 related keys.
 ;;;;;;  (19335 11024))
 ;;; Generated autoloads from lmcompile.el
 
-(autoload (quote lmcompile-do-highlight) "lmcompile" "\
+(autoload 'lmcompile-do-highlight "lmcompile" "\
 Do compilation mode highlighting.
 Works on grep, compile, or other type mode.
 
@@ -134,13 +134,15 @@ Works on grep, compile, or other type mode.
 
 ;;;### (autoloads nil nil ("eieio-base.el" "eieio-comp.el" "eieio-custom.el"
 ;;;;;;  "eieio-doc.el" "eieio-load.el" "eieio-speedbar.el" "eieio-test-methodinvoke.el"
-;;;;;;  "eieio-tests.el" "eieio.el") (19795 11231 149780))
+;;;;;;  "eieio-tests.el" "eieio.el") (19797 58042 485895))
 
 ;;;***
 
+(provide 'eieio-loaddefs)
 ;; Local Variables:
 ;; version-control: never
 ;; no-byte-compile: t
 ;; no-update-autoloads: t
+;; coding: utf-8
 ;; End:
 ;;; eieio-loaddefs.el ends here
