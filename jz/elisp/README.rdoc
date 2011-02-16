@@ -1,0 +1,83 @@
+= Emacs-Lisp by tarao
+
+== install.rb
+
+A simple installer for site-elisp.
+
+=== Usage
+
+Assume that you have site-lisp/ and a working copy of
+this repository named repos/tarao/ in the same directory. Then,
+following commands automatically pull repositories under repos/ and
+install *.el from those repositories:
+
+  cd repos
+  ln -s tarao/install.rb
+  ./install.rb
+
+== default-file-coding-system.el
+
+Set default-file-coding-system according to the regular expressions of
+file names.
+
+=== Example
+
+  (require 'default-file-coding-systems)
+  (setq default-file-coding-system-alist
+        (append
+         '(("\\.tex$" . euc-jp-unix)
+           ("\\.sty$" . euc-jp-unix)
+           ("\\.bib$" . euc-jp-unix))
+         default-file-coding-system-alist))
+
+== end-mark.el
+
+Show mark at the end of buffer.
+
+=== Example
+
+  (require 'end-mark)
+  (global-end-mark-mode)
+
+== hexl-viper-patch.el
+
+Patch for using both hexl-mode and viper-mode.
+
+=== Usage
+
+  (require 'hexl-viper-patch)
+
+== immortal-buffer.el
+
+Make buffer immortal. An immortal buffer will be just cleared when you
+kill the buffer. And it will be respawned when you save it.
+
+=== Example
+
+  (require 'immortal-buffer)
+  (make-buffer-immortal "*scratch*")
+
+== linum+.el
+
+Provide relative-linum-mode which displays relative line numbers.
+
+=== Usage
+
+  (require 'linum+)
+
+And try M-x relative-linum-mode.
+
+=== Requirement
+
+linum.el from http://stud4.tuwien.ac.at/~e0225855/linum/linum.html
+
+== shell-command+.el
+
+Provide feature of a default command from the top of the history in
+shell-command and shell-command-on-region.
+
+=== Usage
+
+  (require 'shell-command+)
+
+And try M-x shell-command+ or M-x shell-command-on-region+.

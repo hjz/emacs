@@ -3,19 +3,35 @@
 
 (setq user-dir (concat dotfiles-dir user-login-name))
 
+(add-to-list 'load-path (concat user-dir "/elisp"))
 (add-to-list 'load-path (concat user-dir "/apel-10.8"))
 (add-to-list 'load-path (concat user-dir "/scala"))
 (add-to-list 'load-path (concat user-dir "/yasnippet"))
 (add-to-list 'load-path (concat user-dir "/ensime/elisp"))
 (add-to-list 'load-path (concat user-dir "/vimpulse"))
+(add-to-list 'load-path (concat user-dir "/vimpulse-surround.el"))
+(add-to-list 'load-path (concat user-dir "/vimpulse-plugins"))
 (add-to-list 'load-path (concat user-dir "/ecb"))
 (add-to-list 'load-path (concat user-dir "/anything-config"))
 (add-to-list 'load-path (concat user-dir "/tabbar"))
 (add-to-list 'load-path (concat user-dir "/elscreen-1.4.6"))
-(add-to-list 'load-path (concat user-dir "/vimpulse-surround.el"))
 
 (setq exec-path (append exec-path '("/Users/jz/bin/")))
 (setq exec-path (append exec-path '("/opt/local/bin/")))
+
+(autoload 'css-color-mode "mon-css-color" "" t)
+(add-hook 'css-mode-hook  'css-color-turn-on-in-buffer)
+
+;; PATH
+(defun read-system-path ()
+  (with-temp-buffer
+    (insert-file-contents "/etc/paths")
+    (goto-char (point-min))
+    (replace-regexp "\n" ":")
+    (thing-at-point 'line)))
+
+(setenv "PATH" (concat (read-system-path) "/opt/local/bin/"))
+
 
 ;;;;;;;;;;;;;;;;; CEDET ;;;;;;;;;;;;;;;;;;;;;;
 (defcustom semantic-ectag-program "/opt/local/bin/ctags" 
@@ -24,10 +40,13 @@
   :type 'program)
 
 (load "jz/cedet-1.0pre7/common/cedet.el")
-(load "jz/cedet-1.0pre7/contrib/semantic-ectag-scala.el")
-(global-ede-mode 1)
-(semantic-load-enable-code-helpers)      ; Enable prototype help and smart completion 
-(semantic-load-enable-primary-exuberent-ctags-support)
+;(load "jz/cedet-1.0pre7/contrib/semantic-ectag-scala.el")
+
+;(global-ede-mode 1)
+
+(semantic-load-enable-minimum-features)      ; Enable prototype help and smart completion 
+;(semantic-load-enable-code-helpers)      ; Enable prototype help and smart completion 
+;(semantic-load-enable-primary-exuberent-ctags-support)
 ;(defun my-semantic-hook ()
 ;  (imenu-add-to-menubar "TAGS"))
 ;(add-hook 'semantic-init-hooks 'my-semantic-hook)
@@ -47,11 +66,14 @@
 (require 'zenburn)
 
 (require 'vimpulse)
+(vimpulse-map ";" 'viper-ex)
+;(vimpulse-map "SPC" 'hs-toggle-hiding)
+(vimpulse-vmap ";" 'vimpulse-visual-ex)
+
 (blink-cursor-mode 1)
 
 ;;;;;; Camel Case ;;;;;;;
 (autoload 'camelCase-mode "camelCase-mode" nil t)
-(camelCase-mode 1)
 ;; rebind viper fwd bkwd
 
 (require 'ecb)
@@ -87,7 +109,7 @@
 ;; cycle through buffers with Ctrl-Tab (like Firefox)
 (global-set-key (kbd "<C-tab>") 'bury-buffer)
 
-;; Scala
+;;;;;;;;;;;;;;; Scala ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (require 'scala-mode-auto)
 (add-hook 'scala-mode-hook
   (lambda ()
@@ -98,6 +120,8 @@
 (defun me-turn-off-indent-tabs-mode ()
   (setq indent-tabs-mode nil))
 (add-hook 'scala-mode-hook 'me-turn-off-indent-tabs-mode)
+(add-hook 'scala-mode-hook 'hs-minor-mode)
+(add-hook 'scala-mode-hook 'camelCase-mode)
 (require 'ensime)
 (require 'yasnippet)
 (yas/initialize)
@@ -106,7 +130,11 @@
             '(lambda ()
                (yas/minor-mode-on)
                ))
+(add-hook 'scala-mode-hook 'hl-line-mode)
 
+;;;;;;;;;;;;;;; END Scala ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;
+;;
 (global-set-key "\C-c\C-w" 'backward-kill-word)
 
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
@@ -157,8 +185,6 @@
 
 ; magit
 (global-set-key (kbd "C-c i") 'magit-status)
-
-(vimpulse-map ";" 'viper-ex)
 
 ;; os x cust
 ; use default Mac browser
@@ -238,24 +264,82 @@
 (global-set-key (kbd "C-c t") 'multi-term-next)
 (global-set-key (kbd "C-c T") 'multi-term) ;; create a new one
 
-;; cleanup mode line
+; Cleanup mode line
+;; Minor modes
 (when (require 'diminish nil 'noerror)
   (eval-after-load "Undo-Tree"
       '(diminish 'undo-tree-mode "U"))
   (eval-after-load "pair"
     '(diminish 'autopair-mode "P"))
+  (eval-after-load "camelCase"
+    '(diminish 'camelCase-mode "cC"))
   (eval-after-load "yasnippet"
     '(diminish 'yas/minor-mode "Y")))
 (add-hook 'emacs-lisp-mode-hook 
   (lambda()
     (setq mode-name "el"))) 
+
+;; Major modes
 (add-hook 'scala-mode-hook
   (lambda()
     (setq mode-name "S"))) 
 
-;; paren mode faces
+; Paren mode faces
 (require 'paren)
 (set-face-background 'show-paren-match-face "#0F4E8B")
 (set-face-foreground 'show-paren-match-face "#dcdccc")
 
-(define-key (current-global-map) [remap vimpulse-jump-to-tag-at-point] 'semantic-complete-jump)
+;; TODO make this scala only
+(define-key (current-global-map) [remap vimpulse-jump-to-tag-at-point] 'ensime-edit-definition)
+(setq campfire-room-name "API")
+(setq campfire-room-id "188551")
+
+; Spelling
+(autoload 'flyspell-mode "flyspell" "On-the-fly spelling checker." t)
+(add-hook 'message-mode-hook 'turn-on-flyspell)
+(add-hook 'text-mode-hook 'turn-on-flyspell)
+(add-hook 'c-mode-common-hook 'flyspell-prog-mode)
+(add-hook 'scala-mode-hook 'flyspell-prog-mode)
+
+(setq ispell-program-name "aspell")
+(setq ispell-list-command "list")
+;(setq ispell-process-directory (expand-file-name "~/"))
+;
+
+;(require 'vimpulse-relative-linum)
+
+;;;;;;;;;;;;;;;;;; ERC ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(require 'erc)
+(erc-autojoin-mode t)
+(setq erc-autojoin-channels-alist
+  '((".*\\.freenode.net" "#emacs" "#twitterapi" "#scala")))
+;; check channels
+(erc-track-mode t)
+(setq erc-track-exclude-types '("JOIN" "NICK" "PART" "QUIT" "MODE"
+                                 "324" "329" "332" "333" "353" "477"))
+;; don't show any of this
+(setq erc-hide-list '("JOIN" "PART" "QUIT" "NICK"))
+
+(defun djcb-erc-start-or-switch ()
+  "Connect to ERC, or switch to last active buffer"
+  (interactive)
+  (if (get-buffer "irc.freenode.net:6667") ;; ERC already active?
+
+    (erc-track-switch-buffer 1) ;; yes: switch to last active
+    (when (y-or-n-p "Start ERC? ") ;; no: maybe start ERC
+      (erc :server "irc.freenode.net" :port 6667 :nick "hjzhu" :full-name "Justin"))))
+;; switch to ERC with Ctrl+c e
+(global-set-key (kbd "C-c e") 'djcb-erc-start-or-switch) ;; ERC
+
+;;;;;;;;;;;;;;;;;; ERC END ;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+; highlighting for TODO 
+(require 'fic-mode)
+(defun add-something-to-mode-hooks (mode-list something)
+  "helper function to add a callback to multiple hooks"
+  (dolist (mode mode-list)
+    (add-hook (intern (concat (symbol-name mode) "-mode-hook")) something)))
+
+(add-something-to-mode-hooks '(c++ scala emacs-lisp) 'turn-on-fic-mode)
+

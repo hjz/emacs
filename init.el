@@ -15,6 +15,40 @@
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
 (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 
+(unless (fboundp 'exec-installed-p)
+  (defvar exec-suffix-list '("")
+    "*List of suffixes for executable.")
+  (defun exec-installed-p (file &optional paths suffixes)
+    "Return absolute-path of FILE if FILE exists in PATHS.
+If PATHS is omitted, `exec-path' is used.
+If suffixes is omitted, `exec-suffix-list' is used."
+    (unless paths
+      (setq paths exec-path))
+    (unless suffixes
+      (setq suffixes exec-suffix-list))
+    (let (files)
+      (catch 'tag
+        (while suffixes
+          (let ((suf (car suffixes)))
+            (if (and (not (string= suf ""))
+                     (string-match (concat (regexp-quote suf) "$") file))
+                (progn
+                  (setq files (list file))
+                  (throw 'tag nil))
+              (setq files (cons (concat file suf) files)))
+            (setq suffixes (cdr suffixes)))))
+      (setq files (nreverse files))
+      (catch 'tag
+        (while paths
+          (let ((path (car paths))
+                (files files))
+            (while files
+              (setq file (expand-file-name (car files) path))
+              (if (file-executable-p file)
+                  (throw 'tag file))
+              (setq files (cdr files)))
+            (setq paths (cdr paths))))))))
+
 ;; Load path etc.
 
 (setq dotfiles-dir (file-name-directory
@@ -77,3 +111,4 @@
   (mapc #'load (directory-files user-specific-dir nil ".*el$")))
 
 ;;; init.el ends here
+(put 'dired-find-alternate-file 'disabled nil)

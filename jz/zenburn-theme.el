@@ -63,12 +63,12 @@
 (defvar zenburn-blue-1 "#7cb8bb")
 (defvar zenburn-blue-2 "#6ca0a3")
 (defvar zenburn-blue-3 "#5c888b")
-(defvar zenburn-blue-4 "#4c7073")
+(defvar zenburn-blue-4 "006ec0")
 (defvar zenburn-cyan "#93e0e3")
 (defvar zenburn-magenta "#dc8cc3")
 
 ;; Faces for inheriting
-(defface zenburn-primary-1 `((t :foreground ,zenburn-blue-2 :weight bold))
+(defface zenburn-primary-1 `((t :foreground ,zenburn-blue-4 :weight bold))
   "Zenburn primary face 1")
 (defface zenburn-primary-2 `((t :foreground ,zenburn-orange :weight bold))
   "Zenburn primary face 2")
