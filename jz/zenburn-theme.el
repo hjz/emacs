@@ -165,7 +165,7 @@
  `(font-lock-function-name-face
    ((t (:foreground ,zenburn-orange weight:bold))))
  `(font-lock-keyword-face
-   ((t (:foreground ,zenburn-blue-1 weight:bold))))
+   ((t (:foreground ,zenburn-magenta-1 weight:bold))))
  `(font-lock-negation-char-face
    ((t (:inherit zenburn-primary-1))))
  `(font-lock-preprocessor-face
@@ -175,7 +175,7 @@
  `(font-lock-type-face
    ((t (:foreground ,zenburn-yellow))))
  `(font-lock-variable-name-face
-   ((t (:foreground ,zenburn-blue-4))))
+   ((t (:foreground ,zenburn-blue-1))))
  `(font-lock-warning-face
    ((t (:inherit zenburn-highlight-alerting))))
 
