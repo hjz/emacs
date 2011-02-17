@@ -63,7 +63,6 @@
 (setq autopair-autowrap t)
 (require 'undo-tree)
 (global-undo-tree-mode)
-(require 'zenburn)
 
 (require 'vimpulse)
 (vimpulse-map ";" 'viper-ex)

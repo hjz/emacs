@@ -36,22 +36,26 @@
   "Created 2010-03-18.")
 
 ;; Define variables for colors
+(defvar zenburn-fg-1 "#777777")
 (defvar zenburn-fg "#dcdccc")
-(defvar zenburn-bg-1 "#2b2b2b")
-(defvar zenburn-bg "#3f3f3f")
-(defvar zenburn-bg+1 "#4f4f4f")
-(defvar zenburn-bg+2 "#5f5f5f")
+(defvar zenburn-bg-1 "#1b1b1b")
+(defvar zenburn-bg "#1f1f1f")
+(defvar zenburn-bg+1 "#2f2f2f")
+(defvar zenburn-bg+2 "#3f3f3f")
 (defvar zenburn-yellow+1 "#dfdfbf")
 (defvar zenburn-yellow "#f0dfaf")
 (defvar zenburn-yellow-1 "#e0cf9f")
 (defvar zenburn-yellow-2 "#d0bf8f")
-(defvar zenburn-orange "#dfaf8f")
+(defvar zenburn-yellow-3 "#ffdead")
+;(defvar zenburn-orange "#dfaf8f")
+(defvar zenburn-orange "#daa17c")
 (defvar zenburn-red+1 "#dca3a3")
 (defvar zenburn-red "#cc9393")
 (defvar zenburn-red-1 "#bc8383")
 (defvar zenburn-red-2 "#ac7373")
 (defvar zenburn-red-3 "#9c6363")
 (defvar zenburn-red-4 "#8c5353")
+(defvar zenburn-red-5 "#c69595")
 (defvar zenburn-green-1 "#5f7f5f")
 (defvar zenburn-green "#7f9f7f")
 (defvar zenburn-green+1 "#8fb28f")
@@ -63,12 +67,13 @@
 (defvar zenburn-blue-1 "#7cb8bb")
 (defvar zenburn-blue-2 "#6ca0a3")
 (defvar zenburn-blue-3 "#5c888b")
-(defvar zenburn-blue-4 "006ec0")
+(defvar zenburn-blue-4 "#ddeeee")
 (defvar zenburn-cyan "#93e0e3")
-(defvar zenburn-magenta "#dc8cc3")
+(defvar zenburn-magenta "#7f3194")
+(defvar zenburn-magenta-1 "#a4a4d0")
 
 ;; Faces for inheriting
-(defface zenburn-primary-1 `((t :foreground ,zenburn-blue-4 :weight bold))
+(defface zenburn-primary-1 `((t :foreground ,zenburn-yellow :weight bold))
   "Zenburn primary face 1")
 (defface zenburn-primary-2 `((t :foreground ,zenburn-orange :weight bold))
   "Zenburn primary face 2")
@@ -158,19 +163,19 @@
  `(font-lock-doc-face
    ((t (:foreground ,zenburn-green+1))))
  `(font-lock-function-name-face
-   ((t (:foreground ,zenburn-yellow))))
+   ((t (:foreground ,zenburn-orange weight:bold))))
  `(font-lock-keyword-face
-   ((t (:inherit zenburn-primary-1))))
+   ((t (:foreground ,zenburn-blue-1 weight:bold))))
  `(font-lock-negation-char-face
    ((t (:inherit zenburn-primary-1))))
  `(font-lock-preprocessor-face
    ((t (:foreground ,zenburn-blue))))
  `(font-lock-string-face
-   ((t (:foreground ,zenburn-red))))
+   ((t (:foreground ,zenburn-red-1))))
  `(font-lock-type-face
-   ((t (:inherit zenburn-primary-3))))
- `(font-lock-variable-name-face
    ((t (:foreground ,zenburn-yellow))))
+ `(font-lock-variable-name-face
+   ((t (:foreground ,zenburn-blue-4))))
  `(font-lock-warning-face
    ((t (:inherit zenburn-highlight-alerting))))
 

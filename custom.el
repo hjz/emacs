@@ -61,5 +61,6 @@
  '(elscreen-tab-control-face ((((class color)) (:background "#1f1f1f" :foreground "white"))))
  '(elscreen-tab-current-screen-face ((((class color)) (:background "#1f1f1f" :foreground "white"))))
  '(elscreen-tab-other-screen-face ((((class color)) (:background "#3D3D3D" :foreground "white"))))
+ '(flyspell-incorrect ((t (:underline "#cc9393" :weight bold))))
  '(magit-item-highlight ((((class color) (background dark)) (:background "#2f2f2f"))))
  '(show-paren-mismatch ((t (:background "red" :foreground "white")))))
