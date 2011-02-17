@@ -37,11 +37,11 @@
   "Words to highlight"
   :group 'fic-mode)
 
-(defcustom fic-foreground-color "Red"
+(defcustom fic-foreground-color "White"
   "Font foreground colour"
   :group 'fic-mode)
 
-(defcustom fic-background-color  "Yellow"
+(defcustom fic-background-color "#1f1f1f" 
   "Font background color"
   :group 'fic-mode)
 
