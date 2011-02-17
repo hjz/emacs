@@ -150,14 +150,19 @@
   (set-frame-position (selected-frame) 0 0)
   (set-frame-size (selected-frame) 1000 1000))
 
-;;:w (winner-mode 1)
-(global-set-key [M-left] 'windmove-left)          ; move to left windnow
-(global-set-key [M-right] 'windmove-right)        ; move to right window
-(global-set-key [M-up] 'windmove-up)              ; move to upper window
-(global-set-key [M-down] 'windmove-down)          ; move to downer wind
+; Window Movement
+(winner-mode 1)
+(windmove-default-keybindings 'meta)
+
+; Window Spliting
+(global-set-key (kbd "M-6") 'delete-other-windows) ; was digit-argument
+(global-set-key (kbd "M-7") 'other-window) ; was center-line
+(global-set-key (kbd "M-8") 'split-window-vertically) ; was digit-argument
+(global-set-key (kbd "M-9") 'split-window-horizontally) ; was digit-argument
 
 ; Fullscreen
 (global-set-key (kbd "<s-return>") 'maximize-frame)
+(maximize-frame)
 
 ; open file
 (global-set-key [(super o)] 'find-file)
