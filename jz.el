@@ -64,10 +64,17 @@
 (require 'undo-tree)
 (global-undo-tree-mode)
 
+;;;;;;;;;;;;;;;; VIM END ;;;;;;;;;;;;;;;;;;
+
 (require 'vimpulse)
 (vimpulse-map ";" 'viper-ex)
 ;(vimpulse-map "SPC" 'hs-toggle-hiding)
 (vimpulse-vmap ";" 'vimpulse-visual-ex)
+
+;(require 'vimpulse-relative-linum)
+(require 'vimpulse-operator-comment)
+
+;;;;;;;;;;;;;;;; VIM END ;;;;;;;;;;;;;;;;;;
 
 (blink-cursor-mode 1)
 
@@ -295,6 +302,7 @@
 
 ;; TODO make this scala only
 (define-key (current-global-map) [remap vimpulse-jump-to-tag-at-point] 'ensime-edit-definition)
+
 (setq campfire-room-name "API")
 (setq campfire-room-id "188551")
 
@@ -310,7 +318,6 @@
 ;(setq ispell-process-directory (expand-file-name "~/"))
 ;
 
-;(require 'vimpulse-relative-linum)
 
 ;;;;;;;;;;;;;;;;;; ERC ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (require 'erc)
@@ -347,3 +354,5 @@
 
 (add-something-to-mode-hooks '(c++ scala emacs-lisp) 'turn-on-fic-mode)
 
+; TODO img for campfire
+(require 'inlimg)
