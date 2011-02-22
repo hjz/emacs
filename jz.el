@@ -71,7 +71,20 @@
 ;(vimpulse-map "SPC" 'hs-toggle-hiding)
 (vimpulse-vmap ";" 'vimpulse-visual-ex)
 
-;(require 'vimpulse-relative-linum)
+; turns it off in unwanted places
+(require 'linum-off)
+
+; right adjust and add blank on right
+(setq linum-format
+      (lambda (line)
+        (propertize (format
+                      (let ((w (length (number-to-string
+                                         (count-lines (point-min) (point-max))))))
+                        (concat "%" (number-to-string w) "d "))
+                      line)
+                    'face 'linum)))
+
+(require 'vimpulse-relative-linum)
 (require 'vimpulse-operator-comment)
 
 ;;;;;;;;;;;;;;;; VIM END ;;;;;;;;;;;;;;;;;;
@@ -355,4 +368,4 @@
 (add-something-to-mode-hooks '(c++ scala emacs-lisp) 'turn-on-fic-mode)
 
 ; TODO img for campfire
-(require 'inlimg)
+
