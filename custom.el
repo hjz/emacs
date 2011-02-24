@@ -76,4 +76,5 @@
  '(highlight-80+-line ((t nil)) t)
  '(linum ((t (:background "#282828" :foreground "#b6b6b6"))))
  '(magit-item-highlight ((((class color) (background dark)) (:background "#2f2f2f"))))
- '(show-paren-mismatch ((t (:background "red" :foreground "white")))))
+ '(show-paren-mismatch ((t (:background "red" :foreground "white"))))
+ '(vertical-border ((t (:background "white" :foreground "#282828")))))

@@ -32,19 +32,19 @@
 
 (setenv "PATH" (concat (read-system-path) "/opt/local/bin/"))
 
-
 ;;;;;;;;;;;;;;;;; CEDET ;;;;;;;;;;;;;;;;;;;;;;
 (defcustom semantic-ectag-program "/opt/local/bin/ctags" 
   "The Exuberent CTags program to use."
   :group 'semantic
   :type 'program)
 
-(load "jz/cedet-1.0pre7/common/cedet.el")
+;(load "jz/cedet-1.0pre7/common/cedet.el")
+
 ;(load "jz/cedet-1.0pre7/contrib/semantic-ectag-scala.el")
 
 ;(global-ede-mode 1)
 
-(semantic-load-enable-minimum-features)      ; Enable prototype help and smart completion 
+;(semantic-load-enable-minimum-features)      ; Enable prototype help and smart completion 
 ;(semantic-load-enable-code-helpers)      ; Enable prototype help and smart completion 
 ;(semantic-load-enable-primary-exuberent-ctags-support)
 ;(defun my-semantic-hook ()
@@ -84,6 +84,7 @@
                       line)
                     'face 'linum)))
 
+(global-linum-mode 1)
 (require 'vimpulse-relative-linum)
 (require 'vimpulse-operator-comment)
 
