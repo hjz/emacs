@@ -370,3 +370,8 @@
 
 ; TODO img for campfire
 
+;; Redefine the 8 primary terminal colors to look good against black
+(setq ansi-term-color-vector
+[unspecified "#000000" "#963F3C" "#5FFB65" "#FFFD65"
+"#0082FF" "#FF2180" "#57DCDB" "#FFFFFF"])
+
