@@ -19,7 +19,7 @@
  '(ecb-options-version "2.40")
  '(ecb-primary-secondary-mouse-buttons (quote mouse-1--mouse-2))
  '(ecb-source-face (quote font-lock-warning-face))
- '(ecb-source-path (quote (("~/ps/swiftlet/src/test/scala/com/twitter/swiftlet" "swift_test") ("~/ps/swiftlet/src/main/scala/com/twitter/swiftlet" "swift") ("/" "/"))))
+ '(ecb-source-path (quote (("~/ps/swiftlet/src/test/scala/com/twitter/swiftlet" "swift_test") ("~/ps/swiftlet/src/main/scala/com/twitter/swiftlet" "swift") ("/" "/") (#("/Users/jz/ps/swiftlet/config" 0 28 (help-echo "Mouse-2 toggles maximizing, mouse-3 displays a popup-menu")) "sconfig"))))
  '(ecb-sources-general-face (quote ecb-default-general-face))
  '(ecb-tag-header-face (quote font-lock-warning-face))
  '(ecb-use-speedbar-instead-native-tree-buffer nil)
@@ -49,7 +49,7 @@
  '(tool-bar-mode nil)
  '(transient-mark-mode nil)
  '(vimpulse-fold-level 5)
- '(vimpulse-operator-comment-key "q")
+ '(vimpulse-operator-comment-key "Q")
  '(vimpulse-want-C-u-like-Vim t)
  '(viper-ESC-moves-cursor-back t)
  '(viper-auto-indent t)
@@ -64,6 +64,7 @@
   ;; If you edit it by hand, you could mess it up, so be careful.
   ;; Your init file should contain only one such instance.
   ;; If there is more than one, they won't work right.
+ '(default ((t (:inherit nil :stipple nil :background "#1f1f1f" :foreground "#dcdccc" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 134 :width normal :foundry "apple" :family "Consolas"))))
  '(campfire-my-message-face ((t (:background "#2b2b2b" :foreground "white"))))
  '(campfire-my-user-face ((t (:foreground "white" :box (:line-width 2 :color "blue" :style released-button)))))
  '(campfire-other-user-face ((t (:background "#2f2f2f" :foreground "#9fc59f"))))
@@ -74,7 +75,8 @@
  '(flyspell-incorrect ((t (:underline "#cc9393" :weight bold))))
  '(highlight-80+ ((((background dark)) (:background "#3f3f3f" :foreground "#afd8af" :weight bold))))
  '(highlight-80+-line ((t nil)) t)
+ '(lazy-highlight ((((class color) (min-colors 88) (background dark)) (:background "#284f28" :foreground "#ffffe0"))))
  '(linum ((t (:background "#282828" :foreground "#b6b6b6"))))
  '(magit-item-highlight ((((class color) (background dark)) (:background "#2f2f2f"))))
  '(show-paren-mismatch ((t (:background "red" :foreground "white"))))
- '(vertical-border ((t (:background "white" :foreground "#282828")))))
+ '(vertical-border ((t (:foreground "#282828")))))

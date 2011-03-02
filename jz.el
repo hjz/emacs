@@ -15,6 +15,7 @@
 (add-to-list 'load-path (concat user-dir "/anything-config"))
 (add-to-list 'load-path (concat user-dir "/tabbar"))
 (add-to-list 'load-path (concat user-dir "/elscreen-1.4.6"))
+(add-to-list 'load-path (concat user-dir "/yaml-mode"))
 
 (setq exec-path (append exec-path '("/Users/jz/bin/")))
 (setq exec-path (append exec-path '("/opt/local/bin/")))
@@ -38,11 +39,35 @@
   :group 'semantic
   :type 'program)
 
+(semantic-mode 1)
+
+(global-ede-mode t)
+
+(if (boundp 'semantic-load-enable-excessive-code-helpers)
+    ; Add-on CEDET
+    (progn
+      (semantic-load-enable-excessive-code-helpers)
+      ; TODO: should already be enabled by previous line
+      (global-semantic-idle-completions-mode)
+      (global-semantic-tag-folding-mode))
+   ; Integrated CEDET
+  (setq semantic-default-submodes
+        '(global-semanticdb-minor-mode
+          global-semantic-idle-scheduler-mode
+          global-semantic-idle-summary-mode
+          global-semantic-idle-completions-mode
+          global-semantic-decoration-mode
+          global-semantic-highlight-func-mode
+          global-semantic-stickyfunc-mode)))
+
+(if (boundp 'semantic-ia) (require 'semantic-ia))
+(if (boundp 'semantic-gcc) (require 'semantic-gcc))
+
 ;(load "jz/cedet-1.0pre7/common/cedet.el")
 
 ;(load "jz/cedet-1.0pre7/contrib/semantic-ectag-scala.el")
 
-;(global-ede-mode 1)
+;(semantic-load-enable-excessive-code-helpers)
 
 ;(semantic-load-enable-minimum-features)      ; Enable prototype help and smart completion 
 ;(semantic-load-enable-code-helpers)      ; Enable prototype help and smart completion 
@@ -59,10 +84,10 @@
 (define-key global-map [(alt k)] 'tabbar-forward)
 
 (require 'autopair)
-(autopair-global-mode)
+(autopair-global-mode t)
 (setq autopair-autowrap t)
 (require 'undo-tree)
-(global-undo-tree-mode)
+(global-undo-tree-mode t)
 
 ;;;;;;;;;;;;;;;; VIM END ;;;;;;;;;;;;;;;;;;
 
@@ -142,6 +167,7 @@
 (add-hook 'scala-mode-hook 'me-turn-off-indent-tabs-mode)
 (add-hook 'scala-mode-hook 'hs-minor-mode)
 (add-hook 'scala-mode-hook 'camelCase-mode)
+(add-hook 'scala-mode-hook 'autopair-mode)
 (require 'ensime)
 (require 'yasnippet)
 (yas/initialize)
@@ -375,3 +401,14 @@
 [unspecified "#000000" "#963F3C" "#5FFB65" "#FFFD65"
 "#0082FF" "#FF2180" "#57DCDB" "#FFFFFF"])
 
+(require 'yaml-mode)
+(add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
+
+(add-hook 'yaml-mode-hook
+          '(lambda ()
+             (define-key yaml-mode-map "\C-m" 'newline-and-indent)))
+
+;; For teh tunez
+(autoload 'pianobar "pianobar" nil t)
+
+(setq initial-scratch-message nil)

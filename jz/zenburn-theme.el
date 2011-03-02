@@ -211,9 +211,9 @@
  '(ido-only-match ((t (:inherit zenburn-primary-2))))
  `(ido-subdir ((t (:foreground ,zenburn-yellow))))
 
- `(isearch ((t (:foreground ,zenburn-fg :background "#506070"))))
+ `(isearch ((t (:foreground "#f8f893" :background "#385f38"))))
  `(isearch-lazy-highlight
-   ((t (:foreground ,zenburn-fg :background "#1e2320" :weight normal))))
+   ((t (:foreground ,zenburn-fg :background "#3a6c09" :weight normal))))
 
  '(comint-highlight-input ((t (:inherit zenburn-primary-1))))
  '(comint-highlight-prompt ((t (:inherit zenburn-primary-2))))
@@ -401,6 +401,7 @@
  `(diff-changed ((t (:foreground ,zenburn-yellow))))
  `(diff-refine-change ((t (:background "grey35" :bold t))))
  `(diff-context ((t (:inherit default))))
+ `(vertical-border ((t (:background "#282828" :foreground "#282828"))))
 )
 
 (provide-theme 'zenburn)
