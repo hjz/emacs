@@ -3,6 +3,10 @@
 
 (setq user-dir (concat dotfiles-dir user-login-name))
 
+(require 'color-theme)
+(load-theme 'zenburn)
+(set-face-foreground 'vertical-border "#28282")
+
 (add-to-list 'load-path (concat user-dir "/elisp"))
 (add-to-list 'load-path (concat user-dir "/apel-10.8"))
 (add-to-list 'load-path (concat user-dir "/scala"))
@@ -16,7 +20,7 @@
 (add-to-list 'load-path (concat user-dir "/tabbar"))
 (add-to-list 'load-path (concat user-dir "/elscreen-1.4.6"))
 (add-to-list 'load-path (concat user-dir "/yaml-mode"))
-(add-to-list 'load-path (concat user-dir "/scamacs"))
+(add-to-list 'load-path (concat user-dir "/scamacs/scamacs"))
 
 (setq exec-path (append exec-path '("/Users/jz/bin/")))
 (setq exec-path (append exec-path '("/opt/local/bin/")))
@@ -179,6 +183,8 @@
                ))
 (add-hook 'scala-mode-hook 'hl-line-mode)
 
+;; ECB support
+(require 'ensime-ecb)
 ;;;;;;;;;;;;;;; END Scala ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;
@@ -384,7 +390,6 @@
 (global-set-key (kbd "C-c e") 'djcb-erc-start-or-switch) ;; ERC
 
 ;;;;;;;;;;;;;;;;;; ERC END ;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 
 ; highlighting for TODO 
 (require 'fic-mode)

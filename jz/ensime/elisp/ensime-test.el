@@ -38,8 +38,13 @@
   "A state dump for anyone who wants to use it. Useful for async tests.")
 (make-variable-buffer-local 'ensime-shared-test-state)
 
+(defvar ensime-test-dev-home
+  "/home/aemon/src/misc/ensime"
+  "The local development root.")
+
 (defvar ensime-test-env-classpath
-  '("/home/aemon/lib/scala/lib/scala-library.jar")
+  (list (concat ensime-test-dev-home
+		"/project/boot/scala-2.8.1/lib/scala-library.jar"))
   "Hard-code a classpath for testing purposes. Not great.")
 
 (put 'ensime-test-assert-failed
@@ -125,35 +130,34 @@
 		 )
      )))
 
-(defun ensime-cleanup-tmp-project (proj)
+(defun ensime-cleanup-tmp-project (proj &optional no-del)
   "Destroy a temporary project directory, kill all buffers visiting
    source files in the project."
   (let ((src-files (plist-get proj :src-files))
 	(root-dir (plist-get proj :root-dir)))
-    (message "deleting %s" src-files)
     (dolist (f src-files)
       (cond ((file-exists-p f)
 	     (progn
-	       (message "deleting existing %s" f)
 	       (find-file f)
 	       (set-buffer-modified-p nil)
 	       (kill-buffer nil)))
 	    ((get-buffer f)
 	     (progn
-	       (message "deleting buffer of %s" f)
 	       (switch-to-buffer (get-buffer f))
 	       (kill-buffer nil)))
 	    (t)))
-    ;; a bit of paranoia..
-    (if (and root-dir (integerp (string-match "^/tmp/" root-dir)))
-	;; ..before we wipe away the project dir
-	(shell-command (format "rm -rf %S" root-dir)))))
+
+    (when (not no-del)
+      ;; a bit of paranoia..
+      (if (and root-dir (integerp (string-match "^/tmp/" root-dir)))
+	  ;; ..before we wipe away the project dir
+	  (shell-command (format "rm -rf %S" root-dir))))))
 
 (defun ensime-kill-all-ensime-servers ()
   "Kill all inferior ensime server buffers."
   (dolist (b (buffer-list))
-    (if (string-match "^\\*inferior-ensime-server" (buffer-name b))
-	(kill-buffer b))))
+    (when (string-match "^\\*inferior-ensime-server" (buffer-name b))
+      (kill-buffer b))))
 
 (defmacro ensime-test-var-put (var val)
   "Helper for writing to shared testing state."
@@ -361,10 +365,10 @@
      (find-file (car src-files))
      (ensime)))
 
-(defmacro ensime-test-cleanup (proj-name)
+(defmacro ensime-test-cleanup (proj-name &optional no-del)
   "Delete temporary project files. Kill ensime buffers."
   `(progn
-     (ensime-cleanup-tmp-project ,proj-name)
+     (ensime-cleanup-tmp-project ,proj-name ,no-del)
      (ensime-kill-all-ensime-servers)))
 
 ;;;;;;;;;;;;;;;;;;
@@ -804,6 +808,7 @@
     )
 
 
+
    (ensime-async-test
     "Test file with package name (this broke when -sourcepath param was used)."
     (let* ((proj (ensime-create-tmp-project
@@ -1072,12 +1077,15 @@
     "Test interactive search."
     (let* ((proj (ensime-create-tmp-project
 		  ensime-tmp-project-hello-world
+		  '(:disable-index-on-startup nil)
 		  )))
       (ensime-test-init-proj proj))
 
     ((:connected connection-info))
 
-    ((:compiler-ready status)
+    ((:compiler-ready status))
+
+    ((:indexer-ready status)
      (ensime-test-with-proj
       (proj src-files)
       (ensime-search)
@@ -1092,16 +1100,115 @@
 	(ensime-assert (search-forward "com.helloworld.HelloWorld" nil t))
 	(goto-char 1)
 	(ensime-assert (search-forward "com.helloworld.HelloWorld$.foo" nil t)))
+
+      (with-current-buffer ensime-search-buffer-name
+	(erase-buffer)
+	(insert "java util vector")
+	)
+      ))
+
+    ((:search-buffer-populated val)
+     (ensime-test-with-proj
+      (proj src-files)
+
+      (with-current-buffer ensime-search-target-buffer-name
+	(goto-char 1)
+	(ensime-assert (search-forward-regexp "java.util.Vector[^a-Z]" nil t))
+	(goto-char 1)
+	(ensime-assert (search-forward "java.util.Vector.set" nil t))
+	(goto-char 1)
+	(ensime-assert (search-forward "java.util.Vector.addAll" nil t)))
+
       (ensime-search-quit)
       (ensime-test-cleanup proj)
       ))
+
+
+
     )
+
+
+   (ensime-async-test
+    "Test compiling sbt-deps test project. Has sbt subprojects."
+    (let* ((root-dir (concat ensime-test-dev-home "/test_projects/sbt-deps/"))
+	   (proj (list
+		  :src-files
+		  (list
+		   (concat
+		    root-dir
+		    "web/src/main/scala/code/model/User.scala"))
+		  :root-dir root-dir
+		  :conf-file (concat root-dir ".ensime"))))
+      (ensime-assert (file-exists-p (plist-get proj :conf-file)))
+      (ensime-test-init-proj proj))
+
+    ((:connected connection-info))
+
+    ((:full-typecheck-finished val)
+     (ensime-test-with-proj
+      (proj src-files)
+      (let* ((notes (plist-get val :notes)))
+	(ensime-assert-equal (length notes) 0))
+      (ensime-test-cleanup proj t)
+      ))
+    )
+
+
+   (ensime-async-test
+    "Test expand-selection."
+    (let* ((proj (ensime-create-tmp-project
+		  `((:name
+		     "pack/a.scala"
+		     :contents ,(ensime-test-concat-lines
+				 "package pack"
+				 "class A(value:String){"
+				 "def hello(){"
+				 "  println(/*1*/\"hello\")"
+				 "}"
+				 "}"
+				 )
+		     )
+		    ))))
+      (ensime-test-init-proj proj))
+
+    ((:connected connection-info))
+
+    ((:compiler-ready status)
+     (ensime-test-with-proj
+      (proj src-files)
+      (ensime-test-eat-mark "1")
+      (ensime-save-buffer-no-hooks)
+
+      ;; Expand once to include entire string
+      (let* ((pt (point))
+	     (range (ensime-rpc-expand-selection
+		     buffer-file-name
+		     pt pt))
+	     (start1 (plist-get range :start))
+	     (end1 (plist-get range :end)))
+	(ensime-assert (= start1 pt))
+	(ensime-assert (> end1 pt))
+
+	;; Expand again to include entire println call
+	(let* ((range (ensime-rpc-expand-selection
+		       buffer-file-name
+		       start1 end1))
+	       (start2 (plist-get range :start))
+	       (end2 (plist-get range :end)))
+	  (ensime-assert (< start2 start1))
+	  (ensime-assert (> end2 end1))))
+
+      (ensime-test-cleanup proj)
+      ))
+    )
+
 
    ))
 
 (defun ensime-run-tests ()
   "Run all regression tests for ensime-mode."
   (interactive)
+  (setq debug-on-error t)
   (ensime-run-fast-tests)
   (ensime-run-slow-tests))
 

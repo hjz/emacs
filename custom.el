@@ -78,5 +78,4 @@
  '(lazy-highlight ((((class color) (min-colors 88) (background dark)) (:background "#284f28" :foreground "#ffffe0"))))
  '(linum ((t (:background "#282828" :foreground "#b6b6b6"))))
  '(magit-item-highlight ((((class color) (background dark)) (:background "#2f2f2f"))))
- '(show-paren-mismatch ((t (:background "red" :foreground "white"))))
- '(vertical-border ((t (:foreground "#282828")))))
+ '(show-paren-mismatch ((t (:background "red" :foreground "white")))))
