@@ -16,6 +16,7 @@
 (add-to-list 'load-path (concat user-dir "/tabbar"))
 (add-to-list 'load-path (concat user-dir "/elscreen-1.4.6"))
 (add-to-list 'load-path (concat user-dir "/yaml-mode"))
+(add-to-list 'load-path (concat user-dir "/scamacs"))
 
 (setq exec-path (append exec-path '("/Users/jz/bin/")))
 (setq exec-path (append exec-path '("/opt/local/bin/")))
@@ -294,8 +295,8 @@
 (global-set-key (kbd "S-<f6>"  ) 'elscreen-kill)  
 
 ;; Windowskey+PgUP/PgDown switches between elscreens
-(global-set-key (kbd "<s-prior>") 'elscreen-previous) 
-(global-set-key (kbd "<s-next>")  'elscreen-next) 
+(global-set-key (kbd "<C-prior>") 'elscreen-previous) 
+(global-set-key (kbd "<C-next>")  'elscreen-next) 
 
 ;; show column #
 (column-number-mode t)
@@ -408,7 +409,8 @@
           '(lambda ()
              (define-key yaml-mode-map "\C-m" 'newline-and-indent)))
 
-;; For teh tunez
-(autoload 'pianobar "pianobar" nil t)
 
 (setq initial-scratch-message nil)
+    
+;; For teh tunez
+(autoload 'pianobar "pianobar" nil t)
