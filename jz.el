@@ -13,17 +13,19 @@
 (add-to-list 'load-path (concat user-dir "/vimpulse-plugins"))
 (add-to-list 'load-path (concat user-dir "/scamacs/ecb"))
 (add-to-list 'load-path (concat user-dir "/scamacs/scala"))
+(add-to-list 'load-path (concat user-dir "/scamacs/scamacs"))
 (add-to-list 'load-path (concat user-dir "/anything-config"))
-(add-to-list 'load-path (concat user-dir "/tabbar"))
+;(add-to-list 'load-path (concat user-dir "/tabbar"))
 (add-to-list 'load-path (concat user-dir "/elscreen-1.4.6"))
 (add-to-list 'load-path (concat user-dir "/yaml-mode"))
-(add-to-list 'load-path (concat user-dir "/scamacs/scamacs"))
 
 (setq exec-path (append exec-path '("/Users/jz/bin/")))
 (setq exec-path (append exec-path '("/opt/local/bin/")))
 
 (autoload 'css-color-mode "mon-css-color" "" t)
 (add-hook 'css-mode-hook  'css-color-turn-on-in-buffer)
+
+(setq ring-bell-function 'ignore)
 
 ;; Theme
 (require 'color-theme)
@@ -83,12 +85,15 @@
 ;  (imenu-add-to-menubar "TAGS"))
 ;(add-hook 'semantic-init-hooks 'my-semantic-hook)
 
+;; TABS
+;(define-key global-map [(alt j)] 'tabbar-backward)
+;(define-key global-map [(alt k)] 'tabbar-forward)
+;(require 'tabkey2)
+
+
 ;;;;;;;;;;;;;;;; CEDET END ;;;;;;;;;;;;;;;;;;
 
 (require 'anything-config)
-
-(define-key global-map [(alt j)] 'tabbar-backward)
-(define-key global-map [(alt k)] 'tabbar-forward)
 
 (require 'autopair)
 (autopair-global-mode t)
@@ -168,7 +173,6 @@
     (local-set-key [return] 'reindent-then-newline-and-indent)))
 (add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
 (add-hook 'scala-mode-hook 'highlight-80+-mode)
-(setq ring-bell-function 'ignore)
 (defun me-turn-off-indent-tabs-mode ()
   (setq indent-tabs-mode nil))
 (add-hook 'scala-mode-hook 'me-turn-off-indent-tabs-mode)
