@@ -3,19 +3,16 @@
 
 (setq user-dir (concat dotfiles-dir user-login-name))
 
-(require 'color-theme)
-(load-theme 'zenburn)
-(set-face-foreground 'vertical-border "#28282")
-
 (add-to-list 'load-path (concat user-dir "/elisp"))
 (add-to-list 'load-path (concat user-dir "/apel-10.8"))
-(add-to-list 'load-path (concat user-dir "/scala"))
+;(add-to-list 'load-path (concat user-dir "/scala"))
 (add-to-list 'load-path (concat user-dir "/yasnippet"))
 (add-to-list 'load-path (concat user-dir "/ensime/elisp"))
 (add-to-list 'load-path (concat user-dir "/vimpulse"))
 (add-to-list 'load-path (concat user-dir "/vimpulse-surround.el"))
 (add-to-list 'load-path (concat user-dir "/vimpulse-plugins"))
-(add-to-list 'load-path (concat user-dir "/ecb"))
+(add-to-list 'load-path (concat user-dir "/scamacs/ecb"))
+(add-to-list 'load-path (concat user-dir "/scamacs/scala"))
 (add-to-list 'load-path (concat user-dir "/anything-config"))
 (add-to-list 'load-path (concat user-dir "/tabbar"))
 (add-to-list 'load-path (concat user-dir "/elscreen-1.4.6"))
@@ -27,6 +24,11 @@
 
 (autoload 'css-color-mode "mon-css-color" "" t)
 (add-hook 'css-mode-hook  'css-color-turn-on-in-buffer)
+
+;; Theme
+(require 'color-theme)
+(load-theme 'zenburn)
+(set-face-foreground 'vertical-border "#282828")
 
 ;; PATH
 (defun read-system-path ()
@@ -294,8 +296,6 @@
 ;; ---------------------------------------
 ;; load elscreen
 ;; ---------------------------------------
-(load "elscreen" "ElScreen" t)
-
 ;; F9 creates a new elscreen, shift-F9 kills it
 (global-set-key (kbd "<f6>"    ) 'elscreen-create)
 (global-set-key (kbd "S-<f6>"  ) 'elscreen-kill)  
@@ -303,6 +303,29 @@
 ;; Windowskey+PgUP/PgDown switches between elscreens
 (global-set-key (kbd "<C-prior>") 'elscreen-previous) 
 (global-set-key (kbd "<C-next>")  'elscreen-next) 
+
+(defun elscreen-frame-title-update ()
+   (when (elscreen-screen-modified-p 'elscreen-frame-title-update)
+     (let* ((screen-list (sort (elscreen-get-screen-list) '<))
+           (screen-to-name-alist (elscreen-get-screen-to-name-alist))
+           (title (mapconcat
+                   (lambda (screen)
+                     (format "%d%s %s"
+                             screen (elscreen-status-label screen)
+                             (replace-regexp-in-string ":" "" 
+                               (replace-regexp-in-string "\*.*\*" "" 
+                                (get-alist screen screen-to-name-alist)))))
+                   screen-list " ")))
+       
+       (if (fboundp 'set-frame-name)
+          (set-frame-name title)
+        (setq frame-title-format title)))))
+ 
+ (eval-after-load "elscreen"
+   '(add-hook 'elscreen-screen-update-hook 'elscreen-frame-title-update))
+
+(load "elscreen" "ElScreen" t)
+(require 'elscreen-buffer-list)
 
 ;; show column #
 (column-number-mode t)
