@@ -1,2 +1,6 @@
-((("ApiRequest" .
+((("isInstanceOf" .
+   [0 0 0 0 0 0 0 0 0 0 0 1])
+  ("+" .
+   [1])
+  ("ApiRequest" .
    [1 0 0 0 0 0 0 0 0 0])))

@@ -5,7 +5,6 @@
 
 (add-to-list 'load-path (concat user-dir "/elisp"))
 (add-to-list 'load-path (concat user-dir "/apel-10.8"))
-;(add-to-list 'load-path (concat user-dir "/scala"))
 (add-to-list 'load-path (concat user-dir "/yasnippet"))
 (add-to-list 'load-path (concat user-dir "/ensime/elisp"))
 (add-to-list 'load-path (concat user-dir "/vimpulse"))
@@ -72,7 +71,7 @@
 (if (boundp 'semantic-ia) (require 'semantic-ia))
 (if (boundp 'semantic-gcc) (require 'semantic-gcc))
 
-;(load "jz/cedet-1.0pre7/common/cedet.el")
+;(global-srecode-minor-mode 1)            ; Enable template insertion menu
 
 ;(load "jz/cedet-1.0pre7/contrib/semantic-ectag-scala.el")
 
@@ -88,8 +87,7 @@
 ;; TABS
 ;(define-key global-map [(alt j)] 'tabbar-backward)
 ;(define-key global-map [(alt k)] 'tabbar-forward)
-;(require 'tabkey2)
-
+(require 'tabkey2)
 
 ;;;;;;;;;;;;;;;; CEDET END ;;;;;;;;;;;;;;;;;;
 
@@ -101,7 +99,7 @@
 (require 'undo-tree)
 (global-undo-tree-mode t)
 
-;;;;;;;;;;;;;;;; VIM END ;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;; VIM STA ;;;;;;;;;;;;;;;;;;
 
 (require 'vimpulse)
 (vimpulse-map ";" 'viper-ex)
@@ -179,6 +177,9 @@
 (add-hook 'scala-mode-hook 'hs-minor-mode)
 (add-hook 'scala-mode-hook 'camelCase-mode)
 (add-hook 'scala-mode-hook 'autopair-mode)
+(require 'highlight-fixmes-mode)
+(add-hook 'scala-mode-hook 'highlight-fixmes-mode)
+
 (require 'ensime)
 (require 'yasnippet)
 (yas/initialize)
@@ -262,7 +263,7 @@
 
 (autoload 'idomenu "idomenu" nil t)
 
-(setq recentf-max-saved-items 100)
+(setq recentf-max-saved-items 200)
 
 ; nicer naming of buffers with identical names
 (require 'uniquify)
@@ -333,6 +334,7 @@
 
 ;; show column #
 (column-number-mode t)
+(line-number-mode nil)
 
 ;; surround        
 (require 'vimpulse-surround)
@@ -376,6 +378,10 @@
 
 ;; TODO make this scala only
 (define-key (current-global-map) [remap vimpulse-jump-to-tag-at-point] 'ensime-edit-definition)
+(define-key (current-global-map) [remap viper-forward-word] 'forward-word)
+(define-key (current-global-map) [remap vimpulse-operator-forward-word] 'forward-word)
+(define-key (current-global-map) [remap viper-backward-word] 'backward-word)
+(define-key (current-global-map) [remap vimpulse-operator-backward-word] 'backward-word)
 
 (setq campfire-room-name "API")
 (setq campfire-room-id "188551")
@@ -389,9 +395,7 @@
 
 (setq ispell-program-name "aspell")
 (setq ispell-list-command "list")
-;(setq ispell-process-directory (expand-file-name "~/"))
-;
-
+(setq ispell-process-directory (expand-file-name "~/"))
 
 ;;;;;;;;;;;;;;;;;; ERC ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (require 'erc)
@@ -419,13 +423,12 @@
 ;;;;;;;;;;;;;;;;;; ERC END ;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ; highlighting for TODO 
-(require 'fic-mode)
 (defun add-something-to-mode-hooks (mode-list something)
   "helper function to add a callback to multiple hooks"
   (dolist (mode mode-list)
     (add-hook (intern (concat (symbol-name mode) "-mode-hook")) something)))
 
-(add-something-to-mode-hooks '(c++ scala emacs-lisp) 'turn-on-fic-mode)
+;(add-something-to-mode-hooks '(c++ scala emacs-lisp) 'turn-on-fic-ext-mode)
 
 ; TODO img for campfire
 
