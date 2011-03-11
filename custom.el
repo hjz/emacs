@@ -4,8 +4,8 @@
   ;; Your init file should contain only one such instance.
   ;; If there is more than one, they won't work right.
  '(column-number-mode t)
- '(comment-auto-fill-only-comments nil)
- '(comment-multi-line nil)
+ '(comment-auto-fill-only-comments t)
+ '(comment-multi-line t)
  '(ecb-analyse-face (quote font-lock-warning-face))
  '(ecb-analyse-general-face (quote ecb-analyse-general-face))
  '(ecb-auto-activate t)
@@ -63,6 +63,8 @@
  '(viper-shift-width 2)
  '(viper-syntax-preference (quote extended))
  '(viper-want-ctl-h-help t)
+ '(yas/also-auto-indent-first-line t)
+ '(yas/indent-line (quote fixed))
  '(yas/next-field-key (quote ("SPC" "<tab>")))
  '(yas/prev-field-key (quote ("<backtab>" "<S-tab>")))
  '(yas/prompt-functions (quote (yas/dropdown-prompt)))
@@ -76,6 +78,7 @@
  '(campfire-my-message-face ((t (:background "#2b2b2b" :foreground "white"))))
  '(campfire-my-user-face ((t (:foreground "white" :box (:line-width 2 :color "blue" :style released-button)))))
  '(campfire-other-user-face ((t (:background "#2f2f2f" :foreground "#9fc59f"))))
+ '(cursor ((t (:weight bold))))
  '(ecb-default-general-face ((((class color) (background dark)) nil)))
  '(elscreen-tab-background-face ((((class color)) (:background "#282828"))))
  '(elscreen-tab-control-face ((((class color)) (:background "#1f1f1f" :foreground "white"))))

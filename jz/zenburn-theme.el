@@ -196,8 +196,8 @@
  '(trailing-whitespace ((t (:inherit font-lock-warning-face))))
  '(highlight ((t (:inherit font-lock-warning-face))))
  '(paren ((t (:inherit zenburn-lowlight-1))))
- '(show-paren-mismatch ((t (:inherit font-lock-warning-face))))
- '(show-paren-match ((t (:inherit font-lock-keyword-face))))
+ '(show-paren-mismatch ((t (:background "red" :foreground "white"))))
+ '(show-paren-match ((t (:background "#0059b3" :foreground "#dcdccc" :weight bold))))
  '(match ((t (:weight bold))))
 
  `(cursor ((t (:background ,zenburn-fg :foreground ,zenburn-bg))))
