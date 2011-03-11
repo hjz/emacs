@@ -481,3 +481,16 @@
       (+ 1 (current-column)))))
 (global-set-key [f2] 'jao-toggle-selective-display)
 
+
+(setq woman-use-own-frame nil)     ; don't create new frame for manpages
+(setq woman-use-topic-at-point t)  ; don't prompt upon K key (manpage display)
+
+;; MAPPINGS
+(defvar my-keys-minor-mode-map (make-keymap) "my-keys-minor-mode keymap.")
+(define-key my-keys-minor-mode-map (kbd "M-;") 'repeat-complex-command)
+
+(define-minor-mode my-keys-minor-mode
+  "A minor mode so that my key settings override annoying major modes."
+  t " my-keys" 'my-keys-minor-mode-map)
+
+(my-keys-minor-mode 1)
