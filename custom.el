@@ -63,7 +63,7 @@
  '(viper-shift-width 2)
  '(viper-syntax-preference (quote extended))
  '(viper-want-ctl-h-help t)
- '(yas/also-auto-indent-first-line t)
+ '(yas/also-auto-indent-first-line nil)
  '(yas/indent-line (quote fixed))
  '(yas/next-field-key (quote ("SPC" "<tab>")))
  '(yas/prev-field-key (quote ("<backtab>" "<S-tab>")))

@@ -11,7 +11,7 @@
 (add-to-list 'load-path (concat user-dir "/vimpulse-surround.el"))
 (add-to-list 'load-path (concat user-dir "/vimpulse-plugins"))
 (add-to-list 'load-path (concat user-dir "/scamacs/ecb"))
-(add-to-list 'load-path (concat user-dir "/scamacs/scala"))
+(add-to-list 'load-path (concat user-dir "/scala"))
 (add-to-list 'load-path (concat user-dir "/scamacs/scamacs"))
 (add-to-list 'load-path (concat user-dir "/anything-config"))
 ;(add-to-list 'load-path (concat user-dir "/tabbar"))
@@ -103,8 +103,20 @@
 
 (require 'vimpulse)
 (vimpulse-map ";" 'viper-ex)
-;(vimpulse-map "SPC" 'hs-toggle-hiding)
 (vimpulse-vmap ";" 'vimpulse-visual-ex)
+(vimpulse-map (kbd "SPC") 'hs-toggle-hiding)
+(vimpulse-map "?" 'describe-bindings)
+(vimpulse-map (kbd "ESC") 'keyboard-quit)
+(define-key viper-minibuffer-map (kbd "ESC") 'keyboard-quit)
+
+(vimpulse-define-text-object vimpulse-sexp (arg)
+  "Select a S-expression."
+  :keys '("ae" "ie")
+  (vimpulse-inner-object-range
+   arg
+   'backward-sexp
+   'forward-sexp))
+
 
 ; turns it off in unwanted places
 (require 'linum-off)
@@ -166,9 +178,10 @@
 
 ;;;;;;;;;;;;;;; Scala ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (require 'scala-mode-auto)
+
 (add-hook 'scala-mode-hook
   (lambda ()
-    (local-set-key [return] 'reindent-then-newline-and-indent)))
+    (local-set-key [return] 'comment-indent-new-line)))
 (add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
 (add-hook 'scala-mode-hook 'highlight-80+-mode)
 (defun me-turn-off-indent-tabs-mode ()
@@ -177,6 +190,8 @@
 (add-hook 'scala-mode-hook 'hs-minor-mode)
 (add-hook 'scala-mode-hook 'camelCase-mode)
 (add-hook 'scala-mode-hook 'autopair-mode)
+
+; highlighting for TODO 
 (require 'highlight-fixmes-mode)
 (add-hook 'scala-mode-hook 'highlight-fixmes-mode)
 
@@ -317,9 +332,8 @@
                    (lambda (screen)
                      (format "%d%s %s"
                              screen (elscreen-status-label screen)
-                             (replace-regexp-in-string ":" "" 
                                (replace-regexp-in-string "\*.*\*" "" 
-                                (get-alist screen screen-to-name-alist)))))
+                                (get-alist screen screen-to-name-alist))))
                    screen-list " ")))
        
        (if (fboundp 'set-frame-name)
@@ -422,7 +436,6 @@
 
 ;;;;;;;;;;;;;;;;;; ERC END ;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-; highlighting for TODO 
 (defun add-something-to-mode-hooks (mode-list something)
   "helper function to add a callback to multiple hooks"
   (dolist (mode mode-list)
@@ -449,3 +462,22 @@
     
 ;; For teh tunez
 (autoload 'pianobar "pianobar" nil t)
+(require 'switchy)
+
+;; Viper is overreaching by caring whether a visited file is under version
+;; ;; control -- disable this check.
+(defadvice viper-maybe-checkout (around viper-vcs-check-is-retarded activate)
+   nil)
+
+(setq viper-custom-file-name
+       (convert-standard-filename "~/.emacs.d/jz/dot-viper.el"))
+
+(defun jao-toggle-selective-display ()
+  "Activate selective display based on the column at point"
+  (interactive)
+  (set-selective-display
+    (if selective-display
+      nil
+      (+ 1 (current-column)))))
+(global-set-key [f2] 'jao-toggle-selective-display)
+

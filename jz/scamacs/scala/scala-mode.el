@@ -170,7 +170,7 @@ When started, run `scala-mode-hook'.
   (make-local-variable 'comment-start-skip)
   (make-local-variable 'comment-end-skip)
   (make-local-variable 'comment-column)
-  ;(make-local-variable 'comment-indent-function)
+  (make-local-variable 'comment-indent-function)
   (make-local-variable 'indent-line-function)
   ;;
   (set-syntax-table scala-mode-syntax-table)

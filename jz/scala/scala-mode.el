@@ -165,6 +165,7 @@ When started, run `scala-mode-hook'.
   (make-local-variable 'paragraph-ignore-fill-prefix)
   (make-local-variable 'require-final-newline)
   (make-local-variable 'comment-start)
+  (make-local-variable 'comment-continue)
   (make-local-variable 'comment-end)
   (make-local-variable 'comment-start-skip)
   (make-local-variable 'comment-end-skip)
@@ -189,6 +190,7 @@ When started, run `scala-mode-hook'.
 	require-final-newline         t
 	comment-start                 "// "
 	comment-end                   ""
+	comment-continue              "// "
 	comment-start-skip            "/\\*+ *\\|//+ *"
 	comment-end-skip              " *\\*+/\\| *"
 	comment-column                40
