@@ -10,6 +10,7 @@
 (add-to-list 'load-path (concat user-dir "/vimpulse"))
 (add-to-list 'load-path (concat user-dir "/vimpulse-surround.el"))
 (add-to-list 'load-path (concat user-dir "/vimpulse-plugins"))
+(add-to-list 'load-path (concat user-dir "/viper-in-more-modes"))
 (add-to-list 'load-path (concat user-dir "/scamacs/ecb"))
 (add-to-list 'load-path (concat user-dir "/scala"))
 (add-to-list 'load-path (concat user-dir "/scamacs/scamacs"))
@@ -17,10 +18,50 @@
 ;(add-to-list 'load-path (concat user-dir "/tabbar"))
 (add-to-list 'load-path (concat user-dir "/elscreen-1.4.6"))
 (add-to-list 'load-path (concat user-dir "/yaml-mode"))
+(add-to-list 'load-path (concat user-dir "/moccur"))
 
 (setq exec-path (append exec-path '("/Users/jz/bin/")))
 (setq exec-path (append exec-path '("/opt/local/bin/")))
 
+;; save a list of open files in ~/.emacs.desktop
+;; save the desktop file automatically if it already exists
+(setq desktop-save 'if-exists)
+(desktop-save-mode 1)
+
+;; save a bunch of variables to the desktop file
+;; for lists specify the len of the maximal saved data also
+(setq desktop-globals-to-save
+      (append '((extended-command-history . 30)
+                (file-name-history        . 100)
+                (grep-history             . 30)
+                (compile-history          . 30)
+                (minibuffer-history       . 50)
+                (query-replace-history    . 60)
+                (read-expression-history  . 60)
+                (regexp-history           . 60)
+                (regexp-search-ring       . 20)
+                (search-ring              . 20)
+                (shell-command-history    . 50)
+                tags-file-name
+                register-alist)))
+
+;; auto save desktop on emacs idle
+(add-hook 'auto-save-hook (lambda () (desktop-save-in-desktop-dir)))
+
+(setq desktop-buffers-not-to-save
+      (concat "\\("
+              "^nn\\.a[0-9]+\\|\\.log\\|(ftp)\\|^tags\\|^TAGS"
+              "\\|\\.emacs.*\\|\\.diary\\|\\.newsrc-dribble\\|\\.bbdb"
+              "\\)$"))
+(add-to-list 'desktop-modes-not-to-save 'dired-mode)
+(add-to-list 'desktop-modes-not-to-save 'Info-mode)
+(add-to-list 'desktop-modes-not-to-save 'info-lookup-mode)
+(add-to-list 'desktop-modes-not-to-save 'fundamental-mode)
+
+(add-hook 'dired-load-hook
+          (function (lambda () (load "dired-x"))))
+
+;; colorise css hex values
 (autoload 'css-color-mode "mon-css-color" "" t)
 (add-hook 'css-mode-hook  'css-color-turn-on-in-buffer)
 
@@ -102,12 +143,14 @@
 ;;;;;;;;;;;;;;;; VIM STA ;;;;;;;;;;;;;;;;;;
 
 (require 'vimpulse)
+(require 'viper-in-more-modes)
+
 (vimpulse-map ";" 'viper-ex)
 (vimpulse-vmap ";" 'vimpulse-visual-ex)
 (vimpulse-map (kbd "SPC") 'hs-toggle-hiding)
 (vimpulse-map "?" 'describe-bindings)
-(vimpulse-map (kbd "ESC") 'keyboard-quit)
-(define-key viper-minibuffer-map (kbd "ESC") 'keyboard-quit)
+(define-key vimpulse-visual-basic-map "v" 'end-of-line)
+(define-key vimpulse-visual-basic-map ";" 'comment-dwim)
 
 (vimpulse-define-text-object vimpulse-sexp (arg)
   "Select a S-expression."
@@ -116,7 +159,6 @@
    arg
    'backward-sexp
    'forward-sexp))
-
 
 ; turns it off in unwanted places
 (require 'linum-off)
@@ -216,8 +258,8 @@
 (menu-bar-mode 1)
 
 ;; Session
-(require 'session)
-(add-hook 'after-init-hook 'session-initialize)
+;(require 'session)
+;(add-hook 'after-init-hook 'session-initialize)
 
 ;;;;;;;;;;;;;;;;;;; KEY BINDINGS ;;;;;;;;;;;;;;;;;;;;;;
 
@@ -278,7 +320,9 @@
 
 (autoload 'idomenu "idomenu" nil t)
 
-(setq recentf-max-saved-items 200)
+(setq recentf-max-saved-items 500)
+(setq recentf-max-menu-items 60)
+(global-set-key [(meta f12)] 'recentf-open-files)
 
 ; nicer naming of buffers with identical names
 (require 'uniquify)
@@ -469,8 +513,8 @@
 (defadvice viper-maybe-checkout (around viper-vcs-check-is-retarded activate)
    nil)
 
-(setq viper-custom-file-name
-       (convert-standard-filename "~/.emacs.d/jz/dot-viper.el"))
+;(setq viper-custom-file-name
+;       (convert-standard-filename "~/.emacs.d/jz/dot-viper.el"))
 
 (defun jao-toggle-selective-display ()
   "Activate selective display based on the column at point"
@@ -485,6 +529,15 @@
 (setq woman-use-own-frame nil)     ; don't create new frame for manpages
 (setq woman-use-topic-at-point t)  ; don't prompt upon K key (manpage display)
 
+;; multi buffer occur
+
+(require 'color-moccur)
+(require 'moccur-edit)
+(defadvice moccur-edit-change-file
+  (after save-after-moccur-edit-buffer activate)
+  (save-buffer))
+
+        ; TODO set fav list, etc
 ;; MAPPINGS
 (defvar my-keys-minor-mode-map (make-keymap) "my-keys-minor-mode keymap.")
 (define-key my-keys-minor-mode-map (kbd "M-;") 'repeat-complex-command)
@@ -494,3 +547,5 @@
   t " my-keys" 'my-keys-minor-mode-map)
 
 (my-keys-minor-mode 1)
+
+
