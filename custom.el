@@ -30,6 +30,7 @@
  '(ecb-windows-width 0.17)
  '(elscreen-display-tab nil)
  '(elscreen-tab-display-control nil)
+ '(ensime-auto-connect (quote never))
  '(ensime-graphical-tooltips t)
  '(ensime-tooltip-type-hints t)
  '(fringe-mode (quote (0 . 0)) nil (fringe))

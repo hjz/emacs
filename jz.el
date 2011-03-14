@@ -197,9 +197,8 @@
 
   ido-ignore-buffers ;; ignore these guys
   '("\\` " "^\*Mess" "^\*Back" ".*Completion" "^\*Ido" "^\*trace"
-
-     "^\*compilation" "^\*GTAGS" "^session\.*" "^\*")
-  ido-work-directory-list '("~/" "~/Desktop" "~/Documents" "~src")
+     "^\*compilation" "^\*GTAGS" "^session\.*" "^\*ECB\.*" "^\*")
+  ido-work-directory-list '("~/ps/")
   ido-case-fold  t                 ; be case-insensitive
 
   ido-enable-last-directory-history t ; remember last used dirs
@@ -216,7 +215,11 @@
  (setq confirm-nonexistent-file-or-buffer nil)
 
 ;; cycle through buffers with Ctrl-Tab (like Firefox)
-(global-set-key (kbd "<C-tab>") 'bury-buffer)
+;(global-set-key (kbd "<C-tab>") 'bury-buffer)
+
+(global-set-key (kbd "C-c k") 'ecb-toggle-ecb-windows)
+(global-set-key (kbd "C-c l") 'ensime) ;; replace lambda
+(global-set-key (kbd "C-c ;") 'ensime-ecb)
 
 ;;;;;;;;;;;;;;; Scala ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (require 'scala-mode-auto)
@@ -541,6 +544,15 @@
 ;; MAPPINGS
 (defvar my-keys-minor-mode-map (make-keymap) "my-keys-minor-mode keymap.")
 (define-key my-keys-minor-mode-map (kbd "M-;") 'repeat-complex-command)
+(define-key my-keys-minor-mode-map (kbd "C-w h") 'windmove-left)          
+(define-key my-keys-minor-mode-map (kbd "C-w l") 'windmove-right)
+(define-key my-keys-minor-mode-map (kbd "C-w k") 'windmove-up)            
+(define-key my-keys-minor-mode-map (kbd "C-w j") 'windmove-down)
+(define-key my-keys-minor-mode-map (kbd "C-w C-h") 'windmove-left)          
+(define-key my-keys-minor-mode-map (kbd "C-w C-l") 'windmove-right)
+(define-key my-keys-minor-mode-map (kbd "C-w C-k") 'windmove-up)            
+(define-key my-keys-minor-mode-map (kbd "C-w C-j") 'windmove-down)
+
 
 (define-minor-mode my-keys-minor-mode
   "A minor mode so that my key settings override annoying major modes."
