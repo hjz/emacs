@@ -72,10 +72,17 @@
 (defvar zenburn-magenta "#7f3194")
 (defvar zenburn-magenta-1 "#a4a4d0")
 
+;(eval-after-load 'term
+;  '(setq ansi-term-color-vector
+;     (vector 'unspecified zenburn-bg
+;       zenburn-red zenburn-green
+;       zenburn-yellow zenburn-blue+1
+;       zenburn-magenta zenburn-cyan)))
+
 ;; Faces for inheriting
-(defface zenburn-primary-1 `((t :foreground ,zenburn-yellow :weight bold))
+(defface zenburn-primary-1 `((t :foreground "#9f9f9f"))
   "Zenburn primary face 1")
-(defface zenburn-primary-2 `((t :foreground ,zenburn-orange :weight bold))
+(defface zenburn-primary-2 `((t :foreground ,zenburn-red+1 :weight bold))
   "Zenburn primary face 2")
 (defface zenburn-primary-3 `((t :foreground "#dfdfbf" :weight bold))
   "Zenburn primary face 3")
@@ -207,15 +214,15 @@
  `(scroll-bar ((t (:background ,zenburn-bg+2))))
  `(tool-bar ((t (:background ,zenburn-bg+2))))
 
- '(ido-first-match ((t (:inherit zenburn-primary-1))))
+ `(ido-first-match ((t (:foreground ,zenburn-blue))))
  '(ido-only-match ((t (:inherit zenburn-primary-2))))
- `(ido-subdir ((t (:foreground ,zenburn-yellow))))
+ `(ido-subdir ((t (:foreground ,zenburn-green))))
 
  `(isearch ((t (:foreground "#f8f893" :background "#385f38"))))
  `(isearch-lazy-highlight
    ((t (:foreground ,zenburn-fg :background "#3a6c09" :weight normal))))
 
- '(comint-highlight-input ((t (:inherit zenburn-primary-1))))
+ `(comint-highlight-input ((t (:foreground "#b6b6b6"))))
  '(comint-highlight-prompt ((t (:inherit zenburn-primary-2))))
 
  '(compilation-info ((t (:inherit zenburn-primary-1))))

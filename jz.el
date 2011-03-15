@@ -150,7 +150,7 @@
 (vimpulse-map (kbd "SPC") 'hs-toggle-hiding)
 (vimpulse-map "?" 'describe-bindings)
 (define-key vimpulse-visual-basic-map "v" 'end-of-line)
-(define-key vimpulse-visual-basic-map ";" 'comment-dwim)
+(define-key vimpulse-visual-basic-map "q" 'comment-dwim)
 
 (vimpulse-define-text-object vimpulse-sexp (arg)
   "Select a S-expression."
@@ -197,7 +197,7 @@
 
   ido-ignore-buffers ;; ignore these guys
   '("\\` " "^\*Mess" "^\*Back" ".*Completion" "^\*Ido" "^\*trace"
-     "^\*compilation" "^\*GTAGS" "^session\.*" "^\*ECB\.*" "^\*")
+     "^\*compilation" "^\*GTAGS" "^session\.*" "^\*ECB*" "^\*")
   ido-work-directory-list '("~/ps/")
   ido-case-fold  t                 ; be case-insensitive
 
@@ -274,6 +274,13 @@
 ; Window Movement
 (winner-mode 1)
 (windmove-default-keybindings 'meta)
+
+(defun halve-other-window-height ()
+  "Expand current window to use half of the other window's lines."
+  (interactive)
+  (enlarge-window (/ (window-height (next-window)) 2)))
+
+(global-set-key (kbd "C-c v") 'halve-other-window-height)
 
 ; Window Spliting
 (global-set-key (kbd "M-6") 'delete-other-windows) ; was digit-argument
@@ -439,10 +446,11 @@
 
 ;; TODO make this scala only
 (define-key (current-global-map) [remap vimpulse-jump-to-tag-at-point] 'ensime-edit-definition)
-(define-key (current-global-map) [remap viper-forward-word] 'forward-word)
-(define-key (current-global-map) [remap vimpulse-operator-forward-word] 'forward-word)
-(define-key (current-global-map) [remap viper-backward-word] 'backward-word)
-(define-key (current-global-map) [remap vimpulse-operator-backward-word] 'backward-word)
+
+;(define-key (current-global-map) [remap viper-forward-word] 'forward-word)
+;(define-key (current-global-map) [remap vimpulse-operator-forward-word] 'forward-word)
+;(define-key (current-global-map) [remap viper-backward-word] 'backward-word)
+;(define-key (current-global-map) [remap vimpulse-operator-backward-word] 'backward-word)
 
 (setq campfire-room-name "API")
 (setq campfire-room-id "188551")
@@ -492,10 +500,10 @@
 
 ; TODO img for campfire
 
-;; Redefine the 8 primary terminal colors to look good against black
-(setq ansi-term-color-vector
-[unspecified "#000000" "#963F3C" "#5FFB65" "#FFFD65"
-"#0082FF" "#FF2180" "#57DCDB" "#FFFFFF"])
+;; Redefine the 8 primary terminal colors to look good against black ;; set in zenburn
+;(setq ansi-term-color-vector
+;[unspecified "#000000" "#963F3C" "#5FFB65" "#FFFD65"
+;"#0082FF" "#FF2180" "#57DCDB" "#FFFFFF"])
 
 (require 'yaml-mode)
 (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
@@ -532,6 +540,7 @@
 (setq woman-use-own-frame nil)     ; don't create new frame for manpages
 (setq woman-use-topic-at-point t)  ; don't prompt upon K key (manpage display)
 
+
 ;; multi buffer occur
 
 (require 'color-moccur)
@@ -560,4 +569,4 @@
 
 (my-keys-minor-mode 1)
 
-
+;; colorize ansi

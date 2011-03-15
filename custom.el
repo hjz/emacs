@@ -3,6 +3,7 @@
   ;; If you edit it by hand, you could mess it up, so be careful.
   ;; Your init file should contain only one such instance.
   ;; If there is more than one, they won't work right.
+ '(ansi-color-names-vector ["#1f1f1f" "#dca3a3" "#7f9f7f" "#f0dfaf" "#7cb8bb" "#7f3194" "#93e0e3" "#dcdccc"])
  '(column-number-mode t)
  '(comment-auto-fill-only-comments t)
  '(comment-multi-line t)

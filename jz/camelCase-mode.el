@@ -132,7 +132,7 @@ camelCase-mode prefix ARG:  0 turns off, 1 turns on, nil toggles mode."
 
 ;;; COMMANDS:
 
-(defconst camelCase-regexp "\\([A-Z]?[a-z]+\\|[A-Z]+\\|[0-9]+\\)"
+(defconst camelCase-regexp "\\([A-Z]?[a-z]+\\|[A-Z]+\\|[0-9]+\\|[{(\\[`'\"\\])}]+\\)"
   ;; capital must be before uppercase
   "regular expression that matches a camelCase word, defined as
 Capitalized, lowercase, or UPPERCASE sequence of letters,
@@ -167,6 +167,14 @@ or sequence of digits.")
               (point))
           (setq case-fold-search old-case-fold-search)))))
   (setq zmacs-region-stays t))
+
+;(defun camelCase-forward-word (&optional count buffer)
+;  "move point foward COUNT camelCase words"
+;  (interactive "p")
+;  (camelCase-forward-word-help count)
+;  (camelCase-forward-word-help count)
+;  (camelCase-backward-word count)
+;)
 
 (defun camelCase-backward-word (&optional count buffer)
   "move point backward COUNT camelCase words"
