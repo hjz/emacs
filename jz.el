@@ -8,7 +8,7 @@
 (add-to-list 'load-path (concat user-dir "/yasnippet"))
 (add-to-list 'load-path (concat user-dir "/ensime/elisp"))
 (add-to-list 'load-path (concat user-dir "/vimpulse"))
-(add-to-list 'load-path (concat user-dir "/vimpulse-surround.el"))
+(add-to-list 'load-path (concat user-dir "/vimpulse-surround"))
 (add-to-list 'load-path (concat user-dir "/vimpulse-plugins"))
 (add-to-list 'load-path (concat user-dir "/viper-in-more-modes"))
 (add-to-list 'load-path (concat user-dir "/ecb"))
@@ -19,7 +19,7 @@
 (add-to-list 'load-path (concat user-dir "/elscreen-1.4.6"))
 (add-to-list 'load-path (concat user-dir "/yaml-mode"))
 (add-to-list 'load-path (concat user-dir "/moccur"))
-(add-to-list 'load-path (concat user-dir "/popwin-el"))
+(add-to-list 'load-path (concat user-dir "/popwin"))
 
 (setq exec-path (append exec-path '("/Users/jz/bin/")))
 (setq exec-path (append exec-path '("/opt/local/bin/")))
@@ -43,7 +43,7 @@
 (push '("svnlog.txt") popwin:special-display-config)
 (push '("journal.txt" :regexp t) popwin:special-display-config)
 (push '("*grep*" :height 50) popwin:special-display-config)
-(push '("*Moccur" :height 50) popwin:special-display-config)
+(push '("*Moccur*" :height 50) popwin:special-display-config)
 (push '(dired-mode :position top) popwin:special-display-config) ; dired-jump-other-window (C-x 4 C-j)
 (push '("*Warnings*") popwin:special-display-config)
 
@@ -580,6 +580,8 @@
 (define-key my-keys-minor-mode-map (kbd "C-l") 'dired-jump-other-window)
 (define-key my-keys-minor-mode-map (kbd "C-b") 'ido-switch-buffer)
 (define-key my-keys-minor-mode-map (kbd "C-x b") 'display-buffer)
+(define-key my-keys-minor-mode-map (kbd "C-f f") 'moccur-grep-find)
+(define-key my-keys-minor-mode-map (kbd "C-f d") 'dmoccur)
 (vimpulse-map (kbd "C-b") 'ido-switch-buffer)
 ;; TODO unbind C-y, C-e
 
