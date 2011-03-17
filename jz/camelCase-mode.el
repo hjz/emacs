@@ -79,7 +79,7 @@
 
 ;;; MODE:
 
-(defvar camelCase-modeline-indicator " camelCase"
+(defvar camelCase-modeline-indicator " cC"
   "call (camelCase-install-mode) again if this is changed")
 (defvar camelCase-mode nil) 
 (make-variable-buffer-local 'camelCase-mode)

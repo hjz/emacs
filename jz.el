@@ -11,17 +11,41 @@
 (add-to-list 'load-path (concat user-dir "/vimpulse-surround.el"))
 (add-to-list 'load-path (concat user-dir "/vimpulse-plugins"))
 (add-to-list 'load-path (concat user-dir "/viper-in-more-modes"))
-(add-to-list 'load-path (concat user-dir "/scamacs/ecb"))
+(add-to-list 'load-path (concat user-dir "/ecb"))
 (add-to-list 'load-path (concat user-dir "/scala"))
-(add-to-list 'load-path (concat user-dir "/scamacs/scamacs"))
+;(add-to-list 'load-path (concat user-dir "/scamacs/scamacs"))
 (add-to-list 'load-path (concat user-dir "/anything-config"))
 ;(add-to-list 'load-path (concat user-dir "/tabbar"))
 (add-to-list 'load-path (concat user-dir "/elscreen-1.4.6"))
 (add-to-list 'load-path (concat user-dir "/yaml-mode"))
 (add-to-list 'load-path (concat user-dir "/moccur"))
+(add-to-list 'load-path (concat user-dir "/popwin-el"))
 
 (setq exec-path (append exec-path '("/Users/jz/bin/")))
 (setq exec-path (append exec-path '("/opt/local/bin/")))
+
+;--------------------------------------------------------------------------
+;; popwin.el
+;;--------------------------------------------------------------------------
+(require 'popwin)
+(setq display-buffer-function 'popwin:display-buffer)
+(setq special-display-function 'popwin:special-display-popup-window)
+
+(push '("*Shell Command Output*" :height 20) popwin:special-display-config)
+;(push '("*Shell Command Output*" :height 20 :position top) popwin:special-display-config)
+
+(setq anything-samewindow nil)
+(push '("*anything*" :height 20) popwin:special-display-config)
+(push '("*anything for files*" :height 20) popwin:special-display-config)
+
+(push '("*scratch*") popwin:special-display-config)
+(push '("*Messages*") popwin:special-display-config)
+(push '("svnlog.txt") popwin:special-display-config)
+(push '("journal.txt" :regexp t) popwin:special-display-config)
+(push '("*grep*" :height 50) popwin:special-display-config)
+(push '("*Moccur" :height 50) popwin:special-display-config)
+(push '(dired-mode :position top) popwin:special-display-config) ; dired-jump-other-window (C-x 4 C-j)
+(push '("*Warnings*") popwin:special-display-config)
 
 ;; save a list of open files in ~/.emacs.desktop
 ;; save the desktop file automatically if it already exists
@@ -219,7 +243,7 @@
 
 (global-set-key (kbd "C-c k") 'ecb-toggle-ecb-windows)
 (global-set-key (kbd "C-c l") 'ensime) ;; replace lambda
-(global-set-key (kbd "C-c ;") 'ensime-ecb)
+;(global-set-key (kbd "C-c ;") 'ensime-ecb)
 
 ;;;;;;;;;;;;;;; Scala ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (require 'scala-mode-auto)
@@ -251,7 +275,7 @@
 (add-hook 'scala-mode-hook 'hl-line-mode)
 
 ;; ECB support
-(require 'ensime-ecb)
+;(require 'ensime-ecb)
 ;;;;;;;;;;;;;;; END Scala ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;
@@ -301,9 +325,6 @@
 ; buffer switching
 (global-set-key [(super k)] 'previous-buffer)
 (global-set-key [(super j)] 'next-buffer)
-
-; window switching
-(global-set-key (kbd "s-`") 'other-window)
 
 ; close window
 (global-set-key [(super w)]
@@ -394,11 +415,11 @@
           (set-frame-name title)
         (setq frame-title-format title)))))
  
- (eval-after-load "elscreen"
-   '(add-hook 'elscreen-screen-update-hook 'elscreen-frame-title-update))
+; (eval-after-load "elscreen"
+;   '(add-hook 'elscreen-screen-update-hook 'elscreen-frame-title-update))
 
 (load "elscreen" "ElScreen" t)
-(require 'elscreen-buffer-list)
+;(require 'elscreen-buffer-list)
 
 ;; show column #
 (column-number-mode t)
@@ -419,17 +440,6 @@
 (global-set-key (kbd "C-c t") 'multi-term-next)
 (global-set-key (kbd "C-c T") 'multi-term) ;; create a new one
 
-; Cleanup mode line
-;; Minor modes
-(when (require 'diminish nil 'noerror)
-  (eval-after-load "Undo-Tree"
-      '(diminish 'undo-tree-mode "U"))
-  (eval-after-load "pair"
-    '(diminish 'autopair-mode "P"))
-  (eval-after-load "camelCase"
-    '(diminish 'camelCase-mode "cC"))
-  (eval-after-load "yasnippet"
-    '(diminish 'yas/minor-mode "Y")))
 (add-hook 'emacs-lisp-mode-hook 
   (lambda()
     (setq mode-name "el"))) 
@@ -526,14 +536,12 @@
 
 ;(setq viper-custom-file-name
 ;       (convert-standard-filename "~/.emacs.d/jz/dot-viper.el"))
-
-(defun jao-toggle-selective-display ()
+(defun jao-toggle-selective-display (column)
   "Activate selective display based on the column at point"
-  (interactive)
-  (set-selective-display
-    (if selective-display
-      nil
-      (+ 1 (current-column)))))
+   (interactive "P")
+     (set-selective-display
+         (if selective-display nil (or column 4))))
+
 (global-set-key [f2] 'jao-toggle-selective-display)
 
 
@@ -549,10 +557,14 @@
   (after save-after-moccur-edit-buffer activate)
   (save-buffer))
 
-        ; TODO set fav list, etc
+; TODO set fav list, etc for moccur
+
 ;; MAPPINGS
 (defvar my-keys-minor-mode-map (make-keymap) "my-keys-minor-mode keymap.")
 (define-key my-keys-minor-mode-map (kbd "M-;") 'repeat-complex-command)
+
+;; Movement
+(define-key my-keys-minor-mode-map (kbd "C-w =") 'balance-windows)          
 (define-key my-keys-minor-mode-map (kbd "C-w h") 'windmove-left)          
 (define-key my-keys-minor-mode-map (kbd "C-w l") 'windmove-right)
 (define-key my-keys-minor-mode-map (kbd "C-w k") 'windmove-up)            
@@ -561,12 +573,35 @@
 (define-key my-keys-minor-mode-map (kbd "C-w C-l") 'windmove-right)
 (define-key my-keys-minor-mode-map (kbd "C-w C-k") 'windmove-up)            
 (define-key my-keys-minor-mode-map (kbd "C-w C-j") 'windmove-down)
+(define-key my-keys-minor-mode-map (kbd "<C-tab>") 'other-frame)
+
+(define-key my-keys-minor-mode-map (kbd "C-c o") 'rename-file-and-buffer)
+(define-key my-keys-minor-mode-map (kbd "C-c g") 'customize-group)
+(define-key my-keys-minor-mode-map (kbd "C-l") 'dired-jump-other-window)
+(define-key my-keys-minor-mode-map (kbd "C-b") 'ido-switch-buffer)
+(define-key my-keys-minor-mode-map (kbd "C-x b") 'display-buffer)
+(vimpulse-map (kbd "C-b") 'ido-switch-buffer)
+;; TODO unbind C-y, C-e
 
 
 (define-minor-mode my-keys-minor-mode
   "A minor mode so that my key settings override annoying major modes."
-  t " my-keys" 'my-keys-minor-mode-map)
+  t " M " 'my-keys-minor-mode-map)
 
 (my-keys-minor-mode 1)
+
+; Cleanup mode line
+;; Minor modes
+(when (require 'diminish nil 'noerror)
+  (eval-after-load "Undo-Tree"
+      '(diminish 'undo-tree-mode "U"))
+  (eval-after-load "pair"
+    '(diminish 'autopair-mode "P"))
+  (eval-after-load "camelCase"
+    '(diminish 'camelCase-mode "C"))
+  (eval-after-load "fixme"
+    '(diminish 'highlight-fixmes-mode "F"))
+  (eval-after-load "yasnippet"
+    '(diminish 'yas/minor-mode "Y")))
 
 ;; colorize ansi
