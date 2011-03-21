@@ -69,7 +69,7 @@
 
 (require 'comint)
 
-(defvar pianobar-key [f7]
+(defvar pianobar-key (kbd "§")
   "The prefix key for pianobar access.
 Call `pianobar-key-setup' when changed to have a correct keymap.")
 
@@ -177,7 +177,7 @@ currently in pianobar"
 (defun pianobar-love-current-song ()
   "Tells pandora that you like this song"
   (interactive)
-  (pianobar-send-string "+"))
+  (pianobar-send-string "="))
 
 ;; -    ban current song
 (defun pianobar-ban-current-song ()
@@ -235,7 +235,7 @@ currently in pianobar"
 ;; n    next song
 (defun pianobar-next-song ()
   (interactive)
-  (pianobar-send-string "n"))
+  (pianobar-send-string "k"))
 
 ;; q    quit
 (defun pianobar-quit ()
@@ -317,12 +317,12 @@ currently in pianobar"
 (defun pianobar-format-current-song (string)
   "Removes extranous characters so when the song is displayed to
 the user it looks a little better. TODO remove backslashes"
-  string)
-  ;;(replace-in-string (replace-in-string string "|>" "" ) "\n" ""))
+(replace-regexp-in-string ".*|>" "" string))
 
 (defun pianobar-comint-output-filter-function (string)
   "Watch output and keep our current song up to date, also
 message when the song changes."
+;;(setq string (replace-regexp-in-string ".*2K" "" string2))
   (if (string-match "|>" string)
       (let ((old-song pianobar-current-song)
             (new-song (pianobar-format-current-song string)))
@@ -336,7 +336,7 @@ message when the song changes."
   (interactive)
   (if pianobar-current-song
       (prog2
-          (message (concat "Now playing: "  pianobar-current-song))
+          (message (concat "Now playing:" pianobar-current-song))
           ;; override the growl function with an external notification system if you wish
           (if (functionp 'growl) (growl "Now Playing" pianobar-current-song)))))
 
@@ -353,7 +353,7 @@ message when the song changes."
         (mode-map inferior-pianobar-mode-map))
     ;; map the keys
     (define-key map key     'pianobar-window-toggle)
-    (define-key map "+"     'pianobar-love-current-song)
+    (define-key map "="     'pianobar-love-current-song)
     (define-key map "-"     'pianobar-ban-current-song)
     (define-key map "c"     'pianobar-create-station)
     (define-key map "d"     'pianobar-delete-current-station)
@@ -361,11 +361,11 @@ message when the song changes."
     (define-key map "g"     'pianobar-add-shared-station)
     (define-key map "h"     'pianobar-song-history)
     (define-key map "i"     'pianobar-currently-playing)
-    (define-key map "j"     'pianobar-add-shared-station)
+    (define-key map "s"     'pianobar-add-shared-station)
     (define-key map "m"     'pianobar-move-song-different-station)
     (define-key map "q"     'pianobar-quit)
     (define-key map "r"     'pianobar-rename-current-station)
-    (define-key map "s"     'pianobar-change-station)
+    (define-key map "j"     'pianobar-change-station)
     (define-key map "t"     'pianobar-tired-of-song)
     (define-key map "u"     'pianobar-upcoming-songs)
     (define-key map "x"     'pianobar-select-quickmix-stations)
@@ -373,7 +373,7 @@ message when the song changes."
 
     ;; next song
     (define-key map [right] 'pianobar-next-song)
-    (define-key map "n" 'pianobar-next-song)
+    (define-key map "k" 'pianobar-next-song)
     ;; pause/unpause
     (define-key map " "     'pianobar-pause-song)
     (define-key map "p"     'pianobar-pause-song)

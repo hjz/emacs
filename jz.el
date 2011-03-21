@@ -21,8 +21,25 @@
 (add-to-list 'load-path (concat user-dir "/moccur"))
 (add-to-list 'load-path (concat user-dir "/popwin"))
 
-(setq exec-path (append exec-path '("/Users/jz/bin/")))
-(setq exec-path (append exec-path '("/opt/local/bin/")))
+;(setq exec-path (append exec-path '("/Users/jz/bin/")))
+(setq exec-path (append exec-path '("/usr/local/bin")))
+
+;; PATH
+(defun read-system-path ()
+  (with-temp-buffer
+    (insert-file-contents "/etc/paths")
+    (goto-char (point-min))
+    (replace-regexp "\n" ":")
+    (thing-at-point 'line)))
+
+(setenv "PATH" (read-system-path))
+
+(autoload 'ansi-color-for-comint-mode-on "ansi-color" nil t)
+(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
+
+;(require 'edit-server)
+;(edit-server-start)
+;(add-hook 'after-change-major-mode-hook 'edit-server-edit-mode) 
 
 ;--------------------------------------------------------------------------
 ;; popwin.el
@@ -38,12 +55,17 @@
 (push '("*anything*" :height 20) popwin:special-display-config)
 (push '("*anything for files*" :height 20) popwin:special-display-config)
 
+(push '("*pianobar*" :width 60 :position right) popwin:special-display-config)
+(push '("*ensime-inferior-scala*" :width 60 :position right) popwin:special-display-config)
+
 (push '("*scratch*") popwin:special-display-config)
+(push '("*magit: macaw") popwin:special-display-config)
 (push '("*Messages*") popwin:special-display-config)
 (push '("svnlog.txt") popwin:special-display-config)
 (push '("journal.txt" :regexp t) popwin:special-display-config)
 (push '("*grep*" :height 50) popwin:special-display-config)
 (push '("*Moccur*" :height 50) popwin:special-display-config)
+(push '("*Inspector*" :height 25 :position right) popwin:special-display-config)
 (push '(dired-mode :position top) popwin:special-display-config) ; dired-jump-other-window (C-x 4 C-j)
 (push '("*Warnings*") popwin:special-display-config)
 
@@ -95,16 +117,6 @@
 (require 'color-theme)
 (load-theme 'zenburn)
 (set-face-foreground 'vertical-border "#282828")
-
-;; PATH
-(defun read-system-path ()
-  (with-temp-buffer
-    (insert-file-contents "/etc/paths")
-    (goto-char (point-min))
-    (replace-regexp "\n" ":")
-    (thing-at-point 'line)))
-
-(setenv "PATH" (concat (read-system-path) "/opt/local/bin/"))
 
 ;;;;;;;;;;;;;;;;; CEDET ;;;;;;;;;;;;;;;;;;;;;;
 (defcustom semantic-ectag-program "/opt/local/bin/ctags" 
@@ -257,8 +269,9 @@
   (setq indent-tabs-mode nil))
 (add-hook 'scala-mode-hook 'me-turn-off-indent-tabs-mode)
 (add-hook 'scala-mode-hook 'hs-minor-mode)
-(add-hook 'scala-mode-hook 'camelCase-mode)
+;(add-hook 'scala-mode-hook 'camelCase-mode)
 (add-hook 'scala-mode-hook 'autopair-mode)
+(add-hook 'scala-mode-hook 'subword-mode)
 
 ; highlighting for TODO 
 (require 'highlight-fixmes-mode)
@@ -582,6 +595,8 @@
 (define-key my-keys-minor-mode-map (kbd "C-x b") 'display-buffer)
 (define-key my-keys-minor-mode-map (kbd "C-f f") 'moccur-grep-find)
 (define-key my-keys-minor-mode-map (kbd "C-f d") 'dmoccur)
+(vimpulse-map (kbd "C-f f") 'moccur-grep-find)
+(vimpulse-map (kbd "C-f d") 'dmoccur)
 (vimpulse-map (kbd "C-b") 'ido-switch-buffer)
 ;; TODO unbind C-y, C-e
 
@@ -605,5 +620,3 @@
     '(diminish 'highlight-fixmes-mode "F"))
   (eval-after-load "yasnippet"
     '(diminish 'yas/minor-mode "Y")))
-
-;; colorize ansi

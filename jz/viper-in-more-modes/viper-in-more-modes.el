@@ -540,6 +540,17 @@ work on closed parens like one can expect in vi."
                            viper-imm-inferior-ruby-mode-vi-map))
 
 ;;; }}} End major mode keybinding code
+;;;;;;;;;;;;;;;;;;
+;; IBuffer mode ;;
+;;;;;;;;;;;;;;;;;;
+
+;;; bindings
+(require 'ibuffer)
+(let ((map ibuffer-mode-map))
+  (define-key map (kbd "j") 'ibuffer-forward-line)
+  (define-key map (kbd "J") 'ibuffer-jump-to-buffer)
+  (define-key map (kbd "k") 'ibuffer-backward-line)
+  (define-key map (kbd "K") 'ibuffer-do-kill-lines))
 
 (provide 'viper-in-more-modes)
 
