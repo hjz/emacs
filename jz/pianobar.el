@@ -317,7 +317,7 @@ currently in pianobar"
 (defun pianobar-format-current-song (string)
   "Removes extranous characters so when the song is displayed to
 the user it looks a little better. TODO remove backslashes"
-(replace-regexp-in-string ".*|>" "" string))
+(replace-regexp-in-string ".*|>  " "" string))
 
 (defun pianobar-comint-output-filter-function (string)
   "Watch output and keep our current song up to date, also
@@ -336,7 +336,7 @@ message when the song changes."
   (interactive)
   (if pianobar-current-song
       (prog2
-          (message (concat "Now playing:" pianobar-current-song))
+          (message (concat "Now playing: " pianobar-current-song))
           ;; override the growl function with an external notification system if you wish
           (if (functionp 'growl) (growl "Now Playing" pianobar-current-song)))))
 
