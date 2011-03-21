@@ -56,6 +56,7 @@
 (push '("*anything for files*" :height 20) popwin:special-display-config)
 
 (push '("*pianobar*" :width 60 :position right) popwin:special-display-config)
+(push '("*ENSIME-Compilation-Result*" :height 50 :position bottom) popwin:special-display-config)
 (push '("*ensime-inferior-scala*" :width 60 :position right) popwin:special-display-config)
 
 (push '("*scratch*") popwin:special-display-config)
@@ -64,8 +65,9 @@
 (push '("svnlog.txt") popwin:special-display-config)
 (push '("journal.txt" :regexp t) popwin:special-display-config)
 (push '("*grep*" :height 50) popwin:special-display-config)
-(push '("*Moccur*" :height 50) popwin:special-display-config)
-(push '("*Inspector*" :height 25 :position right) popwin:special-display-config)
+;; FIXME
+;(push '("*Moccur*" :height 50) popwin:special-display-config)
+(push '("*Inspector*" :width 60 :position right) popwin:special-display-config)
 (push '(dired-mode :position top) popwin:special-display-config) ; dired-jump-other-window (C-x 4 C-j)
 (push '("*Warnings*") popwin:special-display-config)
 
@@ -216,10 +218,36 @@
 ;;;;;;;;;;;;;;;; VIM END ;;;;;;;;;;;;;;;;;;
 
 (blink-cursor-mode 1)
-
+(defun uncamel (s &optional sep start)
+ (interactive)
+  "Convert CamelCase string S to lower case with word separator SEP.
+  Default for SEP is a hyphen \"-\".
+  If third argument START is non-nil, convert words after that
+  index in STRING."
+  (let ((case-fold-search nil))
+    (while (string-match "[A-Z]" s (or start 1))
+           (setq s (replace-match (concat (or sep "_") 
+                                          (downcase (match-string 0 s))) 
+                                  t nil s)))
+    (downcase s)))
 ;;;;;; Camel Case ;;;;;;;
-(autoload 'camelCase-mode "camelCase-mode" nil t)
-;; rebind viper fwd bkwd
+(defun mapcar-head (fn-head fn-rest list)
+  "Like MAPCAR, but applies a different function to the first element."
+     (if list
+       (cons (funcall fn-head (car list)) (mapcar fn-rest (cdr list)))))
+(defun camelize (s)
+ (interactive)
+  "Convert under_score string S to CamelCase string."
+  (mapconcat 'identity (mapcar
+                         '(lambda (word) (capitalize (downcase word)))
+                         (split-string s "_")) ""))
+(defun camelize-method (s)
+ (interactive)
+  "Convert under_score string S to camelCase string."
+  (mapconcat 'identity (mapcar-head
+                         '(lambda (word) (downcase word))
+                         '(lambda (word) (capitalize (downcase word)))
+                         (split-string s "_")) ""))
 
 (require 'ecb)
 (setq ecb-tip-of-the-day nil)

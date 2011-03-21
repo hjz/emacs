@@ -135,6 +135,9 @@ is run).
               (comint-simple-send (pianobar-proc) pianobar-password))
           (add-hook 'comint-output-filter-functions
                     'pianobar-comint-output-filter-function nil t)
+          (add-hook 'comint-output-filter-functions
+                    'pianobar-preoutput-filter nil t)
+
           ;; make them select the station
           (switch-to-pianobar)
           (run-hooks 'pianobar-mode-hook))))
@@ -314,7 +317,11 @@ currently in pianobar"
         (sit-for 0)
     (select-window thiswin)))))
 
-(defun pianobar-format-current-song (string)
+(defun pianobar-preoutput-filter (str)
+ "removes the 2k junk"
+ (replace-regexp-in-string "\033\\[2K" "" str))
+
+(defun  pianobar-format-current-song (string)
   "Removes extranous characters so when the song is displayed to
 the user it looks a little better. TODO remove backslashes"
 (replace-regexp-in-string ".*|>  " "" string))
