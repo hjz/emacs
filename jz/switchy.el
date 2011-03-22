@@ -9,12 +9,12 @@
   (cond
    ;; first condition - switch to src
    ((equal typ "Spec")
-    (setq nfn (replace-regexp-in-string "test" "src" (concat (substring bse 0 -4) ".scala")))
+    (setq nfn (replace-regexp-in-string "test" "main" (concat (substring bse 0 -4) ".scala")))
     (find-file nfn)
     )
    ;; second condition - switch to test file
    ((or (equal ext "scala"))
-    (setq nfn (replace-regexp-in-string "src" "test" (concat bse "Spec.scala")))
+    (setq nfn (replace-regexp-in-string "main" "test" (concat bse "Spec.scala")))
     (find-file nfn)
     )
    )

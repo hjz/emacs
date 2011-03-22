@@ -290,7 +290,7 @@
 
 (add-hook 'scala-mode-hook
   (lambda ()
-    (local-set-key [return] 'comment-indent-new-line)))
+    (local-set-key [return] 'vimpulse-autoindent)))
 (add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
 (add-hook 'scala-mode-hook 'highlight-80+-mode)
 (defun me-turn-off-indent-tabs-mode ()
@@ -315,6 +315,18 @@
                ))
 (add-hook 'scala-mode-hook 'hl-line-mode)
 
+;; reclaim some binding used by shell mode and shell-command.
+;; the shell mode and associated mode and commands use keys in comint-mode-map.
+(add-hook 'comint-mode-hook
+ (lambda ()
+   (define-key comint-mode-map (kbd "M-l") 'recenter) ; was comint-previous-input. Use Ctrl+↑ or f11
+;;   (define-key comint-mode-map (kbd "M-n") 'nil) ; was comint-next-input. Use Ctrl+↓ or f12
+
+   ;; rebind displaced commands that i still want a key
+   (define-key comint-mode-map (kbd "TAB") 'comint-dynamic-complete)
+   (define-key comint-mode-map (kbd "§ <up") 'comint-previous-matching-input)
+   (define-key comint-mode-map (kbd "§ <down>") 'comint-next-matching-input)
+))
 ;; ECB support
 ;(require 'ensime-ecb)
 ;;;;;;;;;;;;;;; END Scala ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
