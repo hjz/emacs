@@ -60,6 +60,7 @@
 (push '("*ensime-inferior-scala*" :width 60 :position right) popwin:special-display-config)
 
 (push '("*scratch*") popwin:special-display-config)
+(push '("*viper-info*") popwin:special-display-config)
 (push '("*magit: macaw") popwin:special-display-config)
 (push '("*Messages*") popwin:special-display-config)
 (push '("svnlog.txt") popwin:special-display-config)
