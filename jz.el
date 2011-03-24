@@ -289,7 +289,7 @@
 
 (add-hook 'scala-mode-hook
   (lambda ()
-    (local-set-key [return] 'comment-indent-new-line)))
+    (local-set-key [return] '(lambda () (interactive) (setq last-command nil) (newline-and-indent)))))
 (setq-default viper-auto-indent t)
 
 (add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
