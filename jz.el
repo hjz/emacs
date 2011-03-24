@@ -24,6 +24,7 @@
 ;(setq exec-path (append exec-path '("/Users/jz/bin/")))
 (setq exec-path (append exec-path '("/usr/local/bin")))
 
+(require 'google-search)
 ;; PATH
 (defun read-system-path ()
   (with-temp-buffer
@@ -636,6 +637,10 @@
 (define-key my-keys-minor-mode-map (kbd "C-x b") 'display-buffer)
 (define-key my-keys-minor-mode-map (kbd "C-f f") 'moccur-grep-find)
 (define-key my-keys-minor-mode-map (kbd "C-f d") 'dmoccur)
+
+(define-key my-keys-minor-mode-map (kbd "M-i") 'google-search-selection)
+(define-key my-keys-minor-mode-map (kbd "s-i") 'google-it)
+
 (vimpulse-map (kbd "C-f f") 'moccur-grep-find)
 (vimpulse-map (kbd "C-f d") 'dmoccur)
 (vimpulse-map (kbd "C-b") 'ido-switch-buffer)
