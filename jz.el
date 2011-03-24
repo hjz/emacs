@@ -5,7 +5,7 @@
 
 (add-to-list 'load-path (concat user-dir "/elisp"))
 (add-to-list 'load-path (concat user-dir "/apel-10.8"))
-(add-to-list 'load-path (concat user-dir "/yasnippet"))
+(add-to-list 'load-path (concat user-dir "/yasnippet-read-only"))
 (add-to-list 'load-path (concat user-dir "/ensime/elisp"))
 (add-to-list 'load-path (concat user-dir "/vimpulse"))
 (add-to-list 'load-path (concat user-dir "/vimpulse-surround"))
@@ -236,13 +236,11 @@
      (if list
        (cons (funcall fn-head (car list)) (mapcar fn-rest (cdr list)))))
 (defun camelize (s)
- (interactive)
   "Convert under_score string S to CamelCase string."
   (mapconcat 'identity (mapcar
                          '(lambda (word) (capitalize (downcase word)))
                          (split-string s "_")) ""))
 (defun camelize-method (s)
- (interactive)
   "Convert under_score string S to camelCase string."
   (mapconcat 'identity (mapcar-head
                          '(lambda (word) (downcase word))
@@ -290,7 +288,9 @@
 
 (add-hook 'scala-mode-hook
   (lambda ()
-    (local-set-key [return] 'vimpulse-autoindent)))
+    (local-set-key [return] 'comment-indent-new-line)))
+(setq-default viper-auto-indent t)
+
 (add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
 (add-hook 'scala-mode-hook 'highlight-80+-mode)
 (defun me-turn-off-indent-tabs-mode ()
@@ -308,7 +308,7 @@
 (require 'ensime)
 (require 'yasnippet)
 (yas/initialize)
-(yas/load-directory (concat user-dir "/yasnippet/snippets"))
+(yas/load-directory (concat user-dir "/yasnippet-read-only/snippets"))
   (add-hook 'scala-mode-hook
             '(lambda ()
                (yas/minor-mode-on)

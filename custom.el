@@ -64,19 +64,17 @@
  '(vimpulse-want-quit-like-Vim nil)
  '(viper-ESC-moves-cursor-back nil)
  '(viper-auto-indent t)
- '(viper-emacs-state-mode-list (quote (Custom-mode efs-mode tar-mode browse-kill-ring-mode recentf-mode recentf-dialog-mode occur-mode mh-folder-mode gnus-group-mode gnus-summary-mode completion-list-mode compilation-mode rcirc-mode jde-javadoc-checker-report-mode view-mode vm-mode vm-summary-mode magit-key-mode pianobar-mode ensime-inferior-scala-mode fundamental-mode comint-mode)))
+ '(viper-emacs-state-mode-list (quote (Custom-mode efs-mode tar-mode browse-kill-ring-mode recentf-mode recentf-dialog-mode occur-mode mh-folder-mode gnus-group-mode gnus-summary-mode completion-list-mode compilation-mode rcirc-mode jde-javadoc-checker-report-mode view-mode vm-mode vm-summary-mode magit-key-mode pianobar-mode ensime-inferior-scala-mode)))
  '(viper-ex-style-editing nil)
  '(viper-insert-state-cursor-color nil)
  '(viper-parse-sexp-ignore-comments nil)
  '(viper-shift-width 2)
  '(viper-syntax-preference (quote extended))
  '(viper-want-ctl-h-help t)
- '(yas/also-auto-indent-first-line nil)
  '(yas/indent-line (quote fixed))
- '(yas/next-field-key (quote ("SPC" "<tab>")))
- '(yas/prev-field-key (quote ("<backtab>" "<S-tab>")))
  '(yas/prompt-functions (quote (yas/dropdown-prompt)))
- '(yas/skip-and-clear-key (quote ("C-d" "<delete>" "<deletechar>"))))
+ '(yas/triggers-in-field t)
+ '(yas/wrap-around-region t))
 (custom-set-faces
   ;; custom-set-faces was added by Custom.
   ;; If you edit it by hand, you could mess it up, so be careful.
