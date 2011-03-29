@@ -40,7 +40,7 @@
 
 ;(require 'edit-server)
 ;(edit-server-start)
-;(add-hook 'after-change-major-mode-hook 'edit-server-edit-mode) 
+;(add-hook 'after-change-major-mode-hook 'edit-server-edit-mode)
 
 ;--------------------------------------------------------------------------
 ;; popwin.el
@@ -56,6 +56,7 @@
 (push '("*anything*" :height 20) popwin:special-display-config)
 (push '("*anything for files*" :height 20) popwin:special-display-config)
 
+(push '(".*ensime-sbt.*" :regexp t :height 30 :position bottom) popwin:special-display-config)
 (push '("*pianobar*" :width 60 :position right) popwin:special-display-config)
 (push '("*ENSIME-Compilation-Result*" :height 50 :position bottom) popwin:special-display-config)
 (push '("*ensime-inferior-scala*" :width 60 :position right) popwin:special-display-config)
@@ -123,7 +124,7 @@
 (set-face-foreground 'vertical-border "#282828")
 
 ;;;;;;;;;;;;;;;;; CEDET ;;;;;;;;;;;;;;;;;;;;;;
-(defcustom semantic-ectag-program "/opt/local/bin/ctags" 
+(defcustom semantic-ectag-program "/opt/local/bin/ctags"
   "The Exuberent CTags program to use."
   :group 'semantic
   :type 'program)
@@ -158,8 +159,8 @@
 
 ;(semantic-load-enable-excessive-code-helpers)
 
-;(semantic-load-enable-minimum-features)      ; Enable prototype help and smart completion 
-;(semantic-load-enable-code-helpers)      ; Enable prototype help and smart completion 
+;(semantic-load-enable-minimum-features)      ; Enable prototype help and smart completion
+;(semantic-load-enable-code-helpers)      ; Enable prototype help and smart completion
 ;(semantic-load-enable-primary-exuberent-ctags-support)
 ;(defun my-semantic-hook ()
 ;  (imenu-add-to-menubar "TAGS"))
@@ -228,8 +229,8 @@
   index in STRING."
   (let ((case-fold-search nil))
     (while (string-match "[A-Z]" s (or start 1))
-           (setq s (replace-match (concat (or sep "_") 
-                                          (downcase (match-string 0 s))) 
+           (setq s (replace-match (concat (or sep "_")
+                                          (downcase (match-string 0 s)))
                                   t nil s)))
     (downcase s)))
 ;;;;;; Camel Case ;;;;;;;
@@ -255,7 +256,7 @@
 (require 'ido)
 ;; stolen from emacs-fu.blogspot.com
 (ido-mode 'both) ;; for buffers and files
-(setq 
+(setq
   ido-everwhere t
   idosave-directory-list-file "~/.emacs.d/cache/ido.last"
 
@@ -299,11 +300,11 @@
   (setq indent-tabs-mode nil))
 (add-hook 'scala-mode-hook 'me-turn-off-indent-tabs-mode)
 (add-hook 'scala-mode-hook 'hs-minor-mode)
-;(add-hook 'scala-mode-hook 'camelCase-mode)
+(add-hook 'scala-mode-hook 'camelCase-mode)
+;(add-hook 'scala-mode-hook 'subword-mode)
 (add-hook 'scala-mode-hook 'autopair-mode)
-(add-hook 'scala-mode-hook 'subword-mode)
 
-; highlighting for TODO 
+; highlighting for TODO
 (require 'highlight-fixmes-mode)
 (add-hook 'scala-mode-hook 'highlight-fixmes-mode)
 
@@ -345,7 +346,7 @@
 
 ;;;;;;;;;;;;;;;;;;; KEY BINDINGS ;;;;;;;;;;;;;;;;;;;;;;
 
-(defun maximize-frame () 
+(defun maximize-frame ()
   (interactive)
   (set-frame-position (selected-frame) 0 0)
   (set-frame-size (selected-frame) 1000 1000))
@@ -442,17 +443,17 @@
          kill-buffer-query-functions))
 
 ; TODO enable cedet folding
- 
+
 ;; ---------------------------------------
 ;; load elscreen
 ;; ---------------------------------------
 ;; F9 creates a new elscreen, shift-F9 kills it
 (global-set-key (kbd "<f6>"    ) 'elscreen-create)
-(global-set-key (kbd "S-<f6>"  ) 'elscreen-kill)  
+(global-set-key (kbd "S-<f6>"  ) 'elscreen-kill)
 
 ;; Windowskey+PgUP/PgDown switches between elscreens
-(global-set-key (kbd "<C-prior>") 'elscreen-previous) 
-(global-set-key (kbd "<C-next>")  'elscreen-next) 
+(global-set-key (kbd "<C-prior>") 'elscreen-previous)
+(global-set-key (kbd "<C-next>")  'elscreen-next)
 
 (defun elscreen-frame-title-update ()
    (when (elscreen-screen-modified-p 'elscreen-frame-title-update)
@@ -462,14 +463,14 @@
                    (lambda (screen)
                      (format "%d%s %s"
                              screen (elscreen-status-label screen)
-                               (replace-regexp-in-string "\*.*\*" "" 
+                               (replace-regexp-in-string "\*.*\*" ""
                                 (get-alist screen screen-to-name-alist))))
                    screen-list " ")))
-       
+
        (if (fboundp 'set-frame-name)
           (set-frame-name title)
         (setq frame-title-format title)))))
- 
+
 ; (eval-after-load "elscreen"
 ;   '(add-hook 'elscreen-screen-update-hook 'elscreen-frame-title-update))
 
@@ -480,12 +481,12 @@
 (column-number-mode t)
 (line-number-mode nil)
 
-;; surround        
+;; surround
 (require 'vimpulse-surround)
 
 (require 'multi-term)
 (setq multi-term-program "/bin/bash")
-(setq term-default-bg-color "#1f1f1f")   
+(setq term-default-bg-color "#1f1f1f")
 (setq term-default-fg-color "#dcdccc")
 ;; only needed if you use autopair
 (add-hook 'term-mode-hook
@@ -495,14 +496,14 @@
 (global-set-key (kbd "C-c t") 'multi-term-next)
 (global-set-key (kbd "C-c T") 'multi-term) ;; create a new one
 
-(add-hook 'emacs-lisp-mode-hook 
+(add-hook 'emacs-lisp-mode-hook
   (lambda()
-    (setq mode-name "el"))) 
+    (setq mode-name "el")))
 
 ;; Major modes
 (add-hook 'scala-mode-hook
   (lambda()
-    (setq mode-name "S"))) 
+    (setq mode-name "S")))
 
 ; Paren mode faces
 (require 'paren)
@@ -512,10 +513,10 @@
 ;; TODO make this scala only
 (define-key (current-global-map) [remap vimpulse-jump-to-tag-at-point] 'ensime-edit-definition)
 
-;(define-key (current-global-map) [remap viper-forward-word] 'forward-word)
-;(define-key (current-global-map) [remap vimpulse-operator-forward-word] 'forward-word)
-;(define-key (current-global-map) [remap viper-backward-word] 'backward-word)
-;(define-key (current-global-map) [remap vimpulse-operator-backward-word] 'backward-word)
+(define-key (current-global-map) [remap viper-forward-word] 'forward-word)
+(define-key (current-global-map) [remap vimpulse-operator-forward-word] 'forward-word)
+(define-key (current-global-map) [remap viper-backward-word] 'backward-word)
+(define-key (current-global-map) [remap vimpulse-operator-backward-word] 'backward-word)
 
 (setq campfire-room-name "API")
 (setq campfire-room-id "188551")
@@ -524,7 +525,7 @@
 (autoload 'flyspell-mode "flyspell" "On-the-fly spelling checker." t)
 (add-hook 'message-mode-hook 'turn-on-flyspell)
 (add-hook 'text-mode-hook 'turn-on-flyspell)
-(add-hook 'c-mode-common-hook 'flyspell-prog-mode)
+;(add-hook 'c-mode-common-hook 'flyspell-prog-mode)
 (add-hook 'scala-mode-hook 'flyspell-prog-mode)
 
 (setq ispell-program-name "aspell")
@@ -579,7 +580,7 @@
 
 
 (setq initial-scratch-message nil)
-    
+
 ;; For teh tunez
 (autoload 'pianobar "pianobar" nil t)
 (require 'switchy)
@@ -619,14 +620,14 @@
 (define-key my-keys-minor-mode-map (kbd "M-;") 'repeat-complex-command)
 
 ;; Movement
-(define-key my-keys-minor-mode-map (kbd "C-w =") 'balance-windows)          
-(define-key my-keys-minor-mode-map (kbd "C-w h") 'windmove-left)          
+(define-key my-keys-minor-mode-map (kbd "C-w =") 'balance-windows)
+(define-key my-keys-minor-mode-map (kbd "C-w h") 'windmove-left)
 (define-key my-keys-minor-mode-map (kbd "C-w l") 'windmove-right)
-(define-key my-keys-minor-mode-map (kbd "C-w k") 'windmove-up)            
+(define-key my-keys-minor-mode-map (kbd "C-w k") 'windmove-up)
 (define-key my-keys-minor-mode-map (kbd "C-w j") 'windmove-down)
-(define-key my-keys-minor-mode-map (kbd "C-w C-h") 'windmove-left)          
+(define-key my-keys-minor-mode-map (kbd "C-w C-h") 'windmove-left)
 (define-key my-keys-minor-mode-map (kbd "C-w C-l") 'windmove-right)
-(define-key my-keys-minor-mode-map (kbd "C-w C-k") 'windmove-up)            
+(define-key my-keys-minor-mode-map (kbd "C-w C-k") 'windmove-up)
 (define-key my-keys-minor-mode-map (kbd "C-w C-j") 'windmove-down)
 (define-key my-keys-minor-mode-map (kbd "<C-tab>") 'other-frame)
 
@@ -640,12 +641,14 @@
 
 (define-key my-keys-minor-mode-map (kbd "M-i") 'google-search-selection)
 (define-key my-keys-minor-mode-map (kbd "s-i") 'google-it)
+(define-key my-keys-minor-mode-map (kbd "C-f s") 'replace-regexp)
+(define-key my-keys-minor-mode-map (kbd "C-;") 'hippie-expand)
 
 (vimpulse-map (kbd "C-f f") 'moccur-grep-find)
 (vimpulse-map (kbd "C-f d") 'dmoccur)
+(vimpulse-map (kbd "C-f s") 'replace-regexp)
 (vimpulse-map (kbd "C-b") 'ido-switch-buffer)
 ;; TODO unbind C-y, C-e
-
 
 (define-minor-mode my-keys-minor-mode
   "A minor mode so that my key settings override annoying major modes."
@@ -666,3 +669,33 @@
     '(diminish 'highlight-fixmes-mode "F"))
   (eval-after-load "yasnippet"
     '(diminish 'yas/minor-mode "Y")))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Hippie expand.  Groovy vans with tie-dyes.
+
+;; Change the default hippie-expand order and add yasnippet to the front.
+(setq hippie-expand-try-functions-list
+      '(yas/hippie-try-expand
+        try-expand-dabbrev
+        try-expand-dabbrev-all-buffers
+        try-expand-dabbrev-from-kill
+        try-complete-file-name
+        try-complete-lisp-symbol))
+
+;; Helps when debugging which try-function expanded
+(setq hippie-expand-verbose t)
+
+;; Enables tab completion in the `eval-expression` minibuffer
+(define-key read-expression-map [(tab)] 'hippie-expand)
+(define-key read-expression-map [(shift tab)] 'unexpand)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; YASnippet
+
+(require 'smart-tab)
+(global-smart-tab-mode 1)
+
+;; Replace yasnippets's TAB
+(add-hook 'yas/minor-mode-hook
+          (lambda () (define-key yas/minor-mode-map
+                       (kbd "TAB") 'smart-tab))) ; was yas/expand
