@@ -14,12 +14,14 @@
 (add-to-list 'load-path (concat user-dir "/ecb"))
 (add-to-list 'load-path (concat user-dir "/scala"))
 ;(add-to-list 'load-path (concat user-dir "/scamacs/scamacs"))
+;(add-to-list 'load-path (concat user-dir "/scamacs/ecb"))
 (add-to-list 'load-path (concat user-dir "/anything-config"))
 ;(add-to-list 'load-path (concat user-dir "/tabbar"))
 (add-to-list 'load-path (concat user-dir "/elscreen-1.4.6"))
 (add-to-list 'load-path (concat user-dir "/yaml-mode"))
 (add-to-list 'load-path (concat user-dir "/moccur"))
 (add-to-list 'load-path (concat user-dir "/popwin"))
+(add-to-list 'load-path (concat user-dir "/ac-sources"))
 
 ;(setq exec-path (append exec-path '("/Users/jz/bin/")))
 (setq exec-path (append exec-path '("/usr/local/bin")))
@@ -150,8 +152,8 @@
           global-semantic-highlight-func-mode
           global-semantic-stickyfunc-mode)))
 
-(if (boundp 'semantic-ia) (require 'semantic-ia))
-(if (boundp 'semantic-gcc) (require 'semantic-gcc))
+;(if (boundp 'semantic-ia) (require 'semantic-ia))
+;(if (boundp 'semantic-gcc) (require 'semantic-gcc))
 
 ;(global-srecode-minor-mode 1)            ; Enable template insertion menu
 
@@ -300,8 +302,8 @@
   (setq indent-tabs-mode nil))
 (add-hook 'scala-mode-hook 'me-turn-off-indent-tabs-mode)
 (add-hook 'scala-mode-hook 'hs-minor-mode)
-(add-hook 'scala-mode-hook 'camelCase-mode)
-;(add-hook 'scala-mode-hook 'subword-mode)
+;(add-hook 'scala-mode-hook 'camelCase-mode)
+(add-hook 'scala-mode-hook 'subword-mode)
 (add-hook 'scala-mode-hook 'autopair-mode)
 
 ; highlighting for TODO
@@ -318,6 +320,11 @@
                ))
 (add-hook 'scala-mode-hook 'hl-line-mode)
 
+(add-hook 'scala-mode-hook
+ (lambda ()
+   (define-key scala-mode-map (kbd "C-n") 'ensime-forward-note)
+   (define-key scala-mode-map (kbd "C-p") 'ensime-previous-note)
+))
 ;; reclaim some binding used by shell mode and shell-command.
 ;; the shell mode and associated mode and commands use keys in comint-mode-map.
 (add-hook 'comint-mode-hook
@@ -363,10 +370,11 @@
 (global-set-key (kbd "C-c v") 'halve-other-window-height)
 
 ; Window Spliting
-(global-set-key (kbd "M-6") 'delete-other-windows) ; was digit-argument
+(global-set-key (kbd "M-6") 'delete-window) ; was digit-argument
 (global-set-key (kbd "M-7") 'other-window) ; was center-line
 (global-set-key (kbd "M-8") 'split-window-vertically) ; was digit-argument
 (global-set-key (kbd "M-9") 'split-window-horizontally) ; was digit-argument
+(global-set-key (kbd "M-0") 'delete-other-windows) ; was digit-argument
 
 ; Fullscreen
 (global-set-key (kbd "<s-return>") 'maximize-frame)
@@ -475,7 +483,7 @@
 ;   '(add-hook 'elscreen-screen-update-hook 'elscreen-frame-title-update))
 
 (load "elscreen" "ElScreen" t)
-;(require 'elscreen-buffer-list)
+(require 'elscreen-buffer-list)
 
 ;; show column #
 (column-number-mode t)
@@ -513,10 +521,10 @@
 ;; TODO make this scala only
 (define-key (current-global-map) [remap vimpulse-jump-to-tag-at-point] 'ensime-edit-definition)
 
-(define-key (current-global-map) [remap viper-forward-word] 'forward-word)
-(define-key (current-global-map) [remap vimpulse-operator-forward-word] 'forward-word)
-(define-key (current-global-map) [remap viper-backward-word] 'backward-word)
-(define-key (current-global-map) [remap vimpulse-operator-backward-word] 'backward-word)
+;(define-key (current-global-map) [remap viper-forward-word] 'forward-word)
+;(define-key (current-global-map) [remap vimpulse-operator-forward-word] 'forward-word)
+;(define-key (current-global-map) [remap viper-backward-word] 'backward-word)
+;(define-key (current-global-map) [remap vimpulse-operator-backward-word] 'backward-word)
 
 (setq campfire-room-name "API")
 (setq campfire-room-id "188551")
@@ -525,7 +533,7 @@
 (autoload 'flyspell-mode "flyspell" "On-the-fly spelling checker." t)
 (add-hook 'message-mode-hook 'turn-on-flyspell)
 (add-hook 'text-mode-hook 'turn-on-flyspell)
-;(add-hook 'c-mode-common-hook 'flyspell-prog-mode)
+(add-hook 'c-mode-common-hook 'flyspell-prog-mode)
 (add-hook 'scala-mode-hook 'flyspell-prog-mode)
 
 (setq ispell-program-name "aspell")
@@ -673,6 +681,20 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Hippie expand.  Groovy vans with tie-dyes.
 
+(require 'auto-complete)
+(global-auto-complete-mode t)
+
+(when (require 'auto-complete nil t)
+  (require 'ac-dabbrev)
+  (require 'auto-complete-yasnippet)
+  (require 'auto-complete-semantic)  
+  (require 'auto-complete-gtags)
+
+  (global-auto-complete-mode t)
+  (setq ac-auto-start 3)
+  (setq ac-dwim t)
+  (set-default 'ac-sources '(ac-source-yasnippet ac-source-abbrev ac-source-words-in-buffer ac-source-files-in-current-dir ac-source-symbols)))
+
 ;; Change the default hippie-expand order and add yasnippet to the front.
 (setq hippie-expand-try-functions-list
       '(yas/hippie-try-expand
@@ -683,7 +705,7 @@
         try-complete-lisp-symbol))
 
 ;; Helps when debugging which try-function expanded
-(setq hippie-expand-verbose t)
+;(setq hippie-expand-verbose t)
 
 ;; Enables tab completion in the `eval-expression` minibuffer
 (define-key read-expression-map [(tab)] 'hippie-expand)
@@ -692,10 +714,10 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; YASnippet
 
-(require 'smart-tab)
-(global-smart-tab-mode 1)
+;(require 'smart-tab)
+;(global-smart-tab-mode 1)
 
 ;; Replace yasnippets's TAB
-(add-hook 'yas/minor-mode-hook
-          (lambda () (define-key yas/minor-mode-map
-                       (kbd "TAB") 'smart-tab))) ; was yas/expand
+;(add-hook 'yas/minor-mode-hook
+;          (lambda () (define-key yas/minor-mode-map
+;                       (kbd "TAB") '))) ; was yas/expand
