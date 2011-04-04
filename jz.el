@@ -22,20 +22,27 @@
 (add-to-list 'load-path (concat user-dir "/moccur"))
 (add-to-list 'load-path (concat user-dir "/popwin"))
 (add-to-list 'load-path (concat user-dir "/ac-sources"))
+(add-to-list 'load-path (concat user-dir "/full-ack"))
+(add-to-list 'load-path (concat user-dir "/dired-extras"))
 
 ;(setq exec-path (append exec-path '("/Users/jz/bin/")))
 (setq exec-path (append exec-path '("/usr/local/bin")))
 
+(autoload 'ack-same "full-ack" nil t)
+(autoload 'ack "full-ack" nil t)
+(autoload 'ack-find-same-file "full-ack" nil t)
+(autoload 'ack-find-file "full-ack" nil t)
+
 (require 'google-search)
 ;; PATH
-(defun read-system-path ()
-  (with-temp-buffer
-    (insert-file-contents "/etc/paths")
-    (goto-char (point-min))
-    (replace-regexp "\n" ":")
-    (thing-at-point 'line)))
+;; (defun read-system-path ()
+;;   (with-temp-buffer
+;;     (insert-file-contents "/etc/paths")
+;;     (goto-char (point-min))
+;;     (replace-regexp "\n" ":")
+;;     (thing-at-point 'line)))
 
-(setenv "PATH" (read-system-path))
+;(setenv "PATH" (read-system-path))
 
 (autoload 'ansi-color-for-comint-mode-on "ansi-color" nil t)
 (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
@@ -70,11 +77,13 @@
 (push '("svnlog.txt") popwin:special-display-config)
 (push '("journal.txt" :regexp t) popwin:special-display-config)
 (push '("*grep*" :height 50) popwin:special-display-config)
-;; FIXME
-;(push '("*Moccur*" :height 50) popwin:special-display-config)
 (push '("*Inspector*" :width 60 :position right) popwin:special-display-config)
-(push '(dired-mode :position top) popwin:special-display-config) ; dired-jump-other-window (C-x 4 C-j)
+(push '(dired-mode :position right :width 70) popwin:special-display-config) ; dired-jump-other-window (C-x 4 C-j)
 (push '("*Warnings*") popwin:special-display-config)
+(push '("*Help*" :height 30 :position bottom) popwin:special-display-config)
+(push '("*Completions*" :height 30 :position bottom) popwin:special-display-config)
+
+;(push '("*Moccur*" :height 20 :width 80 :position right) popwin:special-display-config)
 
 ;; save a list of open files in ~/.emacs.desktop
 ;; save the desktop file automatically if it already exists
@@ -111,8 +120,24 @@
 (add-to-list 'desktop-modes-not-to-save 'info-lookup-mode)
 (add-to-list 'desktop-modes-not-to-save 'fundamental-mode)
 
-(add-hook 'dired-load-hook
-          (function (lambda () (load "dired-x"))))
+(require 'dired+)                 ; Extensions to Dired.
+(when (require 'dired-sort-menu nil t)
+  (require 'dired-sort-menu+ nil t))    ; Menu/dialogue for dired sort options
+(require 'dired-details+)         ; Make file details hideable in dired
+
+(add-hook 'dired-mode-hook 'my-dired-mode-hook)
+(defun my-dired-mode-hook ()
+  (local-set-key (kbd "<mouse-1>") 'dired-mouse-find-file)
+  (define-key dired-mode-map ";" 'dired-details-toggle))
+
+(defun dired-mouse-find-file (event)
+  "In Dired, visit the file or directory name you click on."
+  (interactive "e")
+  (require 'cl)
+  (flet ((find-file-other-window
+          (filename &optional wildcards)
+          (find-file filename wildcards)))
+    (dired-mouse-find-file-other-window event)))
 
 ;; colorise css hex values
 (autoload 'css-color-mode "mon-css-color" "" t)
@@ -193,7 +218,7 @@
 (vimpulse-map (kbd "SPC") 'hs-toggle-hiding)
 (vimpulse-map "?" 'describe-bindings)
 (define-key vimpulse-visual-basic-map "v" 'end-of-line)
-(define-key vimpulse-visual-basic-map "q" 'comment-dwim)
+;(define-key vimpulse-visual-basic-map "-" 'comment-dwim)
 
 (vimpulse-define-text-object vimpulse-sexp (arg)
   "Select a S-expression."
@@ -283,10 +308,6 @@
 
 ;; cycle through buffers with Ctrl-Tab (like Firefox)
 ;(global-set-key (kbd "<C-tab>") 'bury-buffer)
-
-(global-set-key (kbd "C-c k") 'ecb-toggle-ecb-windows)
-(global-set-key (kbd "C-c l") 'ensime) ;; replace lambda
-;(global-set-key (kbd "C-c ;") 'ensime-ecb)
 
 ;;;;;;;;;;;;;;; Scala ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (require 'scala-mode-auto)
@@ -450,7 +471,6 @@
   (remq 'process-kill-buffer-query-function
          kill-buffer-query-functions))
 
-; TODO enable cedet folding
 
 ;; ---------------------------------------
 ;; load elscreen
@@ -650,7 +670,6 @@
 (define-key my-keys-minor-mode-map (kbd "M-i") 'google-search-selection)
 (define-key my-keys-minor-mode-map (kbd "s-i") 'google-it)
 (define-key my-keys-minor-mode-map (kbd "C-f s") 'replace-regexp)
-(define-key my-keys-minor-mode-map (kbd "C-;") 'hippie-expand)
 
 (vimpulse-map (kbd "C-f f") 'moccur-grep-find)
 (vimpulse-map (kbd "C-f d") 'dmoccur)
@@ -658,9 +677,18 @@
 (vimpulse-map (kbd "C-b") 'ido-switch-buffer)
 ;; TODO unbind C-y, C-e
 
+(global-set-key (kbd "C-c k") 'ecb-toggle-ecb-windows)
+(global-set-key (kbd "C-c l") 'ensime) ;; replace lambda
+;(global-set-key (kbd "C-c ;") 'ensime-ecb)
+
 (define-minor-mode my-keys-minor-mode
   "A minor mode so that my key settings override annoying major modes."
   t " M " 'my-keys-minor-mode-map)
+
+(define-key dired-mode-map "j" 'dired-next-line)
+(define-key dired-mode-map "J" 'dired-goto-file)
+(define-key dired-mode-map "k" 'dired-previous-line)
+(define-key dired-mode-map "K" 'dired-do-kill-lines)
 
 (my-keys-minor-mode 1)
 
@@ -687,7 +715,7 @@
 (when (require 'auto-complete nil t)
   (require 'ac-dabbrev)
   (require 'auto-complete-yasnippet)
-  (require 'auto-complete-semantic)  
+  (require 'auto-complete-semantic)
   (require 'auto-complete-gtags)
 
   (global-auto-complete-mode t)
