@@ -6,24 +6,26 @@
 (add-to-list 'load-path (concat user-dir "/elisp"))
 (add-to-list 'load-path (concat user-dir "/apel-10.8"))
 (add-to-list 'load-path (concat user-dir "/yasnippet-read-only"))
-(add-to-list 'load-path (concat user-dir "/ensime/elisp"))
+(add-to-list 'load-path (concat user-dir "/ensime_2.8.1-0.5.0/elisp"))
 (add-to-list 'load-path (concat user-dir "/vimpulse"))
 (add-to-list 'load-path (concat user-dir "/vimpulse-surround"))
 (add-to-list 'load-path (concat user-dir "/vimpulse-plugins"))
 (add-to-list 'load-path (concat user-dir "/viper-in-more-modes"))
 (add-to-list 'load-path (concat user-dir "/ecb"))
 (add-to-list 'load-path (concat user-dir "/scala"))
-;(add-to-list 'load-path (concat user-dir "/scamacs/scamacs"))
-;(add-to-list 'load-path (concat user-dir "/scamacs/ecb"))
 (add-to-list 'load-path (concat user-dir "/anything-config"))
 (add-to-list 'load-path (concat user-dir "/elscreen-1.4.6"))
 (add-to-list 'load-path (concat user-dir "/yaml-mode"))
 (add-to-list 'load-path (concat user-dir "/moccur"))
 (add-to-list 'load-path (concat user-dir "/popwin"))
 (add-to-list 'load-path (concat user-dir "/auto-complete"))
+;(add-to-list 'load-path (concat user-dir "/auto-complete-1.3.1"))
 (add-to-list 'load-path (concat user-dir "/full-ack"))
 (add-to-list 'load-path (concat user-dir "/dired-extras"))
 
+;(add-to-list 'load-path (concat user-dir "/scamacs/scamacs"))
+;(add-to-list 'load-path (concat user-dir "/scamacs/ecb"))
+;
 ;(setq exec-path (append exec-path '("/Users/jz/bin/")))
 (setq exec-path (append exec-path '("/usr/local/bin")))
 
@@ -84,6 +86,7 @@
 (push '("*Help*" :height 30 :position bottom) popwin:special-display-config)
 (push '("*Completions*" :height 30 :position bottom) popwin:special-display-config)
 
+;(push '("*ack*" :height 40 :position bottom) popwin:special-display-config)
 ;(push '("*Moccur*" :height 20 :width 80 :position right) popwin:special-display-config)
 
 ;; save a list of open files in ~/.emacs.desktop
@@ -340,16 +343,6 @@
 ; highlighting for TODO
 (require 'highlight-fixmes-mode)
 (add-hook 'scala-mode-hook 'highlight-fixmes-mode)
-
-(require 'ensime)
-(require 'yasnippet)
-(yas/initialize)
-(yas/load-directory (concat user-dir "/yasnippet-read-only/snippets"))
-
-  ;(add-hook 'scala-mode-hook
-  ;          '(lambda ()
-  ;             (yas/minor-mode-on)
-  ;             ))
 
 (add-hook 'scala-mode-hook 'hl-line-mode)
 
@@ -730,8 +723,10 @@
 ;; Hippie expand.  Groovy vans with tie-dyes.
 
 (require 'auto-complete-config)
+(add-to-list 'ac-dictionary-directories (concat user-dir "/auto-complete/dict"))
 (ac-config-default)
-(setq ac-delay 0)
+
+(setq ac-delay 0.2)
 (setq ac-dwim t)
 (setq ac-expand-on-auto-complete t)
 (setq ac-ignore-case 'smart)
@@ -740,10 +735,13 @@
 (setq ac-use-quick-help t)
 (setq ac-delete-dups t)
 (setq ac-use-fuzzy t)
+(setq ac-auto-show-menu 0.8)
 
 (add-to-list 'ac-modes 'scala-mode)
 
 (define-key ac-completing-map [return] 'ac-complete)
+(define-key ac-completing-map (kbd "<S-tab>") 'ac-previous)
+
 (ac-set-trigger-key "TAB")
 
 ;; Change the default hippie-expand order and add yasnippet to the front.
@@ -765,11 +763,14 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; YASnippet
 
-;(require 'smart-tab)
-;(global-smart-tab-mode 1)
+(require 'ensime)
+(require 'yasnippet)
+(yas/initialize)
+(yas/load-directory (concat user-dir "/yasnippet-read-only/snippets"))
 
 (setq yas/trigger-key (kbd "C-c <kp-multiply>"))
 
+;; BUG DONT COMPILE YASNIPPET!!!!!!!!!!
 ; Replace yasnippets's TAB
 (add-hook 'yas/minor-mode-hook
           (lambda () (define-key yas/minor-mode-map
