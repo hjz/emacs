@@ -1,34 +1,116 @@
-((("hiddenModules" .
-   [1 0 0 0 0 0 0 0 0 0 0 0 0])
-  ("isInstanceOf" .
-   [0 0 0 0 0 0 0 0 0 0 0 1])
-  ("+" .
+((("find-dired" .
+   [0 0 0 0 1 0 0 0 0 0])
+  ("find" .
+   [1 0 1 0])
+  ("actor" .
+   [0 0 0 7 2])
+  ("act" .
+   [3 0 3])
+  ("reset" .
+   [0 0 0 0 3])
+  ("featureConfig" .
+   [0 0 0 0 0 0 0 1 0 0 0 0 0])
+  ("feature" .
+   [0 0 0 0 0 0 1])
+  ("featureKey" .
+   [0 0 0 0 0 0 0 2 0 0])
+  ("clof" .
+   [0 0 0 1])
+  ("resetTime" .
+   [0 0 0 0 0 1 0 0 1])
+  ("Response" .
+   [0 0 0 1 0 0 0 0])
+  ("DefaultProject" .
+   [0 0 0 1 0 0 0 0 0 0 0 0 0 0])
+  ("defaults" .
+   [0 0 0 3 0 0 0 1])
+  ("def" .
+   [29 0 10])
+  ("Version" .
+   [0 0 0 0 0 0 2])
+  ("defaultPort" .
+   [0 0 0 1 0 0 0 0 0 0 0])
+  ("Boolean" .
+   [0 0 0 0 0 0 1])
+  ("VerifyError" .
+   [5 0 0 0 0 0 0 0 0 0 3])
+  ("asInstanceOf" .
+   [1 0 0 0 0 0 0 0 0 0 0 0])
+  ("toString" .
+   [0 0 0 1 0 0 0 2])
+  ("equals" .
+   [0 0 0 0 0 2])
+  ("##" .
+   [0 2])
+  ("x" .
    [1])
-  ("ApiRequest" .
-   [1 0 0 0 0 0 0 0 0 0])
-  ("internal" .
-   [0 0 0 0 0 0 0 1])
-  ("copy" .
-   [0 0 1 0])
-  ("inMilliseconds" .
-   [0 0 1 0 0 0 0 0 0 0 0 0 0 0])
-  ("Duration" .
-   [1 0 0 0 0 0 0 0])
-  ("images" .
-   [0 0 0 0 0 1])
-  ("concurrent" .
-   [0 0 0 0 0 0 0 0 0 1])
-  ("TimeUnit" .
-   [0 0 0 0 0 0 0 1])
-  ("TemporalCacheBuffer" .
-   [0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0])
-  ("toByte" .
-   [0 0 0 0 0 1])
-  ("sortWith" .
-   [0 0 1 0 0 0 0 0])
-  ("toCharArray" .
-   [0 0 0 0 0 0 0 0 0 0 1])
+  ("TwitterLimiter" .
+   [0 0 0 0 0 0 0 0 1 0 0 0 0 5])
+  ("atLimit" .
+   [0 0 0 0 0 0 3])
+  ("duration" .
+   [0 0 0 1 0 0 0 2])
+  ("getBytes" .
+   [0 0 0 0 0 1 0 0])
   ("toArray" .
    [0 0 1 0 0 0 0])
-  ("getBytes" .
-   [0 0 0 0 0 1 0 0])))
+  ("toCharArray" .
+   [0 0 0 0 0 0 0 0 0 0 1])
+  ("sortWith" .
+   [0 0 1 0 0 0 0 0])
+  ("toByte" .
+   [0 0 0 0 0 1])
+  ("TemporalCacheBuffer" .
+   [0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0])
+  ("TimeUnit" .
+   [0 0 0 0 0 0 0 1])
+  ("concurrent" .
+   [0 0 0 0 0 0 0 0 0 1])
+  ("images" .
+   [0 0 0 0 0 1])
+  ("Duration" .
+   [1 0 0 0 0 0 0 0])
+  ("inMilliseconds" .
+   [0 0 1 0 0 0 0 0 0 0 0 0 0 0])
+  ("copy" .
+   [0 0 1 0])
+  ("internal" .
+   [0 0 0 0 0 0 0 1])
+  ("ApiRequest" .
+   [1 0 0 0 0 0 0 0 0 0])
+  ("+" .
+   [13])
+  ("isInstanceOf" .
+   [0 0 0 0 0 0 0 0 0 0 0 1])
+  ("hiddenModules" .
+   [1 0 0 0 0 0 0 0 0 0 0 0 0])
+  ("AuthMethod" .
+   [0 0 0 0 2 0 0 0 0 3])
+  ("name" .
+   [0 0 0 1])
+  ("map" .
+   [0 0 2])
+  ("wait" .
+   [1 1 0 2])
+  ("eq" .
+   [2 0])
+  ("ma" .
+   [0 1])
+  ("forall" .
+   [1 1 0 0 0 0])
+  ("default" .
+   [0 0 0 9 0 0 1])
+  ("TwitterProject" .
+   [0 0 0 1 0 0 0 0 0 0 0 0 0 0])
+  ("defaultWeight" .
+   [0 0 0 1 0 0 0 0 0 0 0 0 0])
+  ("remaining" .
+   [0 0 0 0 0 0 1 0 1])
+  ("versionedApiRequestPath" .
+   [0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0])
+  ("ensuring" .
+   [0 0 0 0 0 0 0 1])
+  ("createStatus" .
+   [0 0 0 0 0 0 0 0 0 0 0 1])
+  ("cos" .
+   [1 0 0])))

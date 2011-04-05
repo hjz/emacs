@@ -16,24 +16,25 @@
 ;(add-to-list 'load-path (concat user-dir "/scamacs/scamacs"))
 ;(add-to-list 'load-path (concat user-dir "/scamacs/ecb"))
 (add-to-list 'load-path (concat user-dir "/anything-config"))
-;(add-to-list 'load-path (concat user-dir "/tabbar"))
 (add-to-list 'load-path (concat user-dir "/elscreen-1.4.6"))
 (add-to-list 'load-path (concat user-dir "/yaml-mode"))
 (add-to-list 'load-path (concat user-dir "/moccur"))
 (add-to-list 'load-path (concat user-dir "/popwin"))
-(add-to-list 'load-path (concat user-dir "/ac-sources"))
+(add-to-list 'load-path (concat user-dir "/auto-complete"))
 (add-to-list 'load-path (concat user-dir "/full-ack"))
 (add-to-list 'load-path (concat user-dir "/dired-extras"))
 
 ;(setq exec-path (append exec-path '("/Users/jz/bin/")))
 (setq exec-path (append exec-path '("/usr/local/bin")))
 
+(require 'mouse+)
 (autoload 'ack-same "full-ack" nil t)
 (autoload 'ack "full-ack" nil t)
 (autoload 'ack-find-same-file "full-ack" nil t)
 (autoload 'ack-find-file "full-ack" nil t)
 
 (require 'google-search)
+
 ;; PATH
 ;; (defun read-system-path ()
 ;;   (with-temp-buffer
@@ -120,15 +121,23 @@
 (add-to-list 'desktop-modes-not-to-save 'info-lookup-mode)
 (add-to-list 'desktop-modes-not-to-save 'fundamental-mode)
 
+;(require 'sunrise-commander)
+
+;;
 (require 'dired+)                 ; Extensions to Dired.
 (when (require 'dired-sort-menu nil t)
   (require 'dired-sort-menu+ nil t))    ; Menu/dialogue for dired sort options
 (require 'dired-details+)         ; Make file details hideable in dired
 
+(toggle-dired-find-file-reuse-dir 1)
+
 (add-hook 'dired-mode-hook 'my-dired-mode-hook)
 (defun my-dired-mode-hook ()
   (local-set-key (kbd "<mouse-1>") 'dired-mouse-find-file)
   (define-key dired-mode-map ";" 'dired-details-toggle))
+
+;; side by side dired for copying
+(setq dired-dwim-target t)
 
 (defun dired-mouse-find-file (event)
   "In Dired, visit the file or directory name you click on."
@@ -314,8 +323,9 @@
 
 (add-hook 'scala-mode-hook
   (lambda ()
-    (local-set-key [return] '(lambda () (interactive) (setq last-command nil) (newline-and-indent)))))
-(setq-default viper-auto-indent t)
+    (local-set-key [return] '(lambda () (interactive) (setq last-command nil) (newline-and-indent))))
+    (local-set-key (kbd "C-c j") 'ensime-sbt-switch)
+  )
 
 (add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
 (add-hook 'scala-mode-hook 'highlight-80+-mode)
@@ -335,16 +345,18 @@
 (require 'yasnippet)
 (yas/initialize)
 (yas/load-directory (concat user-dir "/yasnippet-read-only/snippets"))
-  (add-hook 'scala-mode-hook
-            '(lambda ()
-               (yas/minor-mode-on)
-               ))
+
+  ;(add-hook 'scala-mode-hook
+  ;          '(lambda ()
+  ;             (yas/minor-mode-on)
+  ;             ))
+
 (add-hook 'scala-mode-hook 'hl-line-mode)
 
 (add-hook 'scala-mode-hook
  (lambda ()
    (define-key scala-mode-map (kbd "C-n") 'ensime-forward-note)
-   (define-key scala-mode-map (kbd "C-p") 'ensime-previous-note)
+   (define-key scala-mode-map (kbd "C-p") 'ensime-backward-note)
 ))
 ;; reclaim some binding used by shell mode and shell-command.
 ;; the shell mode and associated mode and commands use keys in comint-mode-map.
@@ -661,19 +673,27 @@
 
 (define-key my-keys-minor-mode-map (kbd "C-c o") 'rename-file-and-buffer)
 (define-key my-keys-minor-mode-map (kbd "C-c g") 'customize-group)
-(define-key my-keys-minor-mode-map (kbd "C-l") 'dired-jump-other-window)
+(define-key my-keys-minor-mode-map (kbd "C-x C-j") 'dired-jump-other-window)
+(define-key my-keys-minor-mode-map (kbd "C-l") 'dired-jump)
 (define-key my-keys-minor-mode-map (kbd "C-b") 'ido-switch-buffer)
 (define-key my-keys-minor-mode-map (kbd "C-x b") 'display-buffer)
-(define-key my-keys-minor-mode-map (kbd "C-f f") 'moccur-grep-find)
+
+;; searching
+(define-key my-keys-minor-mode-map (kbd "C-f g") 'moccur-grep-find)
 (define-key my-keys-minor-mode-map (kbd "C-f d") 'dmoccur)
+(define-key my-keys-minor-mode-map (kbd "C-f s") 'ack-same)
+(define-key my-keys-minor-mode-map (kbd "C-f a") 'ack)
+(define-key my-keys-minor-mode-map (kbd "C-f f") 'ack-find-file)
 
 (define-key my-keys-minor-mode-map (kbd "M-i") 'google-search-selection)
 (define-key my-keys-minor-mode-map (kbd "s-i") 'google-it)
 (define-key my-keys-minor-mode-map (kbd "C-f s") 'replace-regexp)
 
-(vimpulse-map (kbd "C-f f") 'moccur-grep-find)
+(vimpulse-map (kbd "C-f g") 'moccur-grep-find)
 (vimpulse-map (kbd "C-f d") 'dmoccur)
-(vimpulse-map (kbd "C-f s") 'replace-regexp)
+(vimpulse-map (kbd "C-f s") 'ack-same)
+(vimpulse-map (kbd "C-f a") 'ack)
+(vimpulse-map (kbd "C-f f") 'ack-find-file)
 (vimpulse-map (kbd "C-b") 'ido-switch-buffer)
 ;; TODO unbind C-y, C-e
 
@@ -709,19 +729,22 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Hippie expand.  Groovy vans with tie-dyes.
 
-(require 'auto-complete)
-(global-auto-complete-mode t)
+(require 'auto-complete-config)
+(ac-config-default)
+(setq ac-delay 0)
+(setq ac-dwim t)
+(setq ac-expand-on-auto-complete t)
+(setq ac-ignore-case 'smart)
+(setq ac-auto-start 3)
+(setq ac-use-comphist t)
+(setq ac-use-quick-help t)
+(setq ac-delete-dups t)
+(setq ac-use-fuzzy t)
 
-(when (require 'auto-complete nil t)
-  (require 'ac-dabbrev)
-  (require 'auto-complete-yasnippet)
-  (require 'auto-complete-semantic)
-  (require 'auto-complete-gtags)
+(add-to-list 'ac-modes 'scala-mode)
 
-  (global-auto-complete-mode t)
-  (setq ac-auto-start 3)
-  (setq ac-dwim t)
-  (set-default 'ac-sources '(ac-source-yasnippet ac-source-abbrev ac-source-words-in-buffer ac-source-files-in-current-dir ac-source-symbols)))
+(define-key ac-completing-map [return] 'ac-complete)
+(ac-set-trigger-key "TAB")
 
 ;; Change the default hippie-expand order and add yasnippet to the front.
 (setq hippie-expand-try-functions-list
@@ -745,7 +768,9 @@
 ;(require 'smart-tab)
 ;(global-smart-tab-mode 1)
 
-;; Replace yasnippets's TAB
-;(add-hook 'yas/minor-mode-hook
-;          (lambda () (define-key yas/minor-mode-map
-;                       (kbd "TAB") '))) ; was yas/expand
+(setq yas/trigger-key (kbd "C-c <kp-multiply>"))
+
+; Replace yasnippets's TAB
+(add-hook 'yas/minor-mode-hook
+          (lambda () (define-key yas/minor-mode-map
+                       (kbd "TAB") 'auto-complete))) ; was yas/expand
