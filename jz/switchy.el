@@ -54,6 +54,10 @@
    ;; first condition - switch to src
    ((equal typ "Spec")
     (setq nfn (replace-regexp-in-string "test" "main" (concat (substring bse 0 -4) ".scala")))
+
+    ;; create directory if doesn't exist
+    (setq dirname (file-name-directory nfn))
+    (unless not (file-exists-p dirname) (make-directory dirname t))
     (find-file nfn)
     )
    ;; second condition - switch to test file
@@ -63,5 +67,7 @@
     )
    )
   )
-(global-set-key (kbd "C-c s") 'switch-between-test-and-source)
+(add-hook 'scala-mode-hook 
+   (lambda () (local-set-key (kbd "C-c s") 'switch-between-test-and-source)))
+
 (provide 'switchy)
