@@ -561,6 +561,10 @@
 (add-hook 'c-mode-common-hook 'flyspell-prog-mode)
 (add-hook 'scala-mode-hook 'flyspell-prog-mode)
 
+(add-hook 'flyspell-mode-hook
+          '(lambda ()
+             (define-key flyspell-mode-map (kbd "C-;") 'save-buffer)))
+
 (setq ispell-program-name "aspell")
 (setq ispell-list-command "list")
 (setq ispell-process-directory (expand-file-name "~/"))
@@ -677,6 +681,7 @@
 (define-key my-keys-minor-mode-map (kbd "C-f s") 'ack-same)
 (define-key my-keys-minor-mode-map (kbd "C-f a") 'ack)
 (define-key my-keys-minor-mode-map (kbd "C-f f") 'ack-find-file)
+(define-key my-keys-minor-mode-map (kbd "C-f p") 'replace-regexp)
 
 (define-key my-keys-minor-mode-map (kbd "M-i") 'google-search-selection)
 (define-key my-keys-minor-mode-map (kbd "s-i") 'google-it)
@@ -687,6 +692,7 @@
 (vimpulse-map (kbd "C-f s") 'ack-same)
 (vimpulse-map (kbd "C-f a") 'ack)
 (vimpulse-map (kbd "C-f f") 'ack-find-file)
+(vimpulse-map (kbd "C-f p") 'replace-regexp)
 (vimpulse-map (kbd "C-b") 'ido-switch-buffer)
 ;; TODO unbind C-y, C-e
 
@@ -726,11 +732,11 @@
 (add-to-list 'ac-dictionary-directories (concat user-dir "/auto-complete/dict"))
 (ac-config-default)
 
-(setq ac-delay 0.2)
+(setq ac-delay 0.5)
 (setq ac-dwim t)
 (setq ac-expand-on-auto-complete t)
 (setq ac-ignore-case 'smart)
-(setq ac-auto-start 3)
+(setq ac-auto-start 4)
 (setq ac-use-comphist t)
 (setq ac-use-quick-help t)
 (setq ac-delete-dups t)
@@ -741,6 +747,7 @@
 
 (define-key ac-completing-map [return] 'ac-complete)
 (define-key ac-completing-map (kbd "<S-tab>") 'ac-previous)
+(define-key ac-completing-map (kbd "ESC") 'ac-stop)
 
 (ac-set-trigger-key "TAB")
 
@@ -752,9 +759,6 @@
         try-expand-dabbrev-from-kill
         try-complete-file-name
         try-complete-lisp-symbol))
-
-;; Helps when debugging which try-function expanded
-;(setq hippie-expand-verbose t)
 
 ;; Enables tab completion in the `eval-expression` minibuffer
 (define-key read-expression-map [(tab)] 'hippie-expand)

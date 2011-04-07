@@ -1,3 +1,47 @@
+(require 'autoinsert)
+(require 'cl)
+(auto-insert-mode)
+(setq auto-insert-query nil)
+
+(setq auto-insert-directory (expand-file-name "~/.emacs.d/auto/"))
+
+(setq auto-insert-alist
+      '(
+        ("Spec\\.scala$" . ["insert.scala" auto-update-scala-source-file])
+        ))
+
+(defun filepath-to-package-name (s)
+  (reduce (lambda (acc val) (if acc (concat (concat acc val) ".") (when (string= val "scala") ""))) (split-string s "/") :initial-value nil))
+
+(defun auto-update-scala-source-file ()
+  (setq bse (file-name-sans-extension (file-name-nondirectory (buffer-file-name))))
+  (setq bsd (filepath-to-package-name (file-name-directory buffer-file-name)))
+  (save-excursion
+    ;; replace PPP with package name
+    (while (search-forward "PPP" nil t)
+           (save-restriction
+             (narrow-to-region (match-beginning 0) (match-end 0))
+             (replace-match (substring bsd 0 -2) t)
+             ))
+    )
+  (save-excursion
+    ;; Replace @@@ with file name
+    (while (search-forward "@@@" nil t)
+           (save-restriction
+             (narrow-to-region (match-beginning 0) (match-end 0))
+             (replace-match bse)
+             ))
+    )
+  (save-excursion
+    ;; Replace $$$ with src name
+    (while (search-forward "$$$" nil t)
+           (save-restriction
+             (narrow-to-region (match-beginning 0) (match-end 0))
+             (replace-match (substring bse 0 -4))
+             ))
+    )
+  )
+
 (defun switch-between-test-and-source ()
   "Switch between a scala test (*Spec) and its corresponding source"
   (interactive)
