@@ -57,12 +57,14 @@
 
     ;; create directory if doesn't exist
     (setq dirname (file-name-directory nfn))
-    (unless not (file-exists-p dirname) (make-directory dirname t))
+    (unless (not (file-exists-p dirname)) (make-directory dirname t))
     (find-file nfn)
     )
    ;; second condition - switch to test file
    ((or (equal ext "scala"))
     (setq nfn (replace-regexp-in-string "main" "test" (concat bse "Spec.scala")))
+    (setq dirname (file-name-directory nfn))
+    (unless (not (file-exists-p dirname)) (make-directory dirname t))
     (find-file nfn)
     )
    )
