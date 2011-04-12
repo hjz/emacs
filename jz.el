@@ -22,12 +22,21 @@
 ;(add-to-list 'load-path (concat user-dir "/auto-complete-1.3.1"))
 (add-to-list 'load-path (concat user-dir "/full-ack"))
 (add-to-list 'load-path (concat user-dir "/dired-extras"))
+(add-to-list 'load-path (concat user-dir "/smex"))
 
 ;(add-to-list 'load-path (concat user-dir "/scamacs/scamacs"))
 ;(add-to-list 'load-path (concat user-dir "/scamacs/ecb"))
-;
-;(setq exec-path (append exec-path '("/Users/jz/bin/")))
+
 (setq exec-path (append exec-path '("/usr/local/bin")))
+
+(require 'smex)
+(smex-initialize)
+(global-set-key (kbd "M-x") 'smex)
+(global-set-key (kbd "M-X") 'smex-major-mode-commands)
+  ;; This is your old M-x.
+(global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
+
+
 
 (require 'mouse+)
 (autoload 'ack-same "full-ack" nil t)
@@ -292,6 +301,8 @@
 (require 'ecb)
 (setq ecb-tip-of-the-day nil)
 
+;;; IDO
+
 (require 'ido)
 ;; stolen from emacs-fu.blogspot.com
 (ido-mode 'both) ;; for buffers and files
@@ -311,17 +322,21 @@
   ido-use-filename-at-point 'guess ; don't use filename at point (annoying)
   ido-use-url-at-point nil         ; don't use url at point (annoying)
   ido-create-new-buffer 'always    ; create buf for no match
-  ido-enable-flex-matching nil     ; don't try to be too smart
-  ido-max-prospects 8              ; don't spam my minibuffer
+  ido-enable-flex-matching t 
+  ido-max-prospects 10              ; don't spam my minibuffer
   ido-confirm-unique-completion t) ; wait for RET, even with unique completion
 
 ;; when using ido, the confirmation is rather annoying...
- (setq confirm-nonexistent-file-or-buffer nil)
+(setq confirm-nonexistent-file-or-buffer nil)
 
-;; cycle through buffers with Ctrl-Tab (like Firefox)
-;(global-set-key (kbd "<C-tab>") 'bury-buffer)
+;; toggles
+(add-hook 'ido-minibuffer-setup-hook
+ (lambda ()
+   (local-set-key (kbd "C-c p") 'ido-toggle-prefix) ;; same as in isearch
+))
 
-;;;;;;;;;;;;;;; Scala ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; SCALA
+
 (require 'scala-mode-auto)
 
 (add-hook 'scala-mode-hook
@@ -694,6 +709,8 @@
 (vimpulse-map (kbd "C-f f") 'ack-find-file)
 (vimpulse-map (kbd "C-f p") 'replace-regexp)
 (vimpulse-map (kbd "C-b") 'ido-switch-buffer)
+(vimpulse-vmap (kbd "TAB") 'vimpulse-shift-right)
+(vimpulse-vmap (kbd "<S-tab>") 'vimpulse-shift-left)
 ;; TODO unbind C-y, C-e
 
 (global-set-key (kbd "C-c k") 'ecb-toggle-ecb-windows)
@@ -732,14 +749,14 @@
 (add-to-list 'ac-dictionary-directories (concat user-dir "/auto-complete/dict"))
 (ac-config-default)
 
-(setq ac-delay 0.5)
 (setq ac-dwim t)
 (setq ac-expand-on-auto-complete t)
 (setq ac-ignore-case 'smart)
-(setq ac-auto-start 4)
+(setq ac-delay 0.5)
+(setq ac-auto-start nil)
 (setq ac-use-comphist t)
 (setq ac-use-quick-help t)
-(setq ac-delete-dups t)
+(setq ac-delete-dups nil)
 (setq ac-use-fuzzy t)
 (setq ac-auto-show-menu 0.8)
 

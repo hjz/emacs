@@ -73,7 +73,7 @@
  '(vimpulse-want-quit-like-Vim nil)
  '(viper-ESC-moves-cursor-back nil)
  '(viper-auto-indent t)
- '(viper-emacs-state-mode-list (quote (Custom-mode efs-mode tar-mode browse-kill-ring-mode recentf-mode recentf-dialog-mode occur-mode mh-folder-mode gnus-group-mode gnus-summary-mode completion-list-mode compilation-mode rcirc-mode jde-javadoc-checker-report-mode view-mode vm-mode vm-summary-mode magit-key-mode pianobar-mode ensime-inf-mode)))
+ '(viper-emacs-state-mode-list (quote (Custom-mode efs-mode tar-mode browse-kill-ring-mode recentf-mode recentf-dialog-mode occur-mode mh-folder-mode gnus-group-mode gnus-summary-mode completion-list-mode compilation-mode rcirc-mode jde-javadoc-checker-report-mode view-mode vm-mode vm-summary-mode magit-key-mode pianobar-mode ensime-inf-mode ido-everywhere-mode)))
  '(viper-ex-style-editing nil)
  '(viper-insert-state-cursor-color nil)
  '(viper-parse-sexp-ignore-comments nil)
