@@ -1,6 +1,6 @@
 (require 'autoinsert)
 (require 'cl)
-(auto-insert-mode)
+(auto-insert-mode 1)
 (setq auto-insert-query nil)
 
 (setq auto-insert-directory (expand-file-name "~/.emacs.d/auto/"))
@@ -40,7 +40,7 @@
              (replace-match (substring bse 0 -4))
              ))
     )
-  )
+)
 
 (defun switch-between-test-and-source ()
   "Switch between a scala test (*Spec) and its corresponding source"
@@ -57,19 +57,21 @@
 
     ;; create directory if doesn't exist
     (setq dirname (file-name-directory nfn))
-    (unless (not (file-exists-p dirname)) (make-directory dirname t))
+    (unless (file-accessible-directory-p dirname) (make-directory dirname t))
+    (auto-insert-mode 1)
     (find-file nfn)
     )
    ;; second condition - switch to test file
    ((or (equal ext "scala"))
     (setq nfn (replace-regexp-in-string "main" "test" (concat bse "Spec.scala")))
     (setq dirname (file-name-directory nfn))
-    (unless (not (file-exists-p dirname)) (make-directory dirname t))
+    (unless (file-accessible-directory-p dirname) (make-directory dirname t))
+    (auto-insert-mode 1)
     (find-file nfn)
     )
    )
   )
 (add-hook 'scala-mode-hook 
-   (lambda () (local-set-key (kbd "C-c s") 'switch-between-test-and-source)))
+  (lambda () (local-set-key (kbd "C-c s") 'switch-between-test-and-source)))
 
 (provide 'switchy)

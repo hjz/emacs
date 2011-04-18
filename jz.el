@@ -19,16 +19,56 @@
 (add-to-list 'load-path (concat user-dir "/moccur"))
 (add-to-list 'load-path (concat user-dir "/popwin"))
 (add-to-list 'load-path (concat user-dir "/auto-complete"))
-;(add-to-list 'load-path (concat user-dir "/auto-complete-1.3.1"))
 (add-to-list 'load-path (concat user-dir "/full-ack"))
 (add-to-list 'load-path (concat user-dir "/dired-extras"))
 (add-to-list 'load-path (concat user-dir "/smex"))
+(add-to-list 'load-path (concat user-dir "/twittering-mode"))
 
 ;(add-to-list 'load-path (concat user-dir "/scamacs/scamacs"))
 ;(add-to-list 'load-path (concat user-dir "/scamacs/ecb"))
 
 (setq exec-path (append exec-path '("/usr/local/bin")))
 
+;; twittering-mode
+(require 'twittering-mode)
+(setq twittering-use-master-password t)
+(setq twittering-initial-timeline-spec-string
+      '(":home"
+        ":replies"
+        ":favorites"
+        ":direct_messages"))
+
+(add-hook 'twittering-mode-hook
+   (lambda ()
+     (mapc (lambda (pair)
+             (let ((key (car pair))
+                   (func (cdr pair)))
+               (define-key twittering-mode-map
+                 (read-kbd-macro key) func)))
+           '(("F" . twittering-friends-timeline)
+             ("R" . twittering-replies-timeline)
+             ("U" . twittering-user-timeline)
+             (";" . twittering-home-timeline)
+             ("W" . twittering-update-status-interactive)))))
+
+(setq twittering-icon-mode t)                ; Show icons
+(setq twittering-timer-interval 300)         ; Update your timeline each 300 seconds (5 minutes)
+(setq twittering-url-show-status nil)        ; Keeps the echo area from showing all the http processes
+
+(add-hook 'twittering-new-tweets-hook (lambda ()
+(let ((n twittering-new-tweets-count))
+(start-process "twittering-notify" nil "notify-send"
+            "-i" "/usr/share/pixmaps/gnome-emacs.png"
+            "New tweets"
+            (format "You have %d new tweet%s"
+                    n (if (> n 1) "s" ""))))))
+
+(add-hook 'twittering-edit-mode-hook (lambda () (ispell-minor-mode) (flyspell-mode)))
+
+(autoload 'twittering-numbering "twittering-numbering" nil t)
+(add-hook 'twittering-mode-hook 'twittering-numbering)
+
+;; M-x IDO
 (require 'smex)
 (smex-initialize)
 (global-set-key (kbd "M-x") 'smex)
@@ -36,14 +76,7 @@
   ;; This is your old M-x.
 (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
 
-
-
 (require 'mouse+)
-(autoload 'ack-same "full-ack" nil t)
-(autoload 'ack "full-ack" nil t)
-(autoload 'ack-find-same-file "full-ack" nil t)
-(autoload 'ack-find-file "full-ack" nil t)
-
 (require 'google-search)
 
 ;; PATH
@@ -106,17 +139,17 @@
 ;; save a bunch of variables to the desktop file
 ;; for lists specify the len of the maximal saved data also
 (setq desktop-globals-to-save
-      (append '((extended-command-history . 30)
+      (append '((extended-command-history . 100)
                 (file-name-history        . 100)
-                (grep-history             . 30)
-                (compile-history          . 30)
-                (minibuffer-history       . 50)
-                (query-replace-history    . 60)
-                (read-expression-history  . 60)
-                (regexp-history           . 60)
-                (regexp-search-ring       . 20)
-                (search-ring              . 20)
-                (shell-command-history    . 50)
+                (grep-history             . 100)
+                (compile-history          . 100)
+                (minibuffer-history       . 100)
+                (query-replace-history    . 100)
+                (read-expression-history  . 100)
+                (regexp-history           . 100)
+                (regexp-search-ring       . 100)
+                (search-ring              . 100)
+                (shell-command-history    . 100)
                 tags-file-name
                 register-alist)))
 
@@ -146,7 +179,9 @@
 (add-hook 'dired-mode-hook 'my-dired-mode-hook)
 (defun my-dired-mode-hook ()
   (local-set-key (kbd "<mouse-1>") 'dired-mouse-find-file)
-  (define-key dired-mode-map ";" 'dired-details-toggle))
+  (define-key dired-mode-map ";" 'dired-details-toggle)
+  (define-key dired-mode-map "c" 'dired-do-copy))
+
 
 ;; side by side dired for copying
 (setq dired-dwim-target t)
@@ -322,7 +357,7 @@
   ido-use-filename-at-point 'guess ; don't use filename at point (annoying)
   ido-use-url-at-point nil         ; don't use url at point (annoying)
   ido-create-new-buffer 'always    ; create buf for no match
-  ido-enable-flex-matching t 
+  ido-enable-flex-matching t
   ido-max-prospects 10              ; don't spam my minibuffer
   ido-confirm-unique-completion t) ; wait for RET, even with unique completion
 
@@ -533,7 +568,7 @@
 (require 'vimpulse-surround)
 
 (require 'multi-term)
-(setq multi-term-program "/bin/bash")
+(setq multi-term-program "/bin/zsh")
 (setq term-default-bg-color "#1f1f1f")
 (setq term-default-fg-color "#dcdccc")
 ;; only needed if you use autopair
@@ -619,9 +654,9 @@
 ; TODO img for campfire
 
 ;; Redefine the 8 primary terminal colors to look good against black ;; set in zenburn
-;(setq ansi-term-color-vector
-;[unspecified "#000000" "#963F3C" "#5FFB65" "#FFFD65"
-;"#0082FF" "#FF2180" "#57DCDB" "#FFFFFF"])
+(setq ansi-term-color-vector
+[unspecified "#000000" "#963F3C" "#5FFB65" "#FFFD65"
+"#0082FF" "#FF2180" "#57DCDB" "#FFFFFF"])
 
 (require 'yaml-mode)
 (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
@@ -700,7 +735,7 @@
 
 (define-key my-keys-minor-mode-map (kbd "M-i") 'google-search-selection)
 (define-key my-keys-minor-mode-map (kbd "s-i") 'google-it)
-(define-key my-keys-minor-mode-map (kbd "C-f s") 'replace-regexp)
+(define-key my-keys-minor-mode-map (kbd "C-f p") 'replace-regexp)
 
 (vimpulse-map (kbd "C-f g") 'moccur-grep-find)
 (vimpulse-map (kbd "C-f d") 'dmoccur)
@@ -796,3 +831,8 @@
 (add-hook 'yas/minor-mode-hook
           (lambda () (define-key yas/minor-mode-map
                        (kbd "TAB") 'auto-complete))) ; was yas/expand
+
+(autoload 'ack-same "full-ack" nil t)
+(autoload 'ack "full-ack" nil t)
+(autoload 'ack-find-same-file "full-ack" nil t)
+(autoload 'ack-find-file "full-ack" nil t)
