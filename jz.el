@@ -122,6 +122,7 @@
 (push '("svnlog.txt") popwin:special-display-config)
 (push '("journal.txt" :regexp t) popwin:special-display-config)
 (push '("*grep*" :height 50) popwin:special-display-config)
+(push '("*Kill Ring*" :height 30) popwin:special-display-config)
 (push '("*Inspector*" :width 60 :position right) popwin:special-display-config)
 (push '(dired-mode :position right :width 70) popwin:special-display-config) ; dired-jump-other-window (C-x 4 C-j)
 (push '("*Warnings*") popwin:special-display-config)
@@ -506,9 +507,9 @@
 (require 'browse-kill-ring+)
 (browse-kill-ring-default-keybindings)
 ;; popup menu
-(global-set-key "\C-cy" '(lambda ()
-   (interactive)
-   (popup-menu 'yank-menu)))
+;(global-set-key "\C-cy" '(lambda ()
+;   (interactive)
+;   (popup-menu 'yank-menu)))
 
 ; automatically clean up old buffers
 (require 'midnight)
@@ -732,6 +733,8 @@
 (define-key my-keys-minor-mode-map (kbd "C-f a") 'ack)
 (define-key my-keys-minor-mode-map (kbd "C-f f") 'ack-find-file)
 (define-key my-keys-minor-mode-map (kbd "C-f p") 'replace-regexp)
+(define-key my-keys-minor-mode-map (kbd "C-e") 'other-window)
+(define-key my-keys-minor-mode-map (kbd "C-c d") 'ediff-revision)
 
 (define-key my-keys-minor-mode-map (kbd "M-i") 'google-search-selection)
 (define-key my-keys-minor-mode-map (kbd "s-i") 'google-it)
@@ -744,6 +747,8 @@
 (vimpulse-map (kbd "C-f f") 'ack-find-file)
 (vimpulse-map (kbd "C-f p") 'replace-regexp)
 (vimpulse-map (kbd "C-b") 'ido-switch-buffer)
+(vimpulse-map (kbd "C-e") 'other-window)
+(vimpulse-map (kbd "Y") 'kill-line)
 (vimpulse-vmap (kbd "TAB") 'vimpulse-shift-right)
 (vimpulse-vmap (kbd "<S-tab>") 'vimpulse-shift-left)
 ;; TODO unbind C-y, C-e
