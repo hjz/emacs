@@ -23,11 +23,15 @@
 (add-to-list 'load-path (concat user-dir "/dired-extras"))
 (add-to-list 'load-path (concat user-dir "/smex"))
 (add-to-list 'load-path (concat user-dir "/twittering-mode"))
+(add-to-list 'load-path (concat user-dir "/browse-kill-ring"))
+(add-to-list 'load-path (concat user-dir "/one-key-menus"))
 
 ;(add-to-list 'load-path (concat user-dir "/scamacs/scamacs"))
 ;(add-to-list 'load-path (concat user-dir "/scamacs/ecb"))
 
 (setq exec-path (append exec-path '("/usr/local/bin")))
+
+(require 'one-key)
 
 ;; twittering-mode
 (require 'twittering-mode)
@@ -110,14 +114,14 @@
 (push '("*anything*" :height 20) popwin:special-display-config)
 (push '("*anything for files*" :height 20) popwin:special-display-config)
 
-(push '(".*ensime-sbt.*" :regexp t :height 30 :position bottom) popwin:special-display-config)
+(push '(".*ensime-sbt.*" :regexp t :height 10 :position bottom :stick t) popwin:special-display-config)
 (push '("*pianobar*" :width 60 :position right) popwin:special-display-config)
-(push '("*ENSIME-Compilation-Result*" :height 50 :position bottom) popwin:special-display-config)
-(push '("*ensime-inferior-scala*" :width 60 :position right) popwin:special-display-config)
+(push '("*ENSIME-Compilation-Result*" :height 50 :position bottom :stick t) popwin:special-display-config)
+(push '("*ensime-inferior-scala*" :width 60 :position right :stick t) popwin:special-display-config)
 
 (push '("*scratch*") popwin:special-display-config)
 (push '("*viper-info*") popwin:special-display-config)
-(push '("*magit: macaw") popwin:special-display-config)
+;(push '("*magit: macaw") popwin:special-display-config)
 (push '("*Messages*") popwin:special-display-config)
 (push '("svnlog.txt") popwin:special-display-config)
 (push '("journal.txt" :regexp t) popwin:special-display-config)
@@ -128,6 +132,7 @@
 (push '("*Warnings*") popwin:special-display-config)
 (push '("*Help*" :height 30 :position bottom) popwin:special-display-config)
 (push '("*Completions*" :height 30 :position bottom) popwin:special-display-config)
+;(push '("*One-Key*") popwin:special-display-config)
 
 ;(push '("*ack*" :height 40 :position bottom) popwin:special-display-config)
 ;(push '("*Moccur*" :height 20 :width 80 :position right) popwin:special-display-config)
@@ -733,12 +738,14 @@
 (define-key my-keys-minor-mode-map (kbd "C-f a") 'ack)
 (define-key my-keys-minor-mode-map (kbd "C-f f") 'ack-find-file)
 (define-key my-keys-minor-mode-map (kbd "C-f p") 'replace-regexp)
-(define-key my-keys-minor-mode-map (kbd "C-e") 'other-window)
 (define-key my-keys-minor-mode-map (kbd "C-c d") 'ediff-revision)
 
 (define-key my-keys-minor-mode-map (kbd "M-i") 'google-search-selection)
 (define-key my-keys-minor-mode-map (kbd "s-i") 'google-it)
 (define-key my-keys-minor-mode-map (kbd "C-f p") 'replace-regexp)
+
+(fset 'yank-to-end
+   "y$")
 
 (vimpulse-map (kbd "C-f g") 'moccur-grep-find)
 (vimpulse-map (kbd "C-f d") 'dmoccur)
@@ -747,8 +754,10 @@
 (vimpulse-map (kbd "C-f f") 'ack-find-file)
 (vimpulse-map (kbd "C-f p") 'replace-regexp)
 (vimpulse-map (kbd "C-b") 'ido-switch-buffer)
-(vimpulse-map (kbd "C-e") 'other-window)
-(vimpulse-map (kbd "Y") 'kill-line)
+(vimpulse-map (kbd "Y") 'yank-to-end)
+(vimpulse-map (kbd "A") 'viper-append)
+(vimpulse-map (kbd "a") 'viper-Append)
+
 (vimpulse-vmap (kbd "TAB") 'vimpulse-shift-right)
 (vimpulse-vmap (kbd "<S-tab>") 'vimpulse-shift-left)
 ;; TODO unbind C-y, C-e
@@ -841,3 +850,7 @@
 (autoload 'ack "full-ack" nil t)
 (autoload 'ack-find-same-file "full-ack" nil t)
 (autoload 'ack-find-file "full-ack" nil t)
+
+;; onekey
+;;
+(vimpulse-map (kbd "C-e") 'one-key-menu-ensime 'scala-mode)
