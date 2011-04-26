@@ -1805,7 +1805,8 @@ This idiom is preferred over `lexical-let'."
 		   (t
 		    (error "Unexpected reply: %S %S" id value)))))
 	  ((:compiler-ready status)
-	   (message "ENSIME ready. %s" (ensime-random-words-of-encouragement))
+           (if (functionp 'growl) (growl "ENSIME ready" (ensime-random-words-of-encouragement)))
+           (message "ENSIME ready. %s" (ensime-random-words-of-encouragement))
 	   (ensime-event-sig :compiler-ready status))
 	  ((:indexer-ready status)
 	   (ensime-event-sig :indexer-ready status))

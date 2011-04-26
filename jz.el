@@ -1,3 +1,4 @@
+;; TODO onekey for find/search, onekey search lazy
 (setq dotfiles-dir (file-name-directory
                     (or (buffer-file-name) load-file-name)))
 
@@ -132,7 +133,7 @@
 (push '("*Warnings*") popwin:special-display-config)
 (push '("*Help*" :height 30 :position bottom) popwin:special-display-config)
 (push '("*Completions*" :height 30 :position bottom) popwin:special-display-config)
-;(push '("*One-Key*") popwin:special-display-config)
+(push '("*One-Key*") popwin:special-display-config)
 
 ;(push '("*ack*" :height 40 :position bottom) popwin:special-display-config)
 ;(push '("*Moccur*" :height 20 :width 80 :position right) popwin:special-display-config)
@@ -620,6 +621,7 @@
 (add-hook 'flyspell-mode-hook
           '(lambda ()
              (define-key flyspell-mode-map (kbd "C-;") 'save-buffer)))
+(global-set-key (kbd "C-;") 'save-buffer)
 
 (setq ispell-program-name "aspell")
 (setq ispell-list-command "list")
@@ -757,6 +759,8 @@
 (vimpulse-map (kbd "Y") 'yank-to-end)
 (vimpulse-map (kbd "A") 'viper-append)
 (vimpulse-map (kbd "a") 'viper-Append)
+(vimpulse-vmap (kbd "a") 'vimpulse-visual-goto-eol)
+(vimpulse-imap (kbd "C-y") 'yank)
 
 (vimpulse-vmap (kbd "TAB") 'vimpulse-shift-right)
 (vimpulse-vmap (kbd "<S-tab>") 'vimpulse-shift-left)
@@ -854,3 +858,4 @@
 ;; onekey
 ;;
 (vimpulse-map (kbd "C-e") 'one-key-menu-ensime 'scala-mode)
+(require 'one-key-dir)
