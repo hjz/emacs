@@ -1,4 +1,5 @@
-;; TODO onekey for find/search, onekey search lazy
+(setq debug-on-error t)
+
 (setq dotfiles-dir (file-name-directory
                     (or (buffer-file-name) load-file-name)))
 
@@ -26,13 +27,21 @@
 (add-to-list 'load-path (concat user-dir "/twittering-mode"))
 (add-to-list 'load-path (concat user-dir "/browse-kill-ring"))
 (add-to-list 'load-path (concat user-dir "/one-key-menus"))
+(add-to-list 'load-path (concat user-dir "/magit-1.0.0"))
 
 ;(add-to-list 'load-path (concat user-dir "/scamacs/scamacs"))
 ;(add-to-list 'load-path (concat user-dir "/scamacs/ecb"))
 
+; no worky
+(add-to-list 'load-path (concat user-dir "/mo-git-blame"))
+(autoload 'mo-git-blame-file "mo-git-blame" nil t)
+(autoload 'mo-git-blame-current "mo-git-blame" nil t)
+
 (setq exec-path (append exec-path '("/usr/local/bin")))
 
 (require 'one-key)
+(require 'lazy-search-extension)
+
 
 ;; twittering-mode
 (require 'twittering-mode)
@@ -83,6 +92,7 @@
 
 (require 'mouse+)
 (require 'google-search)
+(require 'magit)
 
 ;; PATH
 ;; (defun read-system-path ()
@@ -187,8 +197,10 @@
 (defun my-dired-mode-hook ()
   (local-set-key (kbd "<mouse-1>") 'dired-mouse-find-file)
   (define-key dired-mode-map ";" 'dired-details-toggle)
+  (define-key dired-mode-map "e" 'wdired-change-to-wdired-mode)
   (define-key dired-mode-map "c" 'dired-do-copy))
 
+(add-hook 'wdired-mode-hook 'viper-mode)
 
 ;; side by side dired for copying
 (setq dired-dwim-target t)
@@ -387,6 +399,11 @@
     (local-set-key (kbd "C-c j") 'ensime-sbt-switch)
   )
 
+(add-hook 'el-mode-hook
+          (lambda ()
+            (local-set-key [return] 'newline-and-indent))
+  )
+
 (add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
 (add-hook 'scala-mode-hook 'highlight-80+-mode)
 (defun me-turn-off-indent-tabs-mode ()
@@ -402,7 +419,6 @@
 (add-hook 'scala-mode-hook 'highlight-fixmes-mode)
 
 (add-hook 'scala-mode-hook 'hl-line-mode)
-
 (add-hook 'scala-mode-hook
  (lambda ()
    (define-key scala-mode-map (kbd "C-n") 'ensime-forward-note)
@@ -740,8 +756,8 @@
 (define-key my-keys-minor-mode-map (kbd "C-f a") 'ack)
 (define-key my-keys-minor-mode-map (kbd "C-f f") 'ack-find-file)
 (define-key my-keys-minor-mode-map (kbd "C-f p") 'replace-regexp)
+(define-key my-keys-minor-mode-map (kbd "C-f l") 'lazy-search-menu)
 (define-key my-keys-minor-mode-map (kbd "C-c d") 'ediff-revision)
-
 (define-key my-keys-minor-mode-map (kbd "M-i") 'google-search-selection)
 (define-key my-keys-minor-mode-map (kbd "s-i") 'google-it)
 (define-key my-keys-minor-mode-map (kbd "C-f p") 'replace-regexp)
@@ -755,11 +771,19 @@
 (vimpulse-map (kbd "C-f a") 'ack)
 (vimpulse-map (kbd "C-f f") 'ack-find-file)
 (vimpulse-map (kbd "C-f p") 'replace-regexp)
+(vimpulse-map (kbd "C-f l") 'lazy-search-menu)
+(vimpulse-map (kbd "&") 'lazy-search-menu)
+(vimpulse-vmap (kbd "&") 'lazy-search-menu)
+(vimpulse-vmap (kbd "Q") 'query-replace-regexp)
+(vimpulse-map (kbd "Q") 'query-replace-regexp)
+
 (vimpulse-map (kbd "C-b") 'ido-switch-buffer)
 (vimpulse-map (kbd "Y") 'yank-to-end)
 (vimpulse-map (kbd "A") 'viper-append)
 (vimpulse-map (kbd "a") 'viper-Append)
-(vimpulse-vmap (kbd "a") 'vimpulse-visual-goto-eol)
+
+; use v to go eol in visual mode
+(vimpulse-vmap (kbd "a") 'align-regexp)
 (vimpulse-imap (kbd "C-y") 'yank)
 
 (vimpulse-vmap (kbd "TAB") 'vimpulse-shift-right)
@@ -830,9 +854,10 @@
         try-complete-file-name
         try-complete-lisp-symbol))
 
+(global-set-key (kbd "TAB") 'hippie-expand)
 ;; Enables tab completion in the `eval-expression` minibuffer
-(define-key read-expression-map [(tab)] 'hippie-expand)
-(define-key read-expression-map [(shift tab)] 'unexpand)
+(define-key minibuffer-local-map [(tab)] 'hippie-expand)
+;; (define-key minibuffer-local-map [(shift tab)] 'unexpand-abbrev)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; YASnippet
@@ -841,6 +866,9 @@
 (require 'yasnippet)
 (yas/initialize)
 (yas/load-directory (concat user-dir "/yasnippet-read-only/snippets"))
+
+(add-hook 'scala-mode-hook 'yas/minor-mode-on)
+(yas/global-mode -1)
 
 (setq yas/trigger-key (kbd "C-c <kp-multiply>"))
 
@@ -858,4 +886,12 @@
 ;; onekey
 ;;
 (vimpulse-map (kbd "C-e") 'one-key-menu-ensime 'scala-mode)
-(require 'one-key-dir)
+
+(eval-after-load "menu-bar" '(require 'menu-bar+))
+
+;; Ediff
+
+(setq ediff-split-window-function (lambda (&optional arg)
+                                    (if (> (frame-width) 150)
+                                      (split-window-horizontally arg)
+                                      (split-window-vertically arg))))

@@ -31,7 +31,7 @@
  '(ecb-vc-enable-support t)
  '(ecb-windows-height 0.2)
  '(ecb-windows-width 0.17)
- '(ediff-merge-split-window-function (quote split-window-vertically))
+ '(ediff-merge-split-window-function (quote split-window-horizontally))
  '(ediff-split-window-function (quote split-window-horizontally))
  '(elscreen-buffer-list-enabled t)
  '(elscreen-tab-display-control nil)
