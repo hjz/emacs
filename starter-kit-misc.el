@@ -25,7 +25,6 @@
       shift-select-mode nil
       mouse-yank-at-point t
       require-final-newline t
-      truncate-partial-width-windows nil
       uniquify-buffer-name-style 'forward
       ffap-machine-p-known 'reject
       whitespace-style '(trailing lines space-before-tab

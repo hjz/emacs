@@ -72,6 +72,6 @@
    )
   )
 (add-hook 'scala-mode-hook 
-  (lambda () (local-set-key (kbd "C-c s") 'switch-between-test-and-source)))
+  (lambda () (local-set-key (kbd "C-c SPC") 'switch-between-test-and-source)))
 
 (provide 'switchy)

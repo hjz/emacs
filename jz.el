@@ -1,5 +1,3 @@
-(setq debug-on-error t)
-
 (setq dotfiles-dir (file-name-directory
                     (or (buffer-file-name) load-file-name)))
 
@@ -28,11 +26,28 @@
 (add-to-list 'load-path (concat user-dir "/browse-kill-ring"))
 (add-to-list 'load-path (concat user-dir "/one-key-menus"))
 (add-to-list 'load-path (concat user-dir "/magit-1.0.0"))
+(add-to-list 'load-path (concat user-dir "/confluence-mode"))
+
+(require 'confluence)
+
+(autoload 'confluence-get-page "confluence" nil t)
+
+(eval-after-load "confluence"
+  '(progn
+       (add-hook 'confluence-mode-hook '(lambda ()
+                                         (auto-fill-mode -1)
+                                         (local-set-key "\C-j" 'confluence-newline-and-indent)))))
+
+;; open confluence page
+(global-set-key "\C-xwf" 'confluence-get-page)
 
 ;(add-to-list 'load-path (concat user-dir "/scamacs/scamacs"))
 ;(add-to-list 'load-path (concat user-dir "/scamacs/ecb"))
 
-; no worky
+(require 'real-auto-save)
+(add-hook 'viper-mode-hook 'turn-on-real-auto-save)
+(setq real-auto-save-interval 5) ;; in seconds
+
 (add-to-list 'load-path (concat user-dir "/mo-git-blame"))
 (autoload 'mo-git-blame-file "mo-git-blame" nil t)
 (autoload 'mo-git-blame-current "mo-git-blame" nil t)
@@ -42,6 +57,25 @@
 (require 'one-key)
 (require 'lazy-search-extension)
 
+ (defun rotate-windows ()
+  "Rotate your windows" (interactive) (cond ((not (> (count-windows) 1)) (message "You can't rotate a single window!"))
+ (t
+  (setq i 1)
+  (setq numWindows (count-windows))
+  (while  (< i numWindows)
+    (let* (
+           (w1 (elt (window-list) i))
+           (w2 (elt (window-list) (+ (% i numWindows) 1)))
+           (b1 (window-buffer w1))
+           (b2 (window-buffer w2))
+           (s1 (window-start w1))
+           (s2 (window-start w2))
+           )
+      (set-window-buffer w1  b2)
+      (set-window-buffer w2 b1)
+      (set-window-start w1 s2)
+      (set-window-start w2 s1)
+      (setq i (1+ i)))))))
 
 ;; twittering-mode
 (require 'twittering-mode)
@@ -172,6 +206,14 @@
 
 ;; auto save desktop on emacs idle
 (add-hook 'auto-save-hook (lambda () (desktop-save-in-desktop-dir)))
+
+;; redefine save to remove Desktop saved in ...
+(defun desktop-save-in-desktop-dir ()
+  "Save the desktop in directory `desktop-dirname'."
+  (interactive)
+  (if desktop-dirname
+      (desktop-save desktop-dirname)
+    (call-interactively 'desktop-save)))
 
 (setq desktop-buffers-not-to-save
       (concat "\\("
@@ -382,12 +424,6 @@
 
 ;; when using ido, the confirmation is rather annoying...
 (setq confirm-nonexistent-file-or-buffer nil)
-
-;; toggles
-(add-hook 'ido-minibuffer-setup-hook
- (lambda ()
-   (local-set-key (kbd "C-c p") 'ido-toggle-prefix) ;; same as in isearch
-))
 
 ;;; SCALA
 
@@ -741,6 +777,8 @@
 (define-key my-keys-minor-mode-map (kbd "C-w C-k") 'windmove-up)
 (define-key my-keys-minor-mode-map (kbd "C-w C-j") 'windmove-down)
 (define-key my-keys-minor-mode-map (kbd "<C-tab>") 'other-frame)
+(define-key my-keys-minor-mode-map (kbd "C-w ;") 'rotate-windows)
+(define-key my-keys-minor-mode-map (kbd "C-w C-;") 'rotate-windows)
 
 (define-key my-keys-minor-mode-map (kbd "C-c o") 'rename-file-and-buffer)
 (define-key my-keys-minor-mode-map (kbd "C-c g") 'customize-group)
@@ -761,6 +799,8 @@
 (define-key my-keys-minor-mode-map (kbd "M-i") 'google-search-selection)
 (define-key my-keys-minor-mode-map (kbd "s-i") 'google-it)
 (define-key my-keys-minor-mode-map (kbd "C-f p") 'replace-regexp)
+
+(define-key my-keys-minor-mode-map (kbd "C-c s") 'confluence-search)
 
 (fset 'yank-to-end
    "y$")
@@ -838,6 +878,7 @@
 (setq ac-auto-show-menu 0.8)
 
 (add-to-list 'ac-modes 'scala-mode)
+(add-to-list 'ac-modes 'confluence-mode)
 
 (define-key ac-completing-map [return] 'ac-complete)
 (define-key ac-completing-map (kbd "<S-tab>") 'ac-previous)
@@ -856,8 +897,11 @@
 
 (global-set-key (kbd "TAB") 'hippie-expand)
 ;; Enables tab completion in the `eval-expression` minibuffer
+(defun hippie-unexpand ()
+ (interactive)
+ (hippie-expand 0))
 (define-key minibuffer-local-map [(tab)] 'hippie-expand)
-;; (define-key minibuffer-local-map [(shift tab)] 'unexpand-abbrev)
+(define-key minibuffer-local-map [(shift tab)] 'hippie-unexpand)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; YASnippet
@@ -887,6 +931,17 @@
 ;;
 (vimpulse-map (kbd "C-e") 'one-key-menu-ensime 'scala-mode)
 
+(vimpulse-map (kbd "SPC") 'confluence-get-page-at-point 'confluence-mode)
+(vimpulse-map (kbd "C-e") 'one-key-menu-confluence 'confluence-mode)
+(vimpulse-map [backspace] 'confluence-pop-tag-stack 'confluence-mode)
+(vimpulse-imap [return] 'confluence-newline-and-indent 'confluence-mode)
+
+(vimpulse-map (kbd "TAB") 'confluence-list-indent-dwim 'confluence-mode)
+(vimpulse-map (kbd "<S-tab>") '(lambda () (interactive) (confluence-list-indent-dwim -1)) 'confluence-mode)
+;; (vimpulse-imap (kbd "TAB") 'auto-complete 'confluence-mode)
+(vimpulse-imap (kbd "TAB") 'confluence-list-indent-dwim 'confluence-mode)
+(vimpulse-imap (kbd "<S-tab>") '(lambda () (interactive) (confluence-list-indent-dwim -1)) 'confluence-mode)
+
 (eval-after-load "menu-bar" '(require 'menu-bar+))
 
 ;; Ediff
@@ -895,3 +950,12 @@
                                     (if (> (frame-width) 150)
                                       (split-window-horizontally arg)
                                       (split-window-vertically arg))))
+(setq debug-on-error t)
+
+(remove-hook 'minibuffer-setup-hook 'viper-minibuffer-setup-sentinel)
+(defadvice viper-set-minibuffer-overlay (around vimpulse activate) nil)
+(defadvice viper-has-face-support-p (around vimpulse activate) nil)
+(define-key minibuffer-local-map (kbd "ESC") 'abort-recursive-edit)
+
+;; change cursor to bar in minibuffer
+(add-hook 'minibuffer-setup-hook '(lambda () (setq cursor-type 'bar)))
