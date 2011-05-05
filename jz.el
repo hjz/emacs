@@ -27,8 +27,10 @@
 (add-to-list 'load-path (concat user-dir "/one-key-menus"))
 (add-to-list 'load-path (concat user-dir "/magit-1.0.0"))
 (add-to-list 'load-path (concat user-dir "/confluence-mode"))
+;(add-to-list 'load-path (concat user-dir "/rinari"))
 
 (require 'confluence)
+;(require 'rinari)
 
 (autoload 'confluence-get-page "confluence" nil t)
 
@@ -45,7 +47,8 @@
 ;(add-to-list 'load-path (concat user-dir "/scamacs/ecb"))
 
 (require 'real-auto-save)
-(add-hook 'viper-mode-hook 'turn-on-real-auto-save)
+(add-hook 'scala-mode-hook 'turn-on-real-auto-save)
+(define-key scala-mode-map (kbd "M-q") 'c-fill-paragraph)
 (setq real-auto-save-interval 5) ;; in seconds
 
 (add-to-list 'load-path (concat user-dir "/mo-git-blame"))
@@ -900,8 +903,8 @@
 (defun hippie-unexpand ()
  (interactive)
  (hippie-expand 0))
-(define-key minibuffer-local-map [(tab)] 'hippie-expand)
-(define-key minibuffer-local-map [(shift tab)] 'hippie-unexpand)
+(define-key minibuffer-local-map (kbd "C-;") 'hippie-expand)
+(define-key minibuffer-local-map  (kbd "C-:") 'hippie-unexpand)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; YASnippet
@@ -959,3 +962,28 @@
 
 ;; change cursor to bar in minibuffer
 (add-hook 'minibuffer-setup-hook '(lambda () (setq cursor-type 'bar)))
+
+(defvar ido-enable-replace-completing-read t
+  "If t, use ido-completing-read instead of completing-read if possible.
+
+Set it to nil using let in around-advice for functions where the
+original completing-read is required.  For example, if a function
+foo absolutely must use the original completing-read, define some
+advice like this:
+
+(defadvice foo (around original-completing-read-only activate)
+  (let (ido-enable-replace-completing-read) ad-do-it))")
+
+;; Replace completing-read wherever possible, unless directed otherwise
+(defadvice completing-read
+  (around use-ido-when-possible activate)
+  (if (or (not ido-enable-replace-completing-read) ; Manual override disable ido
+          (boundp 'ido-cur-list)) ; Avoid infinite loop from ido calling this
+      ad-do-it
+    (let ((allcomp (all-completions "" collection predicate)))
+      (if allcomp
+          (setq ad-return-value
+                (ido-completing-read prompt
+                               allcomp
+                               nil require-match initial-input hist def))
+        ad-do-it))))

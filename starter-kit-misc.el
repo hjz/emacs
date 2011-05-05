@@ -15,7 +15,7 @@
 (prefer-coding-system 'utf-8)
 ;(ansi-color-for-comint-mode-on)
 
-(setq visible-bell t
+(setq visible-bell nil
       fringe-mode (cons 4 0)
       echo-keystrokes 0.1
       font-lock-maximum-decoration t
