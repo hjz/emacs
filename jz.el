@@ -46,11 +46,6 @@
 ;(add-to-list 'load-path (concat user-dir "/scamacs/scamacs"))
 ;(add-to-list 'load-path (concat user-dir "/scamacs/ecb"))
 
-(require 'real-auto-save)
-(add-hook 'scala-mode-hook 'turn-on-real-auto-save)
-(define-key scala-mode-map (kbd "M-q") 'c-fill-paragraph)
-(setq real-auto-save-interval 5) ;; in seconds
-
 (add-to-list 'load-path (concat user-dir "/mo-git-blame"))
 (autoload 'mo-git-blame-file "mo-git-blame" nil t)
 (autoload 'mo-git-blame-current "mo-git-blame" nil t)
@@ -432,6 +427,10 @@
 
 (require 'scala-mode-auto)
 
+(require 'real-auto-save)
+(add-hook 'scala-mode-hook 'turn-on-real-auto-save)
+(setq real-auto-save-interval 5) ;; in seconds
+
 (add-hook 'scala-mode-hook
   (lambda ()
     (local-set-key [return] '(lambda () (interactive) (setq last-command nil) (newline-and-indent))))
@@ -462,6 +461,7 @@
  (lambda ()
    (define-key scala-mode-map (kbd "C-n") 'ensime-forward-note)
    (define-key scala-mode-map (kbd "C-p") 'ensime-backward-note)
+   (define-key scala-mode-map (kbd "M-q") 'c-fill-paragraph)
 ))
 ;; reclaim some binding used by shell mode and shell-command.
 ;; the shell mode and associated mode and commands use keys in comint-mode-map.
@@ -987,3 +987,6 @@ advice like this:
                                allcomp
                                nil require-match initial-input hist def))
         ad-do-it))))
+
+(setq ensime-jvm-args "-server -verbose:class -verbosegc -Xloggc:/tmp/ensime_gc.log -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -XX:+PrintGCDateStamps -XX:+PrintTenuringDistribution -XX:+PrintHeapAtGC -XX:+UseConcMarkSweepGC -XX:+UseParNewGC -XX:+UseAdaptiveSizePolicy -Xms256M -Xmx2048M -Dfile.encoding=UTF-8")
+(setenv "ENSIME_JVM_ARGS" ensime-jvm-args)
