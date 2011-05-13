@@ -59,13 +59,13 @@
 ;;
 ;; 2010/10/17
 ;;    * Joe Bloggs
-;;       * Added lazy-search-mark-sentence, lazy-search-copy-sentence, 
+;;       * Added lazy-search-mark-sentence, lazy-search-copy-sentence,
 ;;         lazy-search-mark-paragraph and lazy-search-copy-paragraph
-;;       
+;;
 ;; 2010/09/24
 ;;    * Joe Bloggs
 ;;       * Removed mark/copy parentheses functions and put them in lazy-search.el instead.
-;;       
+;;
 ;;
 ;; 2008/12/24
 ;;      * First released.
@@ -91,6 +91,18 @@
   (interactive)
   (setq isearch-string lazy-search-object) ;set isearch string with object
   (isearch-moccur)
+  (lazy-search-quit))
+
+(defun lazy-search-ack-same ()
+  "Use moccur for ack same"
+  (interactive)
+  (ack-same lazy-search-object) ;set isearch string with object
+  (lazy-search-quit))
+
+(defun lazy-search-ack-all ()
+  "Use moccur for ack all"
+  (interactive)
+  (ack lazy-search-object) ;set isearch string with object
   (lazy-search-quit))
 
 (defun lazy-search-moccur-all ()
@@ -144,6 +156,9 @@ otherwise copy object."
 		    (("N" . "Copy sentence") . lazy-search-copy-sentence)
                     (("v" . "Moccur") . lazy-search-moccur)
                     (("V" . "Moccur All") . lazy-search-moccur-all)
+                    (("V" . "Moccur All") . lazy-search-moccur-all)
+                    (("7" . "Ack Same") . lazy-search-ack-same)
+                    (("a" . "Ack All") . lazy-search-ack-all)
                     ))
   (add-to-alist 'lazy-search-menu-alist elt-cons))
 

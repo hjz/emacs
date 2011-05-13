@@ -427,10 +427,6 @@
 
 (require 'scala-mode-auto)
 
-(require 'real-auto-save)
-(add-hook 'scala-mode-hook 'turn-on-real-auto-save)
-(setq real-auto-save-interval 5) ;; in seconds
-
 (add-hook 'scala-mode-hook
   (lambda ()
     (local-set-key [return] '(lambda () (interactive) (setq last-command nil) (newline-and-indent))))
@@ -513,10 +509,6 @@
 (global-set-key (kbd "M-8") 'split-window-vertically) ; was digit-argument
 (global-set-key (kbd "M-9") 'split-window-horizontally) ; was digit-argument
 (global-set-key (kbd "M-0") 'delete-other-windows) ; was digit-argument
-
-; Fullscreen
-(global-set-key (kbd "<s-return>") 'maximize-frame)
-(maximize-frame)
 
 ; open file
 (global-set-key [(super o)] 'find-file)
@@ -990,3 +982,8 @@ advice like this:
 
 (setq ensime-jvm-args "-server -verbose:class -verbosegc -Xloggc:/tmp/ensime_gc.log -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -XX:+PrintGCDateStamps -XX:+PrintTenuringDistribution -XX:+PrintHeapAtGC -XX:+UseConcMarkSweepGC -XX:+UseParNewGC -XX:+UseAdaptiveSizePolicy -Xms256M -Xmx2048M -Dfile.encoding=UTF-8")
 (setenv "ENSIME_JVM_ARGS" ensime-jvm-args)
+
+; Fullscreen
+(global-set-key (kbd "<s-return>") 'maximize-frame)
+(maximize-frame)
+
