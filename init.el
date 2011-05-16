@@ -112,3 +112,4 @@ If suffixes is omitted, `exec-suffix-list' is used."
 
 ;;; init.el ends here
 (put 'dired-find-alternate-file 'disabled nil)
+(put 'narrow-to-region 'disabled nil)

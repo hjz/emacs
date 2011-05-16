@@ -965,6 +965,8 @@
 (vimpulse-vmap (kbd "K") 'viper-backward-paragraph)
 (vimpulse-vmap (kbd "J") 'viper-forward-paragraph)
 
+(vimpulse-vmap (kbd "m") 'apply-macro-to-region-lines)
+
 (eval-after-load "menu-bar" '(require 'menu-bar+))
 
 ;; Ediff
