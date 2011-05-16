@@ -29,6 +29,9 @@
 (add-to-list 'load-path (concat user-dir "/confluence-mode"))
 ;(add-to-list 'load-path (concat user-dir "/rinari"))
 
+(require 'dot-mode)
+(add-hook 'find-file-hooks 'dot-mode-on)
+
 (require 'confluence)
 ;(require 'rinari)
 
@@ -517,8 +520,7 @@
 (global-set-key [(super F)] 'ack)
 
 ; buffer switching
-(global-set-key [(super k)] 'previous-buffer)
-(global-set-key [(super j)] 'next-buffer)
+(global-set-key [(super k)] 'next-buffer)
 
 ; close window
 (global-set-key [(super w)]
@@ -936,7 +938,9 @@
 ;; (vimpulse-imap (kbd "TAB") 'auto-complete 'confluence-mode)
 (vimpulse-imap (kbd "TAB") 'confluence-list-indent-dwim 'confluence-mode)
 (vimpulse-imap (kbd "<S-tab>") '(lambda () (interactive) (confluence-list-indent-dwim -1)) 'confluence-mode)
-
+(vimpulse-map [(super j)] 'vimpulse-join)
+(vimpulse-map (kbd "K") 'viper-backward-paragraph)
+(vimpulse-map (kbd "J") 'viper-forward-paragraph)
 (eval-after-load "menu-bar" '(require 'menu-bar+))
 
 ;; Ediff
