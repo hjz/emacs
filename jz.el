@@ -29,6 +29,27 @@
 (add-to-list 'load-path (concat user-dir "/confluence-mode"))
 ;(add-to-list 'load-path (concat user-dir "/rinari"))
 
+(defun toggle-kbd-macro-recording-on ()
+  "One-key keyboard macros: turn recording on."
+  (interactive)
+  (define-key
+    global-map
+    (this-command-keys)
+    'toggle-kbd-macro-recording-off)
+  (start-kbd-macro nil))
+
+(defun toggle-kbd-macro-recording-off ()
+  "One-key keyboard macros: turn recording off."
+  (interactive)
+  (define-key
+    global-map
+    (this-command-keys)
+    'toggle-kbd-macro-recording-on)
+  (end-kbd-macro))
+
+(global-set-key '[(f10)]          'call-last-kbd-macro)
+(global-set-key '[(shift f10)]    'toggle-kbd-macro-recording-on)
+
 (require 'dot-mode)
 (add-hook 'find-file-hooks 'dot-mode-on)
 
@@ -941,6 +962,9 @@
 (vimpulse-map [(super j)] 'vimpulse-join)
 (vimpulse-map (kbd "K") 'viper-backward-paragraph)
 (vimpulse-map (kbd "J") 'viper-forward-paragraph)
+(vimpulse-vmap (kbd "K") 'viper-backward-paragraph)
+(vimpulse-vmap (kbd "J") 'viper-forward-paragraph)
+
 (eval-after-load "menu-bar" '(require 'menu-bar+))
 
 ;; Ediff
