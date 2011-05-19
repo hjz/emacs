@@ -457,7 +457,6 @@
   (setq indent-tabs-mode nil))
 (add-hook 'scala-mode-hook 'me-turn-off-indent-tabs-mode)
 (add-hook 'scala-mode-hook 'hs-minor-mode)
-;(add-hook 'scala-mode-hook 'camelCase-mode)
 (add-hook 'scala-mode-hook 'subword-mode)
 (add-hook 'scala-mode-hook 'autopair-mode)
 
@@ -859,8 +858,6 @@
       '(diminish 'undo-tree-mode "U"))
   (eval-after-load "pair"
     '(diminish 'autopair-mode "P"))
-  (eval-after-load "camelCase"
-    '(diminish 'camelCase-mode "C"))
   (eval-after-load "fixme"
     '(diminish 'highlight-fixmes-mode "F"))
   (eval-after-load "yasnippet"
@@ -962,6 +959,8 @@
 (vimpulse-map (kbd "]") 'hs-toggle-hiding)
 (vimpulse-map (kbd "SPC") 'vimpulse-indent)
 (vimpulse-map "?" 'describe-bindings)
+(vimpulse-map "w" 'forward-word)
+(vimpulse-map "b" 'backward-word)
 (define-key vimpulse-visual-basic-map "v" 'end-of-line)
 
 (vimpulse-define-text-object vimpulse-sexp (arg)
