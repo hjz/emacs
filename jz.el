@@ -29,6 +29,11 @@
 (add-to-list 'load-path (concat user-dir "/confluence-mode"))
 ;(add-to-list 'load-path (concat user-dir "/rinari"))
 
+    (require 'command-frequency)
+    (command-frequency-table-load)
+    (command-frequency-mode 1)
+    (command-frequency-autosave-mode 1)
+
 (defun toggle-kbd-macro-recording-on ()
   "One-key keyboard macros: turn recording on."
   (interactive)
@@ -188,7 +193,6 @@
 
 (push '("*scratch*") popwin:special-display-config)
 (push '("*viper-info*") popwin:special-display-config)
-;(push '("*magit: macaw") popwin:special-display-config)
 (push '("*Messages*") popwin:special-display-config)
 (push '("svnlog.txt") popwin:special-display-config)
 (push '("journal.txt" :regexp t) popwin:special-display-config)
@@ -351,21 +355,6 @@
 
 (require 'vimpulse)
 (require 'viper-in-more-modes)
-
-(vimpulse-map ";" 'viper-ex)
-(vimpulse-vmap ";" 'vimpulse-visual-ex)
-(vimpulse-map (kbd "SPC") 'hs-toggle-hiding)
-(vimpulse-map "?" 'describe-bindings)
-(define-key vimpulse-visual-basic-map "v" 'end-of-line)
-;(define-key vimpulse-visual-basic-map "-" 'comment-dwim)
-
-(vimpulse-define-text-object vimpulse-sexp (arg)
-  "Select a S-expression."
-  :keys '("ae" "ie")
-  (vimpulse-inner-object-range
-   arg
-   'backward-sexp
-   'forward-sexp))
 
 ; turns it off in unwanted places
 (require 'linum-off)
@@ -539,9 +528,6 @@
 
 ; use full-ack for Find
 (global-set-key [(super F)] 'ack)
-
-; buffer switching
-(global-set-key [(super k)] 'next-buffer)
 
 ; close window
 (global-set-key [(super w)]
@@ -794,6 +780,9 @@
 (define-key my-keys-minor-mode-map (kbd "C-w C-l") 'windmove-right)
 (define-key my-keys-minor-mode-map (kbd "C-w C-k") 'windmove-up)
 (define-key my-keys-minor-mode-map (kbd "C-w C-j") 'windmove-down)
+(define-key my-keys-minor-mode-map (kbd "C-w ,") 'split-window-vertically)
+(define-key my-keys-minor-mode-map (kbd "C-w .") 'split-window-horizontally)
+(define-key my-keys-minor-mode-map (kbd "C-w SPC") 'delete-window)
 (define-key my-keys-minor-mode-map (kbd "<C-tab>") 'other-frame)
 (define-key my-keys-minor-mode-map (kbd "C-w ;") 'rotate-windows)
 (define-key my-keys-minor-mode-map (kbd "C-w C-;") 'rotate-windows)
@@ -954,18 +943,34 @@
 (vimpulse-map [backspace] 'confluence-pop-tag-stack 'confluence-mode)
 (vimpulse-imap [return] 'confluence-newline-and-indent 'confluence-mode)
 
+(vimpulse-map (kbd "TAB") 'vimpulse-indent)
 (vimpulse-map (kbd "TAB") 'confluence-list-indent-dwim 'confluence-mode)
 (vimpulse-map (kbd "<S-tab>") '(lambda () (interactive) (confluence-list-indent-dwim -1)) 'confluence-mode)
 ;; (vimpulse-imap (kbd "TAB") 'auto-complete 'confluence-mode)
 (vimpulse-imap (kbd "TAB") 'confluence-list-indent-dwim 'confluence-mode)
 (vimpulse-imap (kbd "<S-tab>") '(lambda () (interactive) (confluence-list-indent-dwim -1)) 'confluence-mode)
-(vimpulse-map [(super j)] 'vimpulse-join)
-(vimpulse-map (kbd "K") 'viper-backward-paragraph)
-(vimpulse-map (kbd "J") 'viper-forward-paragraph)
-(vimpulse-vmap (kbd "K") 'viper-backward-paragraph)
-(vimpulse-vmap (kbd "J") 'viper-forward-paragraph)
+(vimpulse-map (kbd "s-k") 'kill-line)
+(vimpulse-map (kbd "s-j") 'newline-and-indent)
+(vimpulse-map (kbd "C-k") 'viper-backward-paragraph)
+(vimpulse-map (kbd "C-j") 'viper-forward-paragraph)
+(vimpulse-vmap (kbd "]") 'sort-lines)
 
 (vimpulse-vmap (kbd "m") 'apply-macro-to-region-lines)
+
+(vimpulse-map ";" 'viper-ex)
+(vimpulse-vmap ";" 'vimpulse-visual-ex)
+(vimpulse-map (kbd "]") 'hs-toggle-hiding)
+(vimpulse-map (kbd "SPC") 'vimpulse-indent)
+(vimpulse-map "?" 'describe-bindings)
+(define-key vimpulse-visual-basic-map "v" 'end-of-line)
+
+(vimpulse-define-text-object vimpulse-sexp (arg)
+  "Select a S-expression."
+  :keys '("ae" "ie")
+  (vimpulse-inner-object-range
+   arg
+   'backward-sexp
+   'forward-sexp))
 
 (eval-after-load "menu-bar" '(require 'menu-bar+))
 
@@ -1016,4 +1021,3 @@ advice like this:
 ; Fullscreen
 (global-set-key (kbd "<s-return>") 'maximize-frame)
 (maximize-frame)
-
