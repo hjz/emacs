@@ -29,34 +29,34 @@
 (add-to-list 'load-path (concat user-dir "/confluence-mode"))
 ;(add-to-list 'load-path (concat user-dir "/rinari"))
 
-    (require 'command-frequency)
-    (command-frequency-table-load)
-    (command-frequency-mode 1)
-    (command-frequency-autosave-mode 1)
+    ;(require 'command-frequency)
+    ;(command-frequency-table-load)
+    ;(command-frequency-mode 1)
+    ;(command-frequency-autosave-mode 1)
 
-(defun toggle-kbd-macro-recording-on ()
-  "One-key keyboard macros: turn recording on."
-  (interactive)
-  (define-key
-    global-map
-    (this-command-keys)
-    'toggle-kbd-macro-recording-off)
-  (start-kbd-macro nil))
+;(defun toggle-kbd-macro-recording-on ()
+  ;"One-key keyboard macros: turn recording on."
+  ;(interactive)
+  ;(define-key
+    ;global-map
+    ;(this-command-keys)
+    ;'toggle-kbd-macro-recording-off)
+  ;(start-kbd-macro nil))
 
-(defun toggle-kbd-macro-recording-off ()
-  "One-key keyboard macros: turn recording off."
-  (interactive)
-  (define-key
-    global-map
-    (this-command-keys)
-    'toggle-kbd-macro-recording-on)
-  (end-kbd-macro))
+;(defun toggle-kbd-macro-recording-off ()
+  ;"One-key keyboard macros: turn recording off."
+  ;(interactive)
+  ;(define-key
+    ;global-map
+    ;(this-command-keys)
+    ;'toggle-kbd-macro-recording-on)
+  ;(end-kbd-macro))
 
-(global-set-key '[(f10)]          'call-last-kbd-macro)
-(global-set-key '[(shift f10)]    'toggle-kbd-macro-recording-on)
+;(global-set-key '[(f10)]          'call-last-kbd-macro)
+;(global-set-key '[(shift f10)]    'toggle-kbd-macro-recording-on)
 
-(require 'dot-mode)
-(add-hook 'find-file-hooks 'dot-mode-on)
+;(require 'dot-mode)
+;(add-hook 'find-file-hooks 'dot-mode-on)
 
 (require 'confluence)
 ;(require 'rinari)
@@ -950,6 +950,7 @@
 (vimpulse-map (kbd "s-j") 'newline-and-indent)
 (vimpulse-map (kbd "C-k") 'viper-backward-paragraph)
 (vimpulse-map (kbd "C-j") 'viper-forward-paragraph)
+(vimpulse-map (kbd "C-i") 'vimpulse-jump-backward)
 (vimpulse-vmap (kbd "]") 'sort-lines)
 
 (vimpulse-vmap (kbd "m") 'apply-macro-to-region-lines)
@@ -959,13 +960,7 @@
 (vimpulse-map (kbd "]") 'hs-toggle-hiding)
 (vimpulse-map (kbd "SPC") 'vimpulse-indent)
 (vimpulse-map "?" 'describe-bindings)
-(vimpulse-map "w" '(lambda ()
-                     (interactive)
-                     (forward-word)
-                     (forward-word)
-                     (backward-word)
-                     )
-              )
+
 (vimpulse-map "b" 'backward-word)
 (define-key vimpulse-visual-basic-map "v" 'end-of-line)
 
