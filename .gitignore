@@ -7,3 +7,9 @@ Session.vim
 ede-projects.el
 *campfire*
 *.elc
+tags
+places
+url
+elpa
+vimpulse-surround
+*comphist.dat

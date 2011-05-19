@@ -982,13 +982,13 @@
                                       (split-window-vertically arg))))
 (setq debug-on-error t)
 
-(remove-hook 'minibuffer-setup-hook 'viper-minibuffer-setup-sentinel)
-(defadvice viper-set-minibuffer-overlay (around vimpulse activate) nil)
-(defadvice viper-has-face-support-p (around vimpulse activate) nil)
-(define-key minibuffer-local-map (kbd "ESC") 'abort-recursive-edit)
+;(remove-hook 'minibuffer-setup-hook 'viper-minibuffer-setup-sentinel)
+;(defadvice viper-set-minibuffer-overlay (around vimpulse activate) nil)
+;(defadvice viper-has-face-support-p (around vimpulse activate) nil)
+;(define-key minibuffer-local-map (kbd "ESC") 'abort-recursive-edit)
 
-;; change cursor to bar in minibuffer
-(add-hook 'minibuffer-setup-hook '(lambda () (setq cursor-type 'bar)))
+;;; change cursor to bar in minibuffer
+;(add-hook 'minibuffer-setup-hook '(lambda () (setq cursor-type 'bar)))
 
 (defvar ido-enable-replace-completing-read t
   "If t, use ido-completing-read instead of completing-read if possible.
