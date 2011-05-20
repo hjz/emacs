@@ -93,7 +93,7 @@
 ;; 2010/10/17
 ;;    * Joe Bloggs
 ;;       * Added lazy-search-toggle-keep-region function and lazy-search-keep-region customization variable.
-;;       
+;;
 ;; 2010/09/24
 ;;    * Joe Bloggs
 ;;       * Moved function for mark/copy parentheses from lazy-search-extension.el to here.
@@ -205,7 +205,7 @@ Otherwise region will be cleared."
 
 (defun lazy-search-toggle-keep-region (val)
   "If called interactively with a prefix, or non-interactively with val equal to 4,
-set the current value of `lazy-search-keep-region' to t. 
+set the current value of `lazy-search-keep-region' to t.
 If called with a double prefix, or with val equal to 16, set `lazy-search-keep-region' to nil.
 Otherwise, toggle the current value of `lazy-search-keep-region'."
   (interactive "p")
@@ -754,7 +754,7 @@ Search backward if option `REVERSE' is `non-nil'."
            (("Y" . "Search Yank") . lazy-search-search-yank)
            ;; Isearch.
            (("C-s" . "Switch To Isearch") . lazy-search-to-isearch)
-	   (("%" . "Switch to query-replace") . lazy-search-to-query-replace)
+	   (("&" . "Switch to query-replace") . lazy-search-to-query-replace)
            ;; Others.
 	   (("t" . "Toggle keep region") . lazy-search-toggle-keep-region)
            (("E" . "Edit Search Object") . lazy-search-edit-object)

@@ -3,6 +3,9 @@
 
 (setq user-dir (concat dotfiles-dir user-login-name))
 
+;; no graphic dialog
+(setq use-dialog-box nil)
+
 (add-to-list 'load-path (concat user-dir "/elisp"))
 (add-to-list 'load-path (concat user-dir "/apel-10.8"))
 (add-to-list 'load-path (concat user-dir "/yasnippet-read-only"))
@@ -29,34 +32,34 @@
 (add-to-list 'load-path (concat user-dir "/confluence-mode"))
 ;(add-to-list 'load-path (concat user-dir "/rinari"))
 
-    ;(require 'command-frequency)
-    ;(command-frequency-table-load)
-    ;(command-frequency-mode 1)
-    ;(command-frequency-autosave-mode 1)
+    (require 'command-frequency)
+    (command-frequency-table-load)
+    (command-frequency-mode 1)
+    (command-frequency-autosave-mode 1)
 
-;(defun toggle-kbd-macro-recording-on ()
-  ;"One-key keyboard macros: turn recording on."
-  ;(interactive)
-  ;(define-key
-    ;global-map
-    ;(this-command-keys)
-    ;'toggle-kbd-macro-recording-off)
-  ;(start-kbd-macro nil))
+(defun toggle-kbd-macro-recording-on ()
+  "One-key keyboard macros: turn recording on."
+  (interactive)
+  (define-key
+    global-map
+    (this-command-keys)
+    'toggle-kbd-macro-recording-off)
+  (start-kbd-macro nil))
 
-;(defun toggle-kbd-macro-recording-off ()
-  ;"One-key keyboard macros: turn recording off."
-  ;(interactive)
-  ;(define-key
-    ;global-map
-    ;(this-command-keys)
-    ;'toggle-kbd-macro-recording-on)
-  ;(end-kbd-macro))
+(defun toggle-kbd-macro-recording-off ()
+  "One-key keyboard macros: turn recording off."
+  (interactive)
+  (define-key
+    global-map
+    (this-command-keys)
+    'toggle-kbd-macro-recording-on)
+  (end-kbd-macro))
 
-;(global-set-key '[(f10)]          'call-last-kbd-macro)
-;(global-set-key '[(shift f10)]    'toggle-kbd-macro-recording-on)
+(global-set-key '[(f10)]          'call-last-kbd-macro)
+(global-set-key '[(shift f10)]    'toggle-kbd-macro-recording-on)
 
-;(require 'dot-mode)
-;(add-hook 'find-file-hooks 'dot-mode-on)
+(require 'dot-mode)
+(add-hook 'find-file-hooks 'dot-mode-on)
 
 (require 'confluence)
 ;(require 'rinari)
@@ -453,6 +456,7 @@
 
 (add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
 (add-hook 'scala-mode-hook 'highlight-80+-mode)
+(add-hook 'scala-mode-hook 'idle-highlight)
 (defun me-turn-off-indent-tabs-mode ()
   (setq indent-tabs-mode nil))
 (add-hook 'scala-mode-hook 'me-turn-off-indent-tabs-mode)
@@ -659,9 +663,9 @@
 (define-key (current-global-map) [remap vimpulse-jump-to-tag-at-point] 'ensime-edit-definition)
 
 ;(define-key (current-global-map) [remap viper-forward-word] 'forward-word)
-;(define-key (current-global-map) [remap vimpulse-operator-forward-word] 'forward-word)
 ;(define-key (current-global-map) [remap viper-backward-word] 'backward-word)
 ;(define-key (current-global-map) [remap vimpulse-operator-backward-word] 'backward-word)
+(define-key (current-global-map) [remap vimpulse-operator-forward-word] 'subword-forward)
 
 (setq campfire-room-name "API")
 (setq campfire-room-id "188551")
@@ -779,9 +783,10 @@
 (define-key my-keys-minor-mode-map (kbd "C-w C-l") 'windmove-right)
 (define-key my-keys-minor-mode-map (kbd "C-w C-k") 'windmove-up)
 (define-key my-keys-minor-mode-map (kbd "C-w C-j") 'windmove-down)
-(define-key my-keys-minor-mode-map (kbd "C-w ,") 'split-window-vertically)
-(define-key my-keys-minor-mode-map (kbd "C-w .") 'split-window-horizontally)
+(define-key my-keys-minor-mode-map (kbd "C-w ,") '(lambda () (interactive) (split-window-vertically) (other-window 1)))
+(define-key my-keys-minor-mode-map (kbd "C-w .") '(lambda () (interactive) (split-window-horizontally) (other-window 1)))
 (define-key my-keys-minor-mode-map (kbd "C-w SPC") 'delete-window)
+(define-key my-keys-minor-mode-map (kbd "C-w C-SPC") 'delete-window)
 (define-key my-keys-minor-mode-map (kbd "<C-tab>") 'other-frame)
 (define-key my-keys-minor-mode-map (kbd "C-w ;") 'rotate-windows)
 (define-key my-keys-minor-mode-map (kbd "C-w C-;") 'rotate-windows)
@@ -811,6 +816,21 @@
 (fset 'yank-to-end
    "y$")
 
+(fset 'surround-paren
+   (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ([100 105 119 105 40 25 escape 37 105] 0 "%d")) arg)))
+
+(fset 'surround-square
+   (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ([100 105 119 105 91 25 escape 37 105] 0 "%d")) arg)))
+
+(fset 'surround-brace
+   (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ([100 105 119 105 123 25 escape 37 105] 0 "%d")) arg)))
+
+(vimpulse-map (kbd ",c") 'surround-brace)
+(vimpulse-map (kbd ",b") 'surround-paren)
+(vimpulse-map (kbd ",s") 'surround-square)
+
+(vimpulse-imap (kbd "RET") 'reindent-then-newline-and-indent)
+
 (vimpulse-map (kbd "C-f g") 'moccur-grep-find)
 (vimpulse-map (kbd "C-f d") 'dmoccur)
 (vimpulse-map (kbd "C-f s") 'ack-same)
@@ -829,14 +849,16 @@
 (vimpulse-map (kbd "a") 'viper-Append)
 
 ; use v to go eol in visual mode
-(vimpulse-vmap (kbd "a") 'align-regexp)
+(vimpulse-vmap (kbd "=") 'align-regexp)
+(vimpulse-vmap (kbd "=") 'align-regexp)
 (vimpulse-imap (kbd "C-y") 'yank)
 
 (vimpulse-vmap (kbd "TAB") 'vimpulse-shift-right)
 (vimpulse-vmap (kbd "<S-tab>") 'vimpulse-shift-left)
-;; TODO unbind C-y, C-e
+;; TODO unbind , C-e
 
 (global-set-key (kbd "C-c k") 'ecb-toggle-ecb-windows)
+(global-set-key (kbd "M-w") 'subword-forward)
 (global-set-key (kbd "C-c l") 'ensime) ;; replace lambda
 ;(global-set-key (kbd "C-c ;") 'ensime-ecb)
 
@@ -940,7 +962,6 @@
 (vimpulse-map [backspace] 'confluence-pop-tag-stack 'confluence-mode)
 (vimpulse-imap [return] 'confluence-newline-and-indent 'confluence-mode)
 
-(vimpulse-map (kbd "TAB") 'vimpulse-indent)
 (vimpulse-map (kbd "TAB") 'confluence-list-indent-dwim 'confluence-mode)
 (vimpulse-map (kbd "<S-tab>") '(lambda () (interactive) (confluence-list-indent-dwim -1)) 'confluence-mode)
 ;; (vimpulse-imap (kbd "TAB") 'auto-complete 'confluence-mode)
@@ -950,7 +971,7 @@
 (vimpulse-map (kbd "s-j") 'newline-and-indent)
 (vimpulse-map (kbd "C-k") 'viper-backward-paragraph)
 (vimpulse-map (kbd "C-j") 'viper-forward-paragraph)
-(vimpulse-map (kbd "C-i") 'vimpulse-jump-backward)
+(vimpulse-map (kbd "C-i") 'vimpulse-jump-forward)
 (vimpulse-vmap (kbd "]") 'sort-lines)
 
 (vimpulse-vmap (kbd "m") 'apply-macro-to-region-lines)
@@ -980,7 +1001,7 @@
                                     (if (> (frame-width) 150)
                                       (split-window-horizontally arg)
                                       (split-window-vertically arg))))
-(setq debug-on-error t)
+;(setq debug-on-error t)
 
 ;(remove-hook 'minibuffer-setup-hook 'viper-minibuffer-setup-sentinel)
 ;(defadvice viper-set-minibuffer-overlay (around vimpulse activate) nil)

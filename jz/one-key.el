@@ -95,8 +95,8 @@
 ;; Now when you type the key, a one-key menu will popup at the bottom of the window.
 ;; Then you just type a keystroke listed in the menu to execute the corresponding command.
 ;;
-;; You can also associate menus with major-modes using the customizable `one-key-mode-alist' variable, 
-;; and the `one-key-get-menu' command. When this command is run it will open the menu associated with the 
+;; You can also associate menus with major-modes using the customizable `one-key-mode-alist' variable,
+;; and the `one-key-get-menu' command. When this command is run it will open the menu associated with the
 ;; current major-mode, or the toplevel menu if there is no associated menu.
 ;; You can bind this to a global key, e.g:
 ;;
@@ -221,7 +221,7 @@
 ;; Put one-key.el in a directory in your load-path, e.g. ~/.emacs.d/
 ;; You can add a directory to your load-path with the following line in ~/.emacs
 ;; (add-to-list 'load-path (expand-file-name "~/elisp"))
-;; where ~/elisp is the directory you want to add 
+;; where ~/elisp is the directory you want to add
 ;; (you don't need to do this for ~/.emacs.d - it's added by default).
 ;;
 ;; Add the following to your ~/.emacs startup file.
@@ -282,7 +282,7 @@
 ;; 2010/11/27
 ;;    * Joe Bloggs
 ;;       * Quick fix to one-key-template-write so that it remains in one-key-template-mode after writing
-;;       
+;;
 ;; 2010/11/23
 ;;    * Joe Bloggs
 ;;       * Added `one-key-template-group-key-items-by-regexps', `one-key-template-describe-command',
@@ -292,7 +292,7 @@
 ;;    * Joe Bloggs
 ;;       * Added `one-key-template-write' function for saving *One-Key-Template* buffer in `one-key-menus-location',
 ;;         and added keybinding `one-key-template-mode' and item to `one-key-menu-one-key-template-alist'.
-;;       
+;;
 ;; 2010/11/18
 ;;    * Joe Bloggs
 ;;       * Added new major mode for editing one-key-menus in *One-Key-Template* buffer
@@ -317,7 +317,7 @@
 ;; 2010/09/27
 ;;    * Joe Bloggs
 ;;       * Altered one-key-make-template so that it adds the original keys to the descriptions of each item.
-;;       
+;;
 ;; 2010/09/21
 ;;    * Joe Bloggs
 ;;       * Fixed a problems with one-key-make-template so it should work with more keymaps
@@ -502,6 +502,13 @@ The string should be the same as the string displayed by the `describe-key' func
   :type 'string
   :group 'one-key)
 
+(defcustom one-key-key-search "C-s"
+  "String representing the search key for one-key menus. This key is available in all one-key menus, and when
+pressed will quit the menu.
+The string should be the same as the string displayed by the `describe-key' function after pressing the key."
+  :type 'string
+  :group 'one-key)
+
 (defcustom one-key-key-hide "?"
   "String representing the hide key for one-key menus. This key is available in all one-key menus, and when
 pressed will hide the menu.
@@ -613,7 +620,7 @@ If no region is active then just the current line will be moved."
 (defun one-key-template-move-line-region-down nil
   "Move the current line/region down by N lines where N is the prefix arg.
 If no prefix is given then N will be set to 1.
-If no region is active then just the current line will be moved."  
+If no region is active then just the current line will be moved."
   (interactive)
   (if (not (mark)) (push-mark (point)))
   (let ((start (region-beginning)) (end (region-end)) (n current-prefix-arg))
@@ -675,7 +682,7 @@ active region, and REVERSE is set to t if a prefix arg is passed but nil otherwi
       (goto-char (point-min))
       (let ((inhibit-field-text-motion t))
 	(sort-subr reverse 'forward-line 'end-of-line nil nil
-		   (lambda (str1 str2) 
+		   (lambda (str1 str2)
                      (let ((cur 0) (match nil))
                        (while (and (< cur (length regexps)) (not match))
                          (let* ((regexp (nth cur regexps))
@@ -880,7 +887,7 @@ Will highlight this `MSG' with face `MSG-FACE'."
 
 (defun one-key-highlight-help (title keystroke)
   "Highlight TITLE help information with KEYSTROKE."
-  (setq title (one-key-highlight (format "Here is a list of <%s> keystrokes. Type '%s' to hide, '%s' to exit, '%s/%s' and '%s/%s' to scroll.\n               Type '%s' for help about next keystroke, and type '%s' to edit this menu\n" title one-key-key-hide one-key-key-quit one-key-key-up one-key-key-down one-key-key-pgup one-key-key-pgdown one-key-key-help one-key-key-edit)
+  (setq title (one-key-highlight (format "Here is a list of <%s> keystrokes. Type '%s' to hide, '%s' to exit, '%s/%s' and '%s/%s' to scroll.\n               Type '%s' for help about next keystroke, type '%s' to edit this menu and '%s' to search\n" title one-key-key-hide one-key-key-quit one-key-key-up one-key-key-down one-key-key-pgup one-key-key-pgdown one-key-key-help one-key-key-edit one-key-key-search)
                                  "\\(<[^<>]*>\\|'[^']*'\\)"
                                  '(face one-key-title)))
   (setq keystroke (one-key-highlight keystroke
@@ -948,7 +955,7 @@ last command when it miss matches in key alist."
                     ;; Call function when match keystroke.
                     (when (one-key-match-keystroke key match-key)
 		      (if one-key-menu-show-help
-			  (progn 
+			  (progn
 			    ;; Show help about command
 			    (describe-function command)
 			    ;; Set `one-key-menu-call-first-time' with "nil".
@@ -968,6 +975,9 @@ last command when it miss matches in key alist."
               nil)
             ;; Handle last.
             (one-key-handle-last alternate-function self recursion-p))
+           ((one-key-match-keystroke key one-key-key-search)
+            ;; search
+            (isearch-forward-regexp))
            ;; Match build-in keystroke.
            ((one-key-match-keystroke key one-key-key-quit)
             ;; quit
@@ -1247,7 +1257,7 @@ TITLE is title name that any string you like."
                 (let ((keystr (replace-regexp-in-string
                                "\\\"" "\\\\\""
                                (replace-regexp-in-string "\\\\" "\\\\\\\\" key))))
-                  (insert (format "((\"%s\" . \"%s (%s)\") . %s)" 
+                  (insert (format "((\"%s\" . \"%s (%s)\") . %s)"
                                   keystr
                                   (capitalize (replace-regexp-in-string "-" " " cmd))
                                   keystr
@@ -1293,7 +1303,7 @@ TITLE is title name that any string you like."
 ;; Load all one-key menus if necessary.
 (if one-key-auto-load-menus
     (one-key-load-files (concat one-key-menus-location "/.*" one-key-menus-regexp)))
-  
+
 
 (provide 'one-key)
 
