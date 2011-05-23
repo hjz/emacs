@@ -297,31 +297,31 @@
 (set-face-foreground 'vertical-border "#282828")
 
 ;;;;;;;;;;;;;;;;; CEDET ;;;;;;;;;;;;;;;;;;;;;;
-(defcustom semantic-ectag-program "/opt/local/bin/ctags"
-  "The Exuberent CTags program to use."
-  :group 'semantic
-  :type 'program)
+;(defcustom semantic-ectag-program "/opt/local/bin/ctags"
+  ;"The Exuberent CTags program to use."
+  ;:group 'semantic
+  ;:type 'program)
 
-(semantic-mode 1)
+;(semantic-mode 1)
 
-(global-ede-mode t)
+;(global-ede-mode t)
 
-(if (boundp 'semantic-load-enable-excessive-code-helpers)
-    ; Add-on CEDET
-    (progn
-      (semantic-load-enable-excessive-code-helpers)
-      ; TODO: should already be enabled by previous line
-      (global-semantic-idle-completions-mode)
-      (global-semantic-tag-folding-mode))
-   ; Integrated CEDET
-  (setq semantic-default-submodes
-        '(global-semanticdb-minor-mode
-          global-semantic-idle-scheduler-mode
-          global-semantic-idle-summary-mode
-          global-semantic-idle-completions-mode
-          global-semantic-decoration-mode
-          global-semantic-highlight-func-mode
-          global-semantic-stickyfunc-mode)))
+;(if (boundp 'semantic-load-enable-excessive-code-helpers)
+    ;; Add-on CEDET
+    ;(progn
+      ;(semantic-load-enable-excessive-code-helpers)
+      ;; TODO: should already be enabled by previous line
+      ;(global-semantic-idle-completions-mode)
+      ;(global-semantic-tag-folding-mode))
+   ;; Integrated CEDET
+  ;(setq semantic-default-submodes
+        ;'(global-semanticdb-minor-mode
+          ;global-semantic-idle-scheduler-mode
+          ;global-semantic-idle-summary-mode
+          ;global-semantic-idle-completions-mode
+          ;global-semantic-decoration-mode
+          ;global-semantic-highlight-func-mode
+          ;global-semantic-stickyfunc-mode)))
 
 ;(if (boundp 'semantic-ia) (require 'semantic-ia))
 ;(if (boundp 'semantic-gcc) (require 'semantic-gcc))
@@ -926,8 +926,8 @@
 (defun hippie-unexpand ()
  (interactive)
  (hippie-expand 0))
-(define-key minibuffer-local-map (kbd "C-;") 'hippie-expand)
-(define-key minibuffer-local-map  (kbd "C-:") 'hippie-unexpand)
+(define-key minibuffer-local-map (kbd "TAB") 'hippie-expand)
+(define-key minibuffer-local-map  (kbd "<S-tab>") 'hippie-unexpand)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; YASnippet
@@ -938,7 +938,7 @@
 (yas/load-directory (concat user-dir "/yasnippet-read-only/snippets"))
 
 (add-hook 'scala-mode-hook 'yas/minor-mode-on)
-(yas/global-mode -1)
+(yas/global-mode 1)
 
 (setq yas/trigger-key (kbd "C-c <kp-multiply>"))
 
