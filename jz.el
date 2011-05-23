@@ -817,13 +817,13 @@
    "y$")
 
 (fset 'surround-paren
-   (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ([100 105 119 105 40 25 escape 37 105] 0 "%d")) arg)))
+   (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ([105 40 escape 108 100 105 119 84 40 105 25 escape 37 105] 0 "%d")) arg)))
 
 (fset 'surround-square
-   (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ([100 105 119 105 91 25 escape 37 105] 0 "%d")) arg)))
+   (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ([105 91 escape 108 100 105 119 84 91 105 25 escape 37 105] 0 "%d")) arg)))
 
 (fset 'surround-brace
-   (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ([100 105 119 105 123 25 escape 37 105] 0 "%d")) arg)))
+   (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ([105 123 escape 108 100 105 119 84 123 105 25 escape 37 105] 0 "%d")) arg)))
 
 (vimpulse-map (kbd ",c") 'surround-brace)
 (vimpulse-map (kbd ",b") 'surround-paren)
@@ -978,8 +978,8 @@
 
 (vimpulse-map ";" 'viper-ex)
 (vimpulse-vmap ";" 'vimpulse-visual-ex)
-(vimpulse-map (kbd "]") 'hs-toggle-hiding)
-(vimpulse-map (kbd "SPC") 'vimpulse-indent)
+;; (vimpulse-map (kbd "]") 'hs-toggle-hiding)
+(vimpulse-map (kbd "SPC") 'hs-toggle-hiding)
 (vimpulse-map "?" 'describe-bindings)
 
 (vimpulse-map "b" 'backward-word)
