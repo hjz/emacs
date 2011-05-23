@@ -1,4 +1,10 @@
-((("Parameters" .
+((("abort-recursive-edit" .
+   [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1])
+  ("ido-completion-map" .
+   [1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0])
+  ("exit-minibuffer" .
+   [1 0 0 0 0 0 0 0 0 0 0 0 0 0 0])
+  ("Parameters" .
    [1 0 0 1 0 0 0 0 0 2])
   ("class" .
    [1 0 0 0 0])
@@ -171,4 +177,10 @@
   ("val" .
    [0 0 1])
   ("one-key-menu" .
-   [0 0 0 0 0 0 0 0 0 0 0 1])))
+   [0 0 0 0 0 0 0 0 0 0 0 1])
+  ("minibuffer-history-position" .
+   [0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0])
+  ("keyboard-quit" .
+   [0 0 0 0 0 0 0 0 0 0 0 1 0])
+  ("ido-completions" .
+   [0 0 0 0 0 0 0 1 0 0 0 0 0 0 0])))

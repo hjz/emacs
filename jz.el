@@ -1042,3 +1042,9 @@ advice like this:
 ; Fullscreen
 (global-set-key (kbd "<s-return>") 'maximize-frame)
 (maximize-frame)
+
+(add-hook 'ido-setup-hook '(lambda ()
+                             (define-key ido-completion-map (kbd "C-c p") 'ido-toggle-prefix)
+                             (define-key ido-completion-map (kbd "C-c c") 'ido-toggle-case)
+                             (define-key ido-completion-map (kbd "C-c t") 'ido-toggle-regexp)
+                             (define-key ido-completion-map [remap viper-intercept-ESC-key] 'abort-recursive-edit)))
