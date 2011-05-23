@@ -198,14 +198,6 @@ not move."
   "Indent current line as smartly as possible.
 When called repeatedly, indent each time one stop further on the right."
   (interactive)
-  (if (or (eq last-command this-command)
-          (eq last-command 'scala-undent-line))
-      (scala-indent-line-to (+ (current-indentation) scala-mode-indent:step))
-    (let 
-	((indentation (scala-indentation)))
-      (scala-indent-line-to indentation))))
-
-(defun scala-undent-line ()
   "Indent line to previous tab stop."
   (interactive)
   (scala-indent-line-to (max 0 (- (current-indentation) scala-mode-indent:step))))
