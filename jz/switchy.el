@@ -5,9 +5,11 @@
 
 (setq auto-insert-directory (expand-file-name "~/.emacs.d/auto/"))
 
+;; TODO move cursor to right place
 (setq auto-insert-alist
       '(
-        ("Spec\\.scala$" . ["insert.scala" auto-update-scala-source-file])
+        ("Spec\\.scala$" . ["insertSpec.scala" auto-update-scala-source-file])
+        ("\\.scala$" . ["insertBase.scala" auto-update-scala-source-file])
         ))
 
 (defun filepath-to-package-name (s)
@@ -47,7 +49,7 @@
   (interactive)
   ;; grab the base of the current buffer's file name
   (setq bse (file-name-sans-extension buffer-file-name))
-  ;; and the extension, converted to lowercase 
+  ;; and the extension, converted to lowercase
   (setq ext (downcase (file-name-extension buffer-file-name)))
   (setq typ (substring bse -4 nil))
   (cond
@@ -71,7 +73,7 @@
     )
    )
   )
-(add-hook 'scala-mode-hook 
+(add-hook 'scala-mode-hook
   (lambda () (local-set-key (kbd "C-c SPC") 'switch-between-test-and-source)))
 
 (provide 'switchy)

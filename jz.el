@@ -454,6 +454,8 @@
             (local-set-key [return] 'newline-and-indent))
   )
 
+(add-hook 'el-mode-hook 'highlight-fixmes-mode)
+
 (add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
 (add-hook 'scala-mode-hook 'highlight-80+-mode)
 (add-hook 'scala-mode-hook 'idle-highlight)
@@ -978,8 +980,8 @@
 
 (vimpulse-map ";" 'viper-ex)
 (vimpulse-vmap ";" 'vimpulse-visual-ex)
-;; (vimpulse-map (kbd "]") 'hs-toggle-hiding)
-(vimpulse-map (kbd "SPC") 'hs-toggle-hiding)
+(vimpulse-map (kbd "]") 'hs-toggle-hiding)
+(vimpulse-map (kbd "SPC") 'vimpulse-indent)
 (vimpulse-map "?" 'describe-bindings)
 
 (vimpulse-map "b" 'backward-word)

@@ -58,6 +58,7 @@
  '(iswitchb-regexp t)
  '(iswitchb-use-virtual-buffers t nil (recentf))
  '(kill-do-not-save-duplicates t)
+ '(magit-commit-all-when-nothing-staged (quote ask-stage))
  '(magit-process-popup-time 30)
  '(magit-repo-dirs (quote ("~/ps/" "~/workspace/")))
  '(moccur-edit-highlight-edited-text t)
