@@ -599,8 +599,8 @@
 ;; load elscreen
 ;; ---------------------------------------
 ;; F9 creates a new elscreen, shift-F9 kills it
-(global-set-key (kbd "<f6>"    ) 'elscreen-create)
-(global-set-key (kbd "S-<f6>"  ) 'elscreen-kill)
+(global-set-key (kbd "s-t"  ) 'elscreen-create)
+(global-set-key (kbd "s-w"  ) 'elscreen-kill)
 
 ;; Windowskey+PgUP/PgDown switches between elscreens
 (global-set-key (kbd "<C-prior>") 'elscreen-previous)
