@@ -67,6 +67,7 @@
  '(one-key-auto-load-menus t)
  '(one-key-menus-location "~/.emacs.d/jz/one-key-menus")
  '(one-key-menus-regexp "one-key-menu.*\\.el$")
+ '(org-special-ctrl-a/e t)
  '(save-interprogram-paste-before-kill t)
  '(save-place t nil (saveplace))
  '(savehist-mode t nil (savehist))

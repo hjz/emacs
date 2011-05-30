@@ -179,7 +179,6 @@
 ;; popwin.el
 ;;--------------------------------------------------------------------------
 (require 'popwin)
-(setq display-buffer-function 'popwin:display-buffer)
 (setq special-display-function 'popwin:special-display-popup-window)
 
 (push '("*Shell Command Output*" :height 20) popwin:special-display-config)
@@ -188,17 +187,13 @@
 (setq anything-samewindow nil)
 (push '("*anything*" :height 20) popwin:special-display-config)
 (push '("*anything for files*" :height 20) popwin:special-display-config)
-
 (push '(".*ensime-sbt.*" :regexp t :height 10 :position bottom :stick t) popwin:special-display-config)
 (push '("*pianobar*" :width 60 :position right) popwin:special-display-config)
 (push '("*ENSIME-Compilation-Result*" :height 50 :position bottom :stick t) popwin:special-display-config)
 (push '("*ensime-inferior-scala*" :width 60 :position right :stick t) popwin:special-display-config)
-
 (push '("*scratch*") popwin:special-display-config)
 (push '("*viper-info*") popwin:special-display-config)
 (push '("*Messages*") popwin:special-display-config)
-(push '("svnlog.txt") popwin:special-display-config)
-(push '("journal.txt" :regexp t) popwin:special-display-config)
 (push '("*grep*" :height 50) popwin:special-display-config)
 (push '("*Kill Ring*" :height 30) popwin:special-display-config)
 (push '("*Inspector*" :width 60 :position right) popwin:special-display-config)
@@ -208,8 +203,23 @@
 (push '("*Completions*" :height 30 :position bottom) popwin:special-display-config)
 (push '("*One-Key*") popwin:special-display-config)
 
-;(push '("*ack*" :height 40 :position bottom) popwin:special-display-config)
-;(push '("*Moccur*" :height 20 :width 80 :position right) popwin:special-display-config)
+;; add to list so special fn is ran
+(push '"*anything*" special-display-buffer-names)
+(push '"*anything for files*" special-display-buffer-names)
+(push '".*ensime-sbt.*" special-display-regexps)
+(push '"*pianobar*" special-display-buffer-names)
+(push '"*ENSIME-Compilation-Result*" special-display-buffer-names)
+(push '"*ensime-inferior-scala*" special-display-buffer-names)
+(push '"*scratch*" special-display-buffer-names)
+(push '"*viper-info*" special-display-buffer-names)
+(push '"*Messages*" special-display-buffer-names)
+(push '"*grep*" special-display-buffer-names)
+(push '"*Kill Ring*" special-display-buffer-names)
+(push '"*Inspector*" special-display-buffer-names)
+(push '"*Warnings*" special-display-buffer-names)
+(push '"*Help*" special-display-buffer-names)
+(push '"*Completions*" special-display-buffer-names)
+(push '"*One-Key*" special-display-buffer-names)
 
 ;; save a list of open files in ~/.emacs.desktop
 ;; save the desktop file automatically if it already exists
