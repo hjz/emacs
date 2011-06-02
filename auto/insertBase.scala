@@ -1,0 +1,4 @@
+package PPP
+
+class @@@ {
+}

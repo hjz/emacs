@@ -107,6 +107,9 @@
   ;; Your init file should contain only one such instance.
   ;; If there is more than one, they won't work right.
  '(default ((t (:inherit nil :stipple nil :background "#1f1f1f" :foreground "#dcdccc" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 134 :width normal :foundry "apple" :family "Consolas"))))
+ '(ack-file ((((background dark)) (:background "#282828" :foreground "#7cb8bb"))))
+ '(ack-line ((((background dark)) (:background "#282828" :foreground "#b6b6b6"))))
+ '(ack-match ((default nil) (((background dark)) (:background "#385f38" :foreground "#dcdccc"))))
  '(campfire-my-message-face ((t (:background "#2b2b2b" :foreground "white"))))
  '(campfire-my-user-face ((t (:foreground "white" :box (:line-width 2 :color "blue" :style released-button)))))
  '(campfire-other-user-face ((t (:background "#2f2f2f" :foreground "#9fc59f"))))

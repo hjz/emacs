@@ -179,6 +179,7 @@
 ;; popwin.el
 ;;--------------------------------------------------------------------------
 (require 'popwin)
+(setq display-buffer-function 'popwin:display-buffer)
 (setq special-display-function 'popwin:special-display-popup-window)
 
 (push '("*Shell Command Output*" :height 20) popwin:special-display-config)
@@ -187,7 +188,7 @@
 (setq anything-samewindow nil)
 (push '("*anything*" :height 20) popwin:special-display-config)
 (push '("*anything for files*" :height 20) popwin:special-display-config)
-(push '(".*ensime-sbt.*" :regexp t :height 10 :position bottom :stick t) popwin:special-display-config)
+(push '("*ensime-sbt*" :height 10 :position bottom :stick t) popwin:special-display-config)
 (push '("*pianobar*" :width 60 :position right) popwin:special-display-config)
 (push '("*ENSIME-Compilation-Result*" :height 50 :position bottom :stick t) popwin:special-display-config)
 (push '("*ensime-inferior-scala*" :width 60 :position right :stick t) popwin:special-display-config)
@@ -204,22 +205,22 @@
 (push '("*One-Key*") popwin:special-display-config)
 
 ;; add to list so special fn is ran
-(push '"*anything*" special-display-buffer-names)
-(push '"*anything for files*" special-display-buffer-names)
-(push '".*ensime-sbt.*" special-display-regexps)
-(push '"*pianobar*" special-display-buffer-names)
-(push '"*ENSIME-Compilation-Result*" special-display-buffer-names)
-(push '"*ensime-inferior-scala*" special-display-buffer-names)
-(push '"*scratch*" special-display-buffer-names)
-(push '"*viper-info*" special-display-buffer-names)
-(push '"*Messages*" special-display-buffer-names)
-(push '"*grep*" special-display-buffer-names)
-(push '"*Kill Ring*" special-display-buffer-names)
-(push '"*Inspector*" special-display-buffer-names)
-(push '"*Warnings*" special-display-buffer-names)
-(push '"*Help*" special-display-buffer-names)
-(push '"*Completions*" special-display-buffer-names)
-(push '"*One-Key*" special-display-buffer-names)
+;; (push '"*anything*" special-display-buffer-names)
+;; (push '"*anything for files*" special-display-buffer-names)
+;; (push '"*ensime-sbt*" special-display-buffer-names)
+;; (push '"*pianobar*" special-display-buffer-names)
+;; (push '"*ENSIME-Compilation-Result*" special-display-buffer-names)
+;; (push '"*ensime-inferior-scala*" special-display-buffer-names)
+;; (push '"*scratch*" special-display-buffer-names)
+;; (push '"*viper-info*" special-display-buffer-names)
+;; (push '"*Messages*" special-display-buffer-names)
+;; (push '"*grep*" special-display-buffer-names)
+;; (push '"*Kill Ring*" special-display-buffer-names)
+;; (push '"*Inspector*" special-display-buffer-names)
+;; (push '"*Warnings*" special-display-buffer-names)
+;; (push '"*Help*" special-display-buffer-names)
+;; (push '"*Completions*" special-display-buffer-names)
+;; (push '"*One-Key*" special-display-buffer-names)
 
 ;; save a list of open files in ~/.emacs.desktop
 ;; save the desktop file automatically if it already exists
@@ -538,11 +539,12 @@
 (global-set-key (kbd "M-9") 'split-window-horizontally) ; was digit-argument
 (global-set-key (kbd "M-0") 'delete-other-windows) ; was digit-argument
 
+;; TODO try these?
 ; open file
-(global-set-key [(super o)] 'find-file)
+;(global-set-key [(super o)] 'find-file)
 
 ; use full-ack for Find
-(global-set-key [(super F)] 'ack)
+;(global-set-key [(super F)] 'ack)
 
 ; close window
 (global-set-key [(super w)]
@@ -610,7 +612,7 @@
 ;; ---------------------------------------
 ;; F9 creates a new elscreen, shift-F9 kills it
 (global-set-key (kbd "s-t"  ) 'elscreen-create)
-(global-set-key (kbd "s-w"  ) 'elscreen-kill)
+(global-set-key (kbd "s-SPC"  ) 'elscreen-kill)
 
 ;; Windowskey+PgUP/PgDown switches between elscreens
 (global-set-key (kbd "<C-prior>") 'elscreen-previous)
@@ -842,6 +844,7 @@
 (vimpulse-map (kbd ",s") 'surround-square)
 
 (vimpulse-imap (kbd "RET") 'reindent-then-newline-and-indent)
+(vimpulse-imap (kbd "C-SPC") 'auto-complete 'scala-mode)
 
 (vimpulse-map (kbd "C-f g") 'moccur-grep-find)
 (vimpulse-map (kbd "C-f d") 'dmoccur)
@@ -870,7 +873,7 @@
 ;; TODO unbind , C-e
 
 (global-set-key (kbd "C-c k") 'ecb-toggle-ecb-windows)
-(global-set-key (kbd "M-w") 'subword-forward)
+;(global-set-key (kbd "M-w") 'subword-forward)
 (global-set-key (kbd "C-c l") 'ensime) ;; replace lambda
 ;(global-set-key (kbd "C-c ;") 'ensime-ecb)
 
@@ -911,9 +914,9 @@
 (setq ac-auto-start nil)
 (setq ac-use-comphist t)
 (setq ac-use-quick-help t)
-(setq ac-delete-dups nil)
+(setq ac-delete-dups t)
 (setq ac-use-fuzzy t)
-(setq ac-auto-show-menu 0.8)
+(setq ac-auto-show-menu t)
 
 (add-to-list 'ac-modes 'scala-mode)
 (add-to-list 'ac-modes 'confluence-mode)
@@ -921,6 +924,7 @@
 (define-key ac-completing-map [return] 'ac-complete)
 (define-key ac-completing-map (kbd "<S-tab>") 'ac-previous)
 (define-key ac-completing-map (kbd "ESC") 'ac-stop)
+(define-key ac-completing-map (kbd "C-SPC") 'ac-expand)
 
 (ac-set-trigger-key "TAB")
 
@@ -956,9 +960,9 @@
 
 ;; BUG DONT COMPILE YASNIPPET!!!!!!!!!!
 ; Replace yasnippets's TAB
-(add-hook 'yas/minor-mode-hook
-          (lambda () (define-key yas/minor-mode-map
-                       (kbd "TAB") 'auto-complete))) ; was yas/expand
+; (add-hook 'yas/minor-mode-hook
+; (lambda () (define-key yas/minor-mode-map
+;       (kbd "TAB") 'auto-complete )))   ; was yas/expand
 
 (autoload 'ack-same "full-ack" nil t)
 (autoload 'ack "full-ack" nil t)
@@ -995,6 +999,7 @@
 (vimpulse-map "?" 'describe-bindings)
 
 (vimpulse-map "b" 'backward-word)
+(vimpulse-map ",," 'switch-between-test-and-source)
 (define-key vimpulse-visual-basic-map "v" 'end-of-line)
 
 (vimpulse-define-text-object vimpulse-sexp (arg)
