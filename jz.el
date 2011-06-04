@@ -30,12 +30,38 @@
 (add-to-list 'load-path (concat user-dir "/one-key-menus"))
 (add-to-list 'load-path (concat user-dir "/magit-1.0.0"))
 (add-to-list 'load-path (concat user-dir "/confluence-mode"))
+(add-to-list 'load-path (concat user-dir "/minimap"))
+(require 'minimap)
 ;(add-to-list 'load-path (concat user-dir "/rinari"))
 
     (require 'command-frequency)
     (command-frequency-table-load)
     (command-frequency-mode 1)
     (command-frequency-autosave-mode 1)
+
+;;;;;;;;;;;;;;;;;; ERC ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(require 'erc)
+(erc-autojoin-mode t)
+(setq erc-autojoin-channels-alist
+  '(("&bitlbee")))
+;; check channels
+(erc-track-mode t)
+(setq erc-track-exclude-types '("JOIN" "NICK" "PART" "QUIT" "MODE"
+                                 "324" "329" "332" "333" "353" "477"))
+;; don't show any of this
+(setq erc-hide-list '("JOIN" "PART" "QUIT" "NICK"))
+
+(defun djcb-erc-start-or-switch ()
+  "Connect to ERC, or switch to last active buffer"
+  (interactive)
+  (if (get-buffer "localhost:6667") ;; ERC already active?
+
+    (erc-track-switch-buffer 1) ;; yes: switch to last active
+    (when (y-or-n-p "Start ERC? ") ;; no: maybe start ERC
+      (erc :server "localhost" :port 6667 :nick "jz" :full-name "Justin"))))
+;; switch to ERC with Ctrl+c e
+(global-set-key (kbd "C-c e") 'djcb-erc-start-or-switch) ;; ERC
+
 
 (defun toggle-kbd-macro-recording-on ()
   "One-key keyboard macros: turn recording on."
@@ -700,29 +726,6 @@
 (setq ispell-list-command "list")
 (setq ispell-process-directory (expand-file-name "~/"))
 
-;;;;;;;;;;;;;;;;;; ERC ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(require 'erc)
-(erc-autojoin-mode t)
-(setq erc-autojoin-channels-alist
-  '((".*\\.freenode.net" "#emacs" "#twitterapi" "#scala")))
-;; check channels
-(erc-track-mode t)
-(setq erc-track-exclude-types '("JOIN" "NICK" "PART" "QUIT" "MODE"
-                                 "324" "329" "332" "333" "353" "477"))
-;; don't show any of this
-(setq erc-hide-list '("JOIN" "PART" "QUIT" "NICK"))
-
-(defun djcb-erc-start-or-switch ()
-  "Connect to ERC, or switch to last active buffer"
-  (interactive)
-  (if (get-buffer "irc.freenode.net:6667") ;; ERC already active?
-
-    (erc-track-switch-buffer 1) ;; yes: switch to last active
-    (when (y-or-n-p "Start ERC? ") ;; no: maybe start ERC
-      (erc :server "irc.freenode.net" :port 6667 :nick "hjzhu" :full-name "Justin"))))
-;; switch to ERC with Ctrl+c e
-(global-set-key (kbd "C-c e") 'djcb-erc-start-or-switch) ;; ERC
-
 ;;;;;;;;;;;;;;;;;; ERC END ;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun add-something-to-mode-hooks (mode-list something)
@@ -934,8 +937,11 @@
         try-expand-dabbrev
         try-expand-dabbrev-all-buffers
         try-expand-dabbrev-from-kill
+        try-complete-file-name-partially
         try-complete-file-name
-        try-complete-lisp-symbol))
+        try-complete-lisp-symbol-partially
+        try-complete-lisp-symbol
+        try-expand-whole-kill))
 
 (global-set-key (kbd "TAB") 'hippie-expand)
 ;; Enables tab completion in the `eval-expression` minibuffer
