@@ -69,7 +69,6 @@
      (erc-message "PRIVMSG" (format "%s identify %s"
                                     (erc-default-target)
                                     bitlbee-password))
-     (erc-nicklist)
 )
    )
 
@@ -239,8 +238,8 @@
                (start-process-shell-command "message recv" nil "afplay ~/Dropbox/Message_Received.wav")
                (growl nick msg)
       nil)))
-;(add-hook 'erc-server-PRIVMSG-functions 'my-erc-page-me-PRIVMSG)
-(add-hook 'erc-insert-pre-hook 'erc-notify-on-msg)
+(add-hook 'erc-server-PRIVMSG-functions 'my-erc-page-me-PRIVMSG)
+;(add-hook 'erc-insert-pre-hook 'erc-notify-on-msg)
 
 ;; The following are commented out by default, but users of other
 ;; non-Emacs IRC clients might find them useful.
@@ -318,5 +317,5 @@
     (erc :server "localhost" :port "6667" :nick "jz" :password bitlbee-password))
 )
 
-(setq erc-auto-query 'bury)
+(setq erc-auto-query 'buffer)
 (start-irc)

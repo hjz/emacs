@@ -124,6 +124,8 @@
  '(elscreen-tab-other-screen-face ((((class color)) (:background "#3D3D3D" :foreground "white"))))
  '(ensime-errline ((((class color) (background dark)) nil)))
  '(ensime-errline-highlight ((t (:underline "firebrick2"))))
+ '(erc-timestamp-face ((t (:inherit zenburn-lowlight-2 :weight normal))))
+ '(fg:erc-color-face5 ((t nil)))
  '(flyspell-incorrect ((t (:underline "#cc9393" :weight bold))))
  '(highlight-80+ ((((background dark)) (:background "#3f3f3f" :foreground "#afd8af" :weight bold))))
  '(highlight-80+-line ((t nil)) t)
