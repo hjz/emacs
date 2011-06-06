@@ -31,26 +31,18 @@
 (add-to-list 'load-path (concat user-dir "/magit-1.0.0"))
 (add-to-list 'load-path (concat user-dir "/confluence-mode"))
 (add-to-list 'load-path (concat user-dir "/minimap"))
+(add-to-list 'load-path (concat user-dir "/google-weather"))
 (require 'minimap)
-;(add-to-list 'load-path (concat user-dir "/rinari"))
 
-    (require 'command-frequency)
-    (command-frequency-table-load)
-    (command-frequency-mode 1)
-    (command-frequency-autosave-mode 1)
+(require 'command-frequency)
+(command-frequency-table-load)
+(command-frequency-mode 1)
+(command-frequency-autosave-mode 1)
 
 ;;;;;;;;;;;;;;;;;; ERC ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (require 'erc)
-(erc-autojoin-mode t)
-(setq erc-autojoin-channels-alist
-  '(("&bitlbee")))
 ;; check channels
 (erc-track-mode t)
-(setq erc-track-exclude-types '("JOIN" "NICK" "PART" "QUIT" "MODE"
-                                 "324" "329" "332" "333" "353" "477"))
-;; don't show any of this
-(setq erc-hide-list '("JOIN" "PART" "QUIT" "NICK"))
-
 (defun djcb-erc-start-or-switch ()
   "Connect to ERC, or switch to last active buffer"
   (interactive)
@@ -62,1012 +54,224 @@
 ;; switch to ERC with Ctrl+c e
 (global-set-key (kbd "C-c e") 'djcb-erc-start-or-switch) ;; ERC
 
-
-(defun toggle-kbd-macro-recording-on ()
-  "One-key keyboard macros: turn recording on."
-  (interactive)
-  (define-key
-    global-map
-    (this-command-keys)
-    'toggle-kbd-macro-recording-off)
-  (start-kbd-macro nil))
-
-(defun toggle-kbd-macro-recording-off ()
-  "One-key keyboard macros: turn recording off."
-  (interactive)
-  (define-key
-    global-map
-    (this-command-keys)
-    'toggle-kbd-macro-recording-on)
-  (end-kbd-macro))
-
-(global-set-key '[(f10)]          'call-last-kbd-macro)
-(global-set-key '[(shift f10)]    'toggle-kbd-macro-recording-on)
-
-(require 'dot-mode)
-(add-hook 'find-file-hooks 'dot-mode-on)
-
-(require 'confluence)
-;(require 'rinari)
-
-(autoload 'confluence-get-page "confluence" nil t)
-
-(eval-after-load "confluence"
-  '(progn
-       (add-hook 'confluence-mode-hook '(lambda ()
-                                         (auto-fill-mode -1)
-                                         (local-set-key "\C-j" 'confluence-newline-and-indent)))))
-
-;; open confluence page
-(global-set-key "\C-xwf" 'confluence-get-page)
-
-;(add-to-list 'load-path (concat user-dir "/scamacs/scamacs"))
-;(add-to-list 'load-path (concat user-dir "/scamacs/ecb"))
-
-(add-to-list 'load-path (concat user-dir "/mo-git-blame"))
-(autoload 'mo-git-blame-file "mo-git-blame" nil t)
-(autoload 'mo-git-blame-current "mo-git-blame" nil t)
-
-(setq exec-path (append exec-path '("/usr/local/bin")))
-
-(require 'one-key)
-(require 'lazy-search-extension)
-
- (defun rotate-windows ()
-  "Rotate your windows" (interactive) (cond ((not (> (count-windows) 1)) (message "You can't rotate a single window!"))
- (t
-  (setq i 1)
-  (setq numWindows (count-windows))
-  (while  (< i numWindows)
-    (let* (
-           (w1 (elt (window-list) i))
-           (w2 (elt (window-list) (+ (% i numWindows) 1)))
-           (b1 (window-buffer w1))
-           (b2 (window-buffer w2))
-           (s1 (window-start w1))
-           (s2 (window-start w2))
-           )
-      (set-window-buffer w1  b2)
-      (set-window-buffer w2 b1)
-      (set-window-start w1 s2)
-      (set-window-start w2 s1)
-      (setq i (1+ i)))))))
-
-;; twittering-mode
-(require 'twittering-mode)
-(setq twittering-use-master-password t)
-(setq twittering-initial-timeline-spec-string
-      '(":home"
-        ":replies"
-        ":favorites"
-        ":direct_messages"))
-
-(add-hook 'twittering-mode-hook
-   (lambda ()
-     (mapc (lambda (pair)
-             (let ((key (car pair))
-                   (func (cdr pair)))
-               (define-key twittering-mode-map
-                 (read-kbd-macro key) func)))
-           '(("F" . twittering-friends-timeline)
-             ("R" . twittering-replies-timeline)
-             ("U" . twittering-user-timeline)
-             (";" . twittering-home-timeline)
-             ("W" . twittering-update-status-interactive)))))
-
-(setq twittering-icon-mode t)                ; Show icons
-(setq twittering-timer-interval 300)         ; Update your timeline each 300 seconds (5 minutes)
-(setq twittering-url-show-status nil)        ; Keeps the echo area from showing all the http processes
-
-(add-hook 'twittering-new-tweets-hook (lambda ()
-(let ((n twittering-new-tweets-count))
-(start-process "twittering-notify" nil "notify-send"
-            "-i" "/usr/share/pixmaps/gnome-emacs.png"
-            "New tweets"
-            (format "You have %d new tweet%s"
-                    n (if (> n 1) "s" ""))))))
-
-(add-hook 'twittering-edit-mode-hook (lambda () (ispell-minor-mode) (flyspell-mode)))
-
-(autoload 'twittering-numbering "twittering-numbering" nil t)
-(add-hook 'twittering-mode-hook 'twittering-numbering)
-
-;; M-x IDO
-(require 'smex)
-(smex-initialize)
-(global-set-key (kbd "M-x") 'smex)
-(global-set-key (kbd "M-X") 'smex-major-mode-commands)
-  ;; This is your old M-x.
-(global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
-
-(require 'mouse+)
-(require 'google-search)
-(require 'magit)
-
-;; PATH
-;; (defun read-system-path ()
-;;   (with-temp-buffer
-;;     (insert-file-contents "/etc/paths")
-;;     (goto-char (point-min))
-;;     (replace-regexp "\n" ":")
-;;     (thing-at-point 'line)))
-
-;(setenv "PATH" (read-system-path))
-
-(autoload 'ansi-color-for-comint-mode-on "ansi-color" nil t)
-(add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
-
-;(require 'edit-server)
-;(edit-server-start)
-;(add-hook 'after-change-major-mode-hook 'edit-server-edit-mode)
-
-;--------------------------------------------------------------------------
-;; popwin.el
-;;--------------------------------------------------------------------------
-(require 'popwin)
-(setq display-buffer-function 'popwin:display-buffer)
-(setq special-display-function 'popwin:special-display-popup-window)
-
-(push '("*Shell Command Output*" :height 20) popwin:special-display-config)
-;(push '("*Shell Command Output*" :height 20 :position top) popwin:special-display-config)
-
-(setq anything-samewindow nil)
-(push '("*anything*" :height 20) popwin:special-display-config)
-(push '("*anything for files*" :height 20) popwin:special-display-config)
-(push '("*ensime-sbt*" :height 10 :position bottom :stick t) popwin:special-display-config)
-(push '("*pianobar*" :width 60 :position right) popwin:special-display-config)
-(push '("*ENSIME-Compilation-Result*" :height 50 :position bottom :stick t) popwin:special-display-config)
-(push '("*ensime-inferior-scala*" :width 60 :position right :stick t) popwin:special-display-config)
-(push '("*scratch*") popwin:special-display-config)
-(push '("*viper-info*") popwin:special-display-config)
-(push '("*Messages*") popwin:special-display-config)
-(push '("*grep*" :height 50) popwin:special-display-config)
-(push '("*Kill Ring*" :height 30) popwin:special-display-config)
-(push '("*Inspector*" :width 60 :position right) popwin:special-display-config)
-(push '(dired-mode :position right :width 70) popwin:special-display-config) ; dired-jump-other-window (C-x 4 C-j)
-(push '("*Warnings*") popwin:special-display-config)
-(push '("*Help*" :height 30 :position bottom) popwin:special-display-config)
-(push '("*Completions*" :height 30 :position bottom) popwin:special-display-config)
-(push '("*One-Key*") popwin:special-display-config)
-
-;; add to list so special fn is ran
-;; (push '"*anything*" special-display-buffer-names)
-;; (push '"*anything for files*" special-display-buffer-names)
-;; (push '"*ensime-sbt*" special-display-buffer-names)
-;; (push '"*pianobar*" special-display-buffer-names)
-;; (push '"*ENSIME-Compilation-Result*" special-display-buffer-names)
-;; (push '"*ensime-inferior-scala*" special-display-buffer-names)
-;; (push '"*scratch*" special-display-buffer-names)
-;; (push '"*viper-info*" special-display-buffer-names)
-;; (push '"*Messages*" special-display-buffer-names)
-;; (push '"*grep*" special-display-buffer-names)
-;; (push '"*Kill Ring*" special-display-buffer-names)
-;; (push '"*Inspector*" special-display-buffer-names)
-;; (push '"*Warnings*" special-display-buffer-names)
-;; (push '"*Help*" special-display-buffer-names)
-;; (push '"*Completions*" special-display-buffer-names)
-;; (push '"*One-Key*" special-display-buffer-names)
-
-;; save a list of open files in ~/.emacs.desktop
-;; save the desktop file automatically if it already exists
-(setq desktop-save 'if-exists)
-(desktop-save-mode 1)
-
-;; save a bunch of variables to the desktop file
-;; for lists specify the len of the maximal saved data also
-(setq desktop-globals-to-save
-      (append '((extended-command-history . 100)
-                (file-name-history        . 100)
-                (grep-history             . 100)
-                (compile-history          . 100)
-                (minibuffer-history       . 100)
-                (query-replace-history    . 100)
-                (read-expression-history  . 100)
-                (regexp-history           . 100)
-                (regexp-search-ring       . 100)
-                (search-ring              . 100)
-                (shell-command-history    . 100)
-                tags-file-name
-                register-alist)))
-
-;; auto save desktop on emacs idle
-(add-hook 'auto-save-hook (lambda () (desktop-save-in-desktop-dir)))
-
-;; redefine save to remove Desktop saved in ...
-(defun desktop-save-in-desktop-dir ()
-  "Save the desktop in directory `desktop-dirname'."
-  (interactive)
-  (if desktop-dirname
-      (desktop-save desktop-dirname)
-    (call-interactively 'desktop-save)))
-
-(setq desktop-buffers-not-to-save
-      (concat "\\("
-              "^nn\\.a[0-9]+\\|\\.log\\|(ftp)\\|^tags\\|^TAGS"
-              "\\|\\.emacs.*\\|\\.diary\\|\\.newsrc-dribble\\|\\.bbdb"
-              "\\)$"))
-(add-to-list 'desktop-modes-not-to-save 'dired-mode)
-(add-to-list 'desktop-modes-not-to-save 'Info-mode)
-(add-to-list 'desktop-modes-not-to-save 'info-lookup-mode)
-(add-to-list 'desktop-modes-not-to-save 'fundamental-mode)
-
-;(require 'sunrise-commander)
-
-;;
-(require 'dired+)                 ; Extensions to Dired.
-(when (require 'dired-sort-menu nil t)
-  (require 'dired-sort-menu+ nil t))    ; Menu/dialogue for dired sort options
-(require 'dired-details+)         ; Make file details hideable in dired
-
-(toggle-dired-find-file-reuse-dir 1)
-
-(add-hook 'dired-mode-hook 'my-dired-mode-hook)
-(defun my-dired-mode-hook ()
-  (local-set-key (kbd "<mouse-1>") 'dired-mouse-find-file)
-  (define-key dired-mode-map ";" 'dired-details-toggle)
-  (define-key dired-mode-map "e" 'wdired-change-to-wdired-mode)
-  (define-key dired-mode-map "c" 'dired-do-copy))
-
-(add-hook 'wdired-mode-hook 'viper-mode)
-
-;; side by side dired for copying
-(setq dired-dwim-target t)
-
-(defun dired-mouse-find-file (event)
-  "In Dired, visit the file or directory name you click on."
-  (interactive "e")
-  (require 'cl)
-  (flet ((find-file-other-window
-          (filename &optional wildcards)
-          (find-file filename wildcards)))
-    (dired-mouse-find-file-other-window event)))
-
-;; colorise css hex values
-(autoload 'css-color-mode "mon-css-color" "" t)
-(add-hook 'css-mode-hook  'css-color-turn-on-in-buffer)
-
-(setq ring-bell-function 'ignore)
-
-;; Theme
-(require 'color-theme)
-(load-theme 'zenburn)
-(set-face-foreground 'vertical-border "#282828")
-
-;;;;;;;;;;;;;;;;; CEDET ;;;;;;;;;;;;;;;;;;;;;;
-;(defcustom semantic-ectag-program "/opt/local/bin/ctags"
-  ;"The Exuberent CTags program to use."
-  ;:group 'semantic
-  ;:type 'program)
-
-;(semantic-mode 1)
-
-;(global-ede-mode t)
-
-;(if (boundp 'semantic-load-enable-excessive-code-helpers)
-    ;; Add-on CEDET
-    ;(progn
-      ;(semantic-load-enable-excessive-code-helpers)
-      ;; TODO: should already be enabled by previous line
-      ;(global-semantic-idle-completions-mode)
-      ;(global-semantic-tag-folding-mode))
-   ;; Integrated CEDET
-  ;(setq semantic-default-submodes
-        ;'(global-semanticdb-minor-mode
-          ;global-semantic-idle-scheduler-mode
-          ;global-semantic-idle-summary-mode
-          ;global-semantic-idle-completions-mode
-          ;global-semantic-decoration-mode
-          ;global-semantic-highlight-func-mode
-          ;global-semantic-stickyfunc-mode)))
-
-;(if (boundp 'semantic-ia) (require 'semantic-ia))
-;(if (boundp 'semantic-gcc) (require 'semantic-gcc))
-
-;(global-srecode-minor-mode 1)            ; Enable template insertion menu
-
-;(load "jz/cedet-1.0pre7/contrib/semantic-ectag-scala.el")
-
-;(semantic-load-enable-excessive-code-helpers)
-
-;(semantic-load-enable-minimum-features)      ; Enable prototype help and smart completion
-;(semantic-load-enable-code-helpers)      ; Enable prototype help and smart completion
-;(semantic-load-enable-primary-exuberent-ctags-support)
-;(defun my-semantic-hook ()
-;  (imenu-add-to-menubar "TAGS"))
-;(add-hook 'semantic-init-hooks 'my-semantic-hook)
-
-;; TABS
-;(define-key global-map [(alt j)] 'tabbar-backward)
-;(define-key global-map [(alt k)] 'tabbar-forward)
-(require 'tabkey2)
-
-;;;;;;;;;;;;;;;; CEDET END ;;;;;;;;;;;;;;;;;;
-
-(require 'anything-config)
-
-(require 'autopair)
-(autopair-global-mode t)
-(setq autopair-autowrap t)
-(require 'undo-tree)
-(global-undo-tree-mode t)
-
-;;;;;;;;;;;;;;;; VIM STA ;;;;;;;;;;;;;;;;;;
-
-(require 'vimpulse)
-(require 'viper-in-more-modes)
-
-; turns it off in unwanted places
-(require 'linum-off)
-
-; right adjust and add blank on right
-(setq linum-format
-      (lambda (line)
-        (propertize (format
-                      (let ((w (length (number-to-string
-                                         (count-lines (point-min) (point-max))))))
-                        (concat "%" (number-to-string w) "d "))
-                      line)
-                    'face 'linum)))
-
-(global-linum-mode 1)
-(require 'vimpulse-relative-linum)
-(require 'vimpulse-operator-comment)
-
-;;;;;;;;;;;;;;;; VIM END ;;;;;;;;;;;;;;;;;;
-
-(blink-cursor-mode 1)
-(defun uncamel (s &optional sep start)
- (interactive)
-  "Convert CamelCase string S to lower case with word separator SEP.
-  Default for SEP is a hyphen \"-\".
-  If third argument START is non-nil, convert words after that
-  index in STRING."
-  (let ((case-fold-search nil))
-    (while (string-match "[A-Z]" s (or start 1))
-           (setq s (replace-match (concat (or sep "_")
-                                          (downcase (match-string 0 s)))
-                                  t nil s)))
-    (downcase s)))
-;;;;;; Camel Case ;;;;;;;
-(defun mapcar-head (fn-head fn-rest list)
-  "Like MAPCAR, but applies a different function to the first element."
-     (if list
-       (cons (funcall fn-head (car list)) (mapcar fn-rest (cdr list)))))
-(defun camelize (s)
-  "Convert under_score string S to CamelCase string."
-  (mapconcat 'identity (mapcar
-                         '(lambda (word) (capitalize (downcase word)))
-                         (split-string s "_")) ""))
-(defun camelize-method (s)
-  "Convert under_score string S to camelCase string."
-  (mapconcat 'identity (mapcar-head
-                         '(lambda (word) (downcase word))
-                         '(lambda (word) (capitalize (downcase word)))
-                         (split-string s "_")) ""))
-
-(require 'ecb)
-(setq ecb-tip-of-the-day nil)
-
-;;; IDO
-
-(require 'ido)
-;; stolen from emacs-fu.blogspot.com
-(ido-mode 'both) ;; for buffers and files
-(setq
-  ido-everwhere t
-  idosave-directory-list-file "~/.emacs.d/cache/ido.last"
-
-  ido-ignore-buffers ;; ignore these guys
-  '("\\` " "^\*Mess" "^\*Back" ".*Completion" "^\*Ido" "^\*trace"
-     "^\*compilation" "^\*GTAGS" "^session\.*" "^\*ECB*" "^\*")
-  ido-work-directory-list '("~/ps/")
-  ido-case-fold  t                 ; be case-insensitive
-
-  ido-enable-last-directory-history t ; remember last used dirs
-  ido-max-work-directory-list 30   ; should be enough
-  ido-max-work-file-list      50   ; remember many
-  ido-use-filename-at-point 'guess ; don't use filename at point (annoying)
-  ido-use-url-at-point nil         ; don't use url at point (annoying)
-  ido-create-new-buffer 'always    ; create buf for no match
-  ido-enable-flex-matching t
-  ido-max-prospects 10              ; don't spam my minibuffer
-  ido-confirm-unique-completion t) ; wait for RET, even with unique completion
-
-;; when using ido, the confirmation is rather annoying...
-(setq confirm-nonexistent-file-or-buffer nil)
-
-;;; SCALA
-
-(require 'scala-mode-auto)
-
-(add-hook 'scala-mode-hook
-  (lambda ()
-    (local-set-key [return] '(lambda () (interactive) (setq last-command nil) (newline-and-indent))))
-    (local-set-key (kbd "C-c j") 'ensime-sbt-switch)
+(load "~/.ercpass")
+(add-hook 'erc-join-hook 'bitlbee-identify)
+(defun bitlbee-identify ()
+  "If we're on the bitlbee server, send the identify command to the
+  &bitlbee channel."
+   (when (and (string= "localhost" erc-session-server)
+              (string= "&bitlbee" (buffer-name)))
+     (erc-message "PRIVMSG" (format "%s identify %s"
+                                    (erc-default-target)
+                                    bitlbee-password)))
+   )
+
+;(require 'erc-services)
+;(erc-services-mode 1)
+(setq erc-prompt-for-nickserv-password nil)
+
+;; bitlbee specific
+(defun erc-ignore-unimportant (msg)
+  (if (or (string-match "*** localhost has changed mode for &bitlbee to" msg)
+          (string-match "Account already online" msg)
+          (string-match "You're already logged in." msg)
+          (string-match "Trying to get all accounts connected" msg)
+          (string-match "Unknown error while loading configuration" msg))
+      (setq erc-insert-this nil)))
+(add-hook 'erc-insert-pre-hook 'erc-ignore-unimportant)
+
+(setq erc-keywords '((".*Online.*" (:foreground "#8fb28f"))
+                     (".*Busy$" (:foreground "#bc8383"))
+                     (".*Away$" (:foreground "#7cb8bb"))
+                     (".*Away (.*)" (:foreground "#7cb8bb"))
+                     ("available" (:foreground "#8fb28f"))
+                     ("away" (:foreground "#7cb8bb"))
+                     ("offline" (:foreground "#bc8383"))
+                     (".*Idle$" (:foreground "#d0bf8f"))
+                     (".*Disturb$" (:foreground "#bc8383"))
+                     ))
+                     
+(setq erc-auto-query 'bury)
+(if (get-buffer "localhost:6667") ;; ERC already active?
+  (erc-track-switch-buffer 1) ;; yes: switch to last active
+(erc :server "localhost" :port "6667" :nick "jz" :password bitlbee-password))
+
+; VIA: http://hg.quodlibetor.com/emacs.d/raw-file/6634ae6dcbee/customize/chat.el
+(setq erc-modules '(netsplit fill track completion ring button autojoin smiley
+                 services match stamp page log replace
+                 scrolltobottom move-to-prompt irccontrols spelling)
+      erc-autojoin-channels-alist '(("localhost" "&bitlbee")); "#Emacs" "#ScalaFolks" "#API" "#test" ))
+;      erc-pals '("forever" "alone")
+;      erc-fools '()
+      erc-hide-list '("JOIN" "PART" "QUIT" "NICK" "MODE")
+
+      erc-track-exclude-types '("JOIN" "NICK" "PART" "QUIT" "MODE" "NAMES"
+                                "324" "329" "332" "333" "353" "477")
+
+      erc-fill-function 'erc-fill-static
+      erc-fill-static-center 6
+      ;; logging! ... requires the `log' module
+      ;; do it line-by-line instead of on quit
+      erc-log-channels-directory (expand-file-name "~/Dropbox/logs/")
+      erc-save-buffer-on-part nil
+      erc-save-queries-on-quit nil
+      erc-log-write-after-send t
+      erc-log-write-after-insert t)
+
+(setq erc-replace-alist 
+  '(
+    ("\*\*\* Topic for.*" . "")
+    (".*topic set by root!root@localhost.*" . "")
+    (".*modes: \+t" . "")
+    )
   )
 
-(add-hook 'el-mode-hook
-          (lambda ()
-            (local-set-key [return] 'newline-and-indent))
-  )
+;; allow some channels to not auto-delay messages. This can
+;; get you kicked from sane channels, so don't use it.
+;(add-hook 'erc-mode-hook
+      ;(lambda ()
+        ;(let ((floodable-buffers
+           ;'(;; every channel in this list is floodable:
+             ;"#bugfunk"
+             ;)))
+          ;(when (member (buffer-name) floodable-buffers)
+        ;(make-local-variable 'erc-server-flood-penalty)
+        ;(setq erc-server-flood-penalty 0)))))
 
-(add-hook 'el-mode-hook 'highlight-fixmes-mode)
+(defun erc-quit-bitlbee-maybe (process)
+  (when (and (get-buffer-process bitlbee-buffer-name)
+         (equal (get-buffer-process bitlbee-buffer-name)
+            (get-process "bitlbee")))
+    (bitlbee-stop)
+    (kill-buffer bitlbee-buffer-name)))
+(add-hook 'erc-quit-hook
+      'erc-quit-bitlbee-maybe)
+(add-hook 'erc-quit-hook
+      (lambda (process)
+        (message "%s" process)))
 
-(add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
-(add-hook 'scala-mode-hook 'highlight-80+-mode)
-(add-hook 'scala-mode-hook 'idle-highlight)
-(defun me-turn-off-indent-tabs-mode ()
-  (setq indent-tabs-mode nil))
-(add-hook 'scala-mode-hook 'me-turn-off-indent-tabs-mode)
-(add-hook 'scala-mode-hook 'hs-minor-mode)
-(add-hook 'scala-mode-hook 'subword-mode)
-(add-hook 'scala-mode-hook 'autopair-mode)
+(defun bwm-make-buffer-floodable ()
+  (make-local-variable 'erc-server-flood-penalty)
+  (setq erc-server-flood-penalty 0))
 
-; highlighting for TODO
-(require 'highlight-fixmes-mode)
-(add-hook 'scala-mode-hook 'highlight-fixmes-mode)
+;; fancy prompt with channel name, or ERC if nil
+;; http://www.emacswiki.org/emacs/ErcConfiguration#toc5
+(setq erc-prompt (lambda ()
+           (if (and (boundp 'erc-default-recipients)
+                (erc-default-target))
+               (erc-propertize (concat (erc-default-target) "❯")
+                       'read-only t
+                       'rear-nonsticky t
+                       'front-nonsticky t)
+             (erc-propertize (concat "❯")
+                     'read-only t
+                     'rear-nonsticky t
+                     'front-nonsticky t))))
 
-(add-hook 'scala-mode-hook 'hl-line-mode)
-(add-hook 'scala-mode-hook
- (lambda ()
-   (define-key scala-mode-map (kbd "C-n") 'ensime-forward-note)
-   (define-key scala-mode-map (kbd "C-p") 'ensime-backward-note)
-   (define-key scala-mode-map (kbd "M-q") 'c-fill-paragraph)
-))
-;; reclaim some binding used by shell mode and shell-command.
-;; the shell mode and associated mode and commands use keys in comint-mode-map.
-(add-hook 'comint-mode-hook
- (lambda ()
-   (define-key comint-mode-map (kbd "M-l") 'recenter) ; was comint-previous-input. Use Ctrl+↑ or f11
-;;   (define-key comint-mode-map (kbd "M-n") 'nil) ; was comint-next-input. Use Ctrl+↓ or f12
+;; Interpret mIRC-style color commands in IRC chats
+;; seems to only work correctly when the irccontrols module is enabled
+(setq erc-interpret-mirc-color t
+      erc-interpret-controls-p t)
 
-   ;; rebind displaced commands that i still want a key
-   (define-key comint-mode-map (kbd "TAB") 'comint-dynamic-complete)
-   (define-key comint-mode-map (kbd "§ <up") 'comint-previous-matching-input)
-   (define-key comint-mode-map (kbd "§ <down>") 'comint-next-matching-input)
-))
-;; ECB support
-;(require 'ensime-ecb)
-;;;;;;;;;;;;;;; END Scala ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;
-(global-set-key "\C-c\C-w" 'backward-kill-word)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; bitlbee stuff
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
-(menu-bar-mode 1)
+(defun erc-update-header-line-show-disconnected ()
+  "Use a different face in the header-line when disconnected."
+  (erc-with-server-buffer
+    (cond ((erc-server-process-alive) 'erc-header-line)
+          (t 'erc-header-line-disconnected))))
+(setq erc-header-line-face-method 'erc-update-header-line-show-disconnected)
 
-;; Session
-;(require 'session)
-;(add-hook 'after-init-hook 'session-initialize)
+;; TODO use growl notify"
+(defun erc-notify-on-msg (msg)
+  "Send a message via notify-send if a message specifically to me"
+  (if (or (string-match "jz:" msg)
+          (and (string-match "justin" msg)
+           (not (string-match "\<root\>" msg)))
+          (and (string-match "zhu" msg)
+           (not (string-match "\<root\>" msg)))
+          (string-match "Message from unknown handle" msg)
+      (and (string= "localhost" erc-session-server)
+           (not (string-match "\\*\\*\\*" msg))
+           (not (string-match "\<root\>" msg))))
+      (let ((nameless-msg (replace-regexp-in-string "^\<.*?\>" "" msg)))
+    (start-process-shell-command "message recv" nil "afplay ~/Dropbox/Message_Received.wav")
+    (growl (buffer-name) nameless-msg)
+)))
+(add-hook 'erc-insert-pre-hook 'erc-notify-on-msg)
 
-;;;;;;;;;;;;;;;;;;; KEY BINDINGS ;;;;;;;;;;;;;;;;;;;;;;
+;; The following are commented out by default, but users of other
+;; non-Emacs IRC clients might find them useful.
 
-(defun maximize-frame ()
-  (interactive)
-  (set-frame-position (selected-frame) 0 0)
-  (set-frame-size (selected-frame) 1000 1000))
+;; these can all be accomplished by
+;;     M-x ibuffer RET * M erc-mode RET D RET
 
-; Window Movement
-(winner-mode 1)
-(windmove-default-keybindings 'meta)
+;; Kill buffers for channels after /part
+;; (setq erc-kill-buffer-on-part t)
+;; Kill buffers for private queries after quitting the server
+;; (setq erc-kill-queries-on-quit t)
+;; Kill buffers for server messages after quitting the server
+(setq erc-kill-server-buffer-on-quit t)
 
-(defun halve-other-window-height ()
-  "Expand current window to use half of the other window's lines."
-  (interactive)
-  (enlarge-window (/ (window-height (next-window)) 2)))
-
-(global-set-key (kbd "C-c v") 'halve-other-window-height)
-
-; Window Spliting
-(global-set-key (kbd "M-6") 'delete-window) ; was digit-argument
-(global-set-key (kbd "M-7") 'other-window) ; was center-line
-(global-set-key (kbd "M-8") 'split-window-vertically) ; was digit-argument
-(global-set-key (kbd "M-9") 'split-window-horizontally) ; was digit-argument
-(global-set-key (kbd "M-0") 'delete-other-windows) ; was digit-argument
-
-;; TODO try these?
-; open file
-;(global-set-key [(super o)] 'find-file)
-
-; use full-ack for Find
-;(global-set-key [(super F)] 'ack)
-
-; close window
-(global-set-key [(super w)]
-  (lambda ()
-      (interactive)
-          (kill-buffer (current-buffer))))
-
-; navigating through errors
-(global-set-key [(meta j)] 'next-error)
-(global-set-key [(meta k)] 'previous-error)
-
-; magit
-(global-set-key (kbd "C-c i") 'magit-status)
-
-;; os x cust
-; use default Mac browser
-(setq browse-url-browser-function 'browse-url-default-macosx-browser)
-
-; delete files by moving them to the OS X trash
-(setq delete-by-moving-to-trash t)
-
-; run macro
-(global-set-key [f5] 'call-last-kbd-macro)
-
-(autoload 'idomenu "idomenu" nil t)
-
-(setq recentf-max-saved-items 500)
-(setq recentf-max-menu-items 60)
-(global-set-key [(meta f12)] 'recentf-open-files)
-
-; nicer naming of buffers with identical names
-(require 'uniquify)
-(setq uniquify-buffer-name-style 'reverse)
-(setq uniquify-separator " • ")
-(setq uniquify-after-kill-buffer-p t)
-(setq uniquify-ignore-buffers-re "^\\*")
-
-; kill ring browsing
-(require 'browse-kill-ring+)
-(browse-kill-ring-default-keybindings)
-;; popup menu
-;(global-set-key "\C-cy" '(lambda ()
-;   (interactive)
-;   (popup-menu 'yank-menu)))
-
-; automatically clean up old buffers
-(require 'midnight)
-
-(require 'unbound)
-
-; pick up changes to files on disk automatically (ie, after git pull)
-(global-auto-revert-mode 1)
-
-; don't confirm opening non-existant files/buffers
-(setq confirm-nonexistent-file-or-buffer nil)
-
-; yes, I want to kill buffers with processes attached
-(setq kill-buffer-query-functions
-  (remq 'process-kill-buffer-query-function
-         kill-buffer-query-functions))
-
-
-;; ---------------------------------------
-;; load elscreen
-;; ---------------------------------------
-;; F9 creates a new elscreen, shift-F9 kills it
-(global-set-key (kbd "s-t"  ) 'elscreen-create)
-(global-set-key (kbd "s-SPC"  ) 'elscreen-kill)
-
-;; Windowskey+PgUP/PgDown switches between elscreens
-(global-set-key (kbd "<C-prior>") 'elscreen-previous)
-(global-set-key (kbd "<C-next>")  'elscreen-next)
-
-(defun elscreen-frame-title-update ()
-   (when (elscreen-screen-modified-p 'elscreen-frame-title-update)
-     (let* ((screen-list (sort (elscreen-get-screen-list) '<))
-           (screen-to-name-alist (elscreen-get-screen-to-name-alist))
-           (title (mapconcat
-                   (lambda (screen)
-                     (format "%d%s %s"
-                             screen (elscreen-status-label screen)
-                               (replace-regexp-in-string "\*.*\*" ""
-                                (get-alist screen screen-to-name-alist))))
-                   screen-list " ")))
-
-       (if (fboundp 'set-frame-name)
-          (set-frame-name title)
-        (setq frame-title-format title)))))
-
-; (eval-after-load "elscreen"
-;   '(add-hook 'elscreen-screen-update-hook 'elscreen-frame-title-update))
-
-(load "elscreen" "ElScreen" t)
-(require 'elscreen-buffer-list)
-
-;; show column #
-(column-number-mode t)
-(line-number-mode nil)
-
-;; surround
-(require 'vimpulse-surround)
-
-(require 'multi-term)
-(setq multi-term-program "/bin/zsh")
-(setq term-default-bg-color "#1f1f1f")
-(setq term-default-fg-color "#dcdccc")
-;; only needed if you use autopair
-(add-hook 'term-mode-hook
-  #'(lambda () (setq autopair-dont-activate t)))
-
-
-(global-set-key (kbd "C-c t") 'multi-term-next)
-(global-set-key (kbd "C-c T") 'multi-term) ;; create a new one
-
-(add-hook 'emacs-lisp-mode-hook
-  (lambda()
-    (setq mode-name "el")))
-
-;; Major modes
-(add-hook 'scala-mode-hook
-  (lambda()
-    (setq mode-name "S")))
-
-; Paren mode faces
-(require 'paren)
-(set-face-background 'show-paren-match-face "#0F4E8B")
-(set-face-foreground 'show-paren-match-face "#dcdccc")
-
-;; TODO make this scala only
-(define-key (current-global-map) [remap vimpulse-jump-to-tag-at-point] 'ensime-edit-definition)
-
-;(define-key (current-global-map) [remap viper-forward-word] 'forward-word)
-;(define-key (current-global-map) [remap viper-backward-word] 'backward-word)
-;(define-key (current-global-map) [remap vimpulse-operator-backward-word] 'backward-word)
-(define-key (current-global-map) [remap vimpulse-operator-forward-word] 'subword-forward)
-
-(setq campfire-room-name "API")
-(setq campfire-room-id "188551")
-
-; Spelling
-(autoload 'flyspell-mode "flyspell" "On-the-fly spelling checker." t)
-(add-hook 'message-mode-hook 'turn-on-flyspell)
-(add-hook 'text-mode-hook 'turn-on-flyspell)
-(add-hook 'c-mode-common-hook 'flyspell-prog-mode)
-(add-hook 'scala-mode-hook 'flyspell-prog-mode)
-
-(add-hook 'flyspell-mode-hook
+(make-variable-buffer-local 'erc-fill-column)
+(add-hook 'window-configuration-change-hook 
           '(lambda ()
-             (define-key flyspell-mode-map (kbd "C-;") 'save-buffer)))
-(global-set-key (kbd "C-;") 'save-buffer)
+             (save-excursion
+               (walk-windows
+                 (lambda (w)
+                   (let ((buffer (window-buffer w)))
+                     (set-buffer buffer)
+                     (when (eq major-mode 'erc-mode)
+                       (setq erc-fill-column (- (window-width w) 2)))))))))
+
+(defadvice save-buffers-kill-emacs (around no-query-kill-emacs activate)
+  "Prevent annoying \"Active processes exist\" query when you quit Emacs."
+  (flet ((process-list ())) ad-do-it))
+
+(defun erc-cmd-FORTUNE ()
+  "show some information about my system"
+  (let ((str (shell-command-to-string "fortune | cowsay -f tux")))
+    (when str (erc-send-message str))))
+
+ (make-variable-buffer-local 'erc-fill-column)
+ (add-hook 'window-configuration-change-hook 
+           '(lambda ()
+              (save-excursion
+                (walk-windows
+                 (lambda (w)
+                   (let ((buffer (window-buffer w)))
+                     (set-buffer buffer)
+                     (when (eq major-mode 'erc-mode)
+                       (setq erc-fill-column (- (window-width w) 2)))))))))
+
+;; auto fill last chatted user
+(defadvice erc-display-prompt (after conversation-erc-display-prompt activate)
+  "Insert last recipient after prompt."
+  (let ((previous 
+         (save-excursion 
+           (if (and (search-backward-regexp (concat "^[^<]*<" erc-nick ">") nil t)
+                    (search-forward-regexp (concat "^[^<]*<" erc-nick ">" 
+                                                   " *\\([^:]*: ?\\)") nil t))
+               (match-string 1)))))
+    ;; when we got something, and it was in the last 3 mins, put it in
+    (when (and 
+           previous 
+           (> 180 (time-to-seconds 
+                   (time-since (get-text-property 0 'timestamp previous)))))
+      (set-text-properties 0 (length previous) nil previous)
+      (insert previous))))
+
+ ;; Ensure that ERC comes up in Insert mode. TODO for MAGIT
+ ;(add-to-list 'viper-insert-state-mode-list 'erc-mode)
+ ;(defun ted-viper-erc-hook ()
+   ;"Make RET DTRT when you use Viper and ERC together."
+   ;(viper-add-local-keys 'insert-state
+                         ;`((,(kbd "RET") . erc-send-current-line)))
+   ;(viper-add-local-keys 'vi-state
+                         ;`((,(kbd "RET") . erc-send-current-line))))
+ ;(add-hook 'erc-mode-hook 'ted-viper-erc-hook)
+ (setq erc-button-url-regexp
+      "\\([-a-zA-Z0-9_=!?#$@~`%&*+\\/:;,]+\\.\\)+[-a-zA-Z0-9_=!?#$@~`%&*+\\/:;,]*[-a-zA-Z0-9\\/]")
 
-(setq ispell-program-name "aspell")
-(setq ispell-list-command "list")
-(setq ispell-process-directory (expand-file-name "~/"))
-
-;;;;;;;;;;;;;;;;;; ERC END ;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defun add-something-to-mode-hooks (mode-list something)
-  "helper function to add a callback to multiple hooks"
-  (dolist (mode mode-list)
-    (add-hook (intern (concat (symbol-name mode) "-mode-hook")) something)))
-
-;(add-something-to-mode-hooks '(c++ scala emacs-lisp) 'turn-on-fic-ext-mode)
-
-; TODO img for campfire
-
-;; Redefine the 8 primary terminal colors to look good against black ;; set in zenburn
-(setq ansi-term-color-vector
-[unspecified "#000000" "#963F3C" "#5FFB65" "#FFFD65"
-"#0082FF" "#FF2180" "#57DCDB" "#FFFFFF"])
-
-(require 'yaml-mode)
-(add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode))
-
-(add-hook 'yaml-mode-hook
-          '(lambda ()
-             (define-key yaml-mode-map "\C-m" 'newline-and-indent)))
-
-
-(setq initial-scratch-message nil)
-
-;; For teh tunez
-(autoload 'pianobar "pianobar" nil t)
-(require 'switchy)
-
-;; Viper is overreaching by caring whether a visited file is under version
-;; ;; control -- disable this check.
-(defadvice viper-maybe-checkout (around viper-vcs-check-is-retarded activate)
-   nil)
-
-;(setq viper-custom-file-name
-;       (convert-standard-filename "~/.emacs.d/jz/dot-viper.el"))
-(defun jao-toggle-selective-display (column)
-  "Activate selective display based on the column at point"
-   (interactive "P")
-     (set-selective-display
-         (if selective-display nil (or column 4))))
-
-(global-set-key [f2] 'jao-toggle-selective-display)
-
-
-(setq woman-use-own-frame nil)     ; don't create new frame for manpages
-(setq woman-use-topic-at-point t)  ; don't prompt upon K key (manpage display)
-
-
-;; multi buffer occur
-
-(require 'color-moccur)
-(require 'moccur-edit)
-(defadvice moccur-edit-change-file
-  (after save-after-moccur-edit-buffer activate)
-  (save-buffer))
-
-; TODO set fav list, etc for moccur
-
-;; MAPPINGS
-(defvar my-keys-minor-mode-map (make-keymap) "my-keys-minor-mode keymap.")
-(define-key my-keys-minor-mode-map (kbd "M-;") 'repeat-complex-command)
-
-;; Movement
-(define-key my-keys-minor-mode-map (kbd "C-w =") 'balance-windows)
-(define-key my-keys-minor-mode-map (kbd "C-w h") 'windmove-left)
-(define-key my-keys-minor-mode-map (kbd "C-w l") 'windmove-right)
-(define-key my-keys-minor-mode-map (kbd "C-w k") 'windmove-up)
-(define-key my-keys-minor-mode-map (kbd "C-w j") 'windmove-down)
-(define-key my-keys-minor-mode-map (kbd "C-w C-h") 'windmove-left)
-(define-key my-keys-minor-mode-map (kbd "C-w C-l") 'windmove-right)
-(define-key my-keys-minor-mode-map (kbd "C-w C-k") 'windmove-up)
-(define-key my-keys-minor-mode-map (kbd "C-w C-j") 'windmove-down)
-(define-key my-keys-minor-mode-map (kbd "C-w ,") '(lambda () (interactive) (split-window-vertically) (other-window 1)))
-(define-key my-keys-minor-mode-map (kbd "C-w .") '(lambda () (interactive) (split-window-horizontally) (other-window 1)))
-(define-key my-keys-minor-mode-map (kbd "C-w SPC") 'delete-window)
-(define-key my-keys-minor-mode-map (kbd "C-w C-SPC") 'delete-window)
-(define-key my-keys-minor-mode-map (kbd "<C-tab>") 'other-frame)
-(define-key my-keys-minor-mode-map (kbd "C-w ;") 'rotate-windows)
-(define-key my-keys-minor-mode-map (kbd "C-w C-;") 'rotate-windows)
-
-(define-key my-keys-minor-mode-map (kbd "C-c o") 'rename-file-and-buffer)
-(define-key my-keys-minor-mode-map (kbd "C-c g") 'customize-group)
-(define-key my-keys-minor-mode-map (kbd "C-x C-j") 'dired-jump-other-window)
-(define-key my-keys-minor-mode-map (kbd "C-l") 'dired-jump)
-(define-key my-keys-minor-mode-map (kbd "C-b") 'ido-switch-buffer)
-(define-key my-keys-minor-mode-map (kbd "C-x b") 'display-buffer)
-
-;; searching
-(define-key my-keys-minor-mode-map (kbd "C-f g") 'moccur-grep-find)
-(define-key my-keys-minor-mode-map (kbd "C-f d") 'dmoccur)
-(define-key my-keys-minor-mode-map (kbd "C-f s") 'ack-same)
-(define-key my-keys-minor-mode-map (kbd "C-f a") 'ack)
-(define-key my-keys-minor-mode-map (kbd "C-f f") 'ack-find-file)
-(define-key my-keys-minor-mode-map (kbd "C-f p") 'replace-regexp)
-(define-key my-keys-minor-mode-map (kbd "C-f l") 'lazy-search-menu)
-(define-key my-keys-minor-mode-map (kbd "C-c d") 'ediff-revision)
-(define-key my-keys-minor-mode-map (kbd "M-i") 'google-search-selection)
-(define-key my-keys-minor-mode-map (kbd "s-i") 'google-it)
-(define-key my-keys-minor-mode-map (kbd "C-f p") 'replace-regexp)
-
-(define-key my-keys-minor-mode-map (kbd "C-c s") 'confluence-search)
-
-(fset 'yank-to-end
-   "y$")
-
-(fset 'surround-paren
-   (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ([105 40 escape 108 100 105 119 84 40 105 25 escape 37 105] 0 "%d")) arg)))
-
-(fset 'surround-square
-   (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ([105 91 escape 108 100 105 119 84 91 105 25 escape 37 105] 0 "%d")) arg)))
-
-(fset 'surround-brace
-   (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ([105 123 escape 108 100 105 119 84 123 105 25 escape 37 105] 0 "%d")) arg)))
-
-(vimpulse-map (kbd ",c") 'surround-brace)
-(vimpulse-map (kbd ",b") 'surround-paren)
-(vimpulse-map (kbd ",s") 'surround-square)
-
-(vimpulse-imap (kbd "RET") 'reindent-then-newline-and-indent)
-(vimpulse-imap (kbd "C-SPC") 'auto-complete 'scala-mode)
-
-(vimpulse-map (kbd "C-f g") 'moccur-grep-find)
-(vimpulse-map (kbd "C-f d") 'dmoccur)
-(vimpulse-map (kbd "C-f s") 'ack-same)
-(vimpulse-map (kbd "C-f a") 'ack)
-(vimpulse-map (kbd "C-f f") 'ack-find-file)
-(vimpulse-map (kbd "C-f p") 'replace-regexp)
-(vimpulse-map (kbd "C-f l") 'lazy-search-menu)
-(vimpulse-map (kbd "&") 'lazy-search-menu)
-(vimpulse-vmap (kbd "&") 'lazy-search-menu)
-(vimpulse-vmap (kbd "Q") 'query-replace-regexp)
-(vimpulse-map (kbd "Q") 'query-replace-regexp)
-
-(vimpulse-map (kbd "C-b") 'ido-switch-buffer)
-(vimpulse-map (kbd "Y") 'yank-to-end)
-(vimpulse-map (kbd "A") 'viper-append)
-(vimpulse-map (kbd "a") 'viper-Append)
-
-; use v to go eol in visual mode
-(vimpulse-vmap (kbd "=") 'align-regexp)
-(vimpulse-vmap (kbd "=") 'align-regexp)
-(vimpulse-imap (kbd "C-y") 'yank)
-
-(vimpulse-vmap (kbd "TAB") 'vimpulse-shift-right)
-(vimpulse-vmap (kbd "<S-tab>") 'vimpulse-shift-left)
-;; TODO unbind , C-e
-
-(global-set-key (kbd "C-c k") 'ecb-toggle-ecb-windows)
-;(global-set-key (kbd "M-w") 'subword-forward)
-(global-set-key (kbd "C-c l") 'ensime) ;; replace lambda
-;(global-set-key (kbd "C-c ;") 'ensime-ecb)
-
-(define-minor-mode my-keys-minor-mode
-  "A minor mode so that my key settings override annoying major modes."
-  t " M " 'my-keys-minor-mode-map)
-
-(define-key dired-mode-map "j" 'dired-next-line)
-(define-key dired-mode-map "J" 'dired-goto-file)
-(define-key dired-mode-map "k" 'dired-previous-line)
-(define-key dired-mode-map "K" 'dired-do-kill-lines)
-
-(my-keys-minor-mode 1)
-
-; Cleanup mode line
-;; Minor modes
-(when (require 'diminish nil 'noerror)
-  (eval-after-load "Undo-Tree"
-      '(diminish 'undo-tree-mode "U"))
-  (eval-after-load "pair"
-    '(diminish 'autopair-mode "P"))
-  (eval-after-load "fixme"
-    '(diminish 'highlight-fixmes-mode "F"))
-  (eval-after-load "yasnippet"
-    '(diminish 'yas/minor-mode "Y")))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Hippie expand.  Groovy vans with tie-dyes.
-
-(require 'auto-complete-config)
-(add-to-list 'ac-dictionary-directories (concat user-dir "/auto-complete/dict"))
-(ac-config-default)
-
-(setq ac-dwim t)
-(setq ac-expand-on-auto-complete t)
-(setq ac-ignore-case 'smart)
-(setq ac-delay 0.5)
-(setq ac-auto-start nil)
-(setq ac-use-comphist t)
-(setq ac-use-quick-help t)
-(setq ac-delete-dups t)
-(setq ac-use-fuzzy t)
-(setq ac-auto-show-menu t)
-
-(add-to-list 'ac-modes 'scala-mode)
-(add-to-list 'ac-modes 'confluence-mode)
-
-(define-key ac-completing-map [return] 'ac-complete)
-(define-key ac-completing-map (kbd "<S-tab>") 'ac-previous)
-(define-key ac-completing-map (kbd "ESC") 'ac-stop)
-(define-key ac-completing-map (kbd "C-SPC") 'ac-expand)
-
-(ac-set-trigger-key "TAB")
-
-;; Change the default hippie-expand order and add yasnippet to the front.
-(setq hippie-expand-try-functions-list
-      '(yas/hippie-try-expand
-        try-expand-dabbrev
-        try-expand-dabbrev-all-buffers
-        try-expand-dabbrev-from-kill
-        try-complete-file-name-partially
-        try-complete-file-name
-        try-complete-lisp-symbol-partially
-        try-complete-lisp-symbol
-        try-expand-whole-kill))
-
-(global-set-key (kbd "TAB") 'hippie-expand)
-;; Enables tab completion in the `eval-expression` minibuffer
-(defun hippie-unexpand ()
- (interactive)
- (hippie-expand 0))
-(define-key minibuffer-local-map (kbd "TAB") 'hippie-expand)
-(define-key minibuffer-local-map  (kbd "<S-tab>") 'hippie-unexpand)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; YASnippet
-
-(require 'ensime)
-(require 'yasnippet)
-(yas/initialize)
-(yas/load-directory (concat user-dir "/yasnippet-read-only/snippets"))
-
-(add-hook 'scala-mode-hook 'yas/minor-mode-on)
-(yas/global-mode 1)
-
-(setq yas/trigger-key (kbd "C-c <kp-multiply>"))
-
-;; BUG DONT COMPILE YASNIPPET!!!!!!!!!!
-; Replace yasnippets's TAB
-; (add-hook 'yas/minor-mode-hook
-; (lambda () (define-key yas/minor-mode-map
-;       (kbd "TAB") 'auto-complete )))   ; was yas/expand
-
-(autoload 'ack-same "full-ack" nil t)
-(autoload 'ack "full-ack" nil t)
-(autoload 'ack-find-same-file "full-ack" nil t)
-(autoload 'ack-find-file "full-ack" nil t)
-
-;; onekey
-;;
-(vimpulse-map (kbd "C-e") 'one-key-menu-ensime 'scala-mode)
-
-(vimpulse-map (kbd "SPC") 'confluence-get-page-at-point 'confluence-mode)
-(vimpulse-map (kbd "C-e") 'one-key-menu-confluence 'confluence-mode)
-(vimpulse-map [backspace] 'confluence-pop-tag-stack 'confluence-mode)
-(vimpulse-imap [return] 'confluence-newline-and-indent 'confluence-mode)
-
-(vimpulse-map (kbd "TAB") 'confluence-list-indent-dwim 'confluence-mode)
-(vimpulse-map (kbd "<S-tab>") '(lambda () (interactive) (confluence-list-indent-dwim -1)) 'confluence-mode)
-;; (vimpulse-imap (kbd "TAB") 'auto-complete 'confluence-mode)
-(vimpulse-imap (kbd "TAB") 'confluence-list-indent-dwim 'confluence-mode)
-(vimpulse-imap (kbd "<S-tab>") '(lambda () (interactive) (confluence-list-indent-dwim -1)) 'confluence-mode)
-(vimpulse-map (kbd "s-k") 'kill-line)
-(vimpulse-map (kbd "s-j") 'newline-and-indent)
-(vimpulse-map (kbd "C-k") 'viper-backward-paragraph)
-(vimpulse-map (kbd "C-j") 'viper-forward-paragraph)
-(vimpulse-map (kbd "C-i") 'vimpulse-jump-forward)
-(vimpulse-vmap (kbd "]") 'sort-lines)
-
-(vimpulse-vmap (kbd "m") 'apply-macro-to-region-lines)
-
-(vimpulse-map ";" 'viper-ex)
-(vimpulse-vmap ";" 'vimpulse-visual-ex)
-(vimpulse-map (kbd "]") 'hs-toggle-hiding)
-(vimpulse-map (kbd "SPC") 'vimpulse-indent)
-(vimpulse-map "?" 'describe-bindings)
-
-(vimpulse-map "b" 'backward-word)
-(vimpulse-map ",," 'switch-between-test-and-source)
-(define-key vimpulse-visual-basic-map "v" 'end-of-line)
-
-(vimpulse-define-text-object vimpulse-sexp (arg)
-  "Select a S-expression."
-  :keys '("ae" "ie")
-  (vimpulse-inner-object-range
-   arg
-   'backward-sexp
-   'forward-sexp))
-
-(eval-after-load "menu-bar" '(require 'menu-bar+))
-
-;; Ediff
-
-(setq ediff-split-window-function (lambda (&optional arg)
-                                    (if (> (frame-width) 150)
-                                      (split-window-horizontally arg)
-                                      (split-window-vertically arg))))
-;(setq debug-on-error t)
-
-;(remove-hook 'minibuffer-setup-hook 'viper-minibuffer-setup-sentinel)
-;(defadvice viper-set-minibuffer-overlay (around vimpulse activate) nil)
-;(defadvice viper-has-face-support-p (around vimpulse activate) nil)
-;(define-key minibuffer-local-map (kbd "ESC") 'abort-recursive-edit)
-
-;;; change cursor to bar in minibuffer
-;(add-hook 'minibuffer-setup-hook '(lambda () (setq cursor-type 'bar)))
-
-(defvar ido-enable-replace-completing-read t
-  "If t, use ido-completing-read instead of completing-read if possible.
-
-Set it to nil using let in around-advice for functions where the
-original completing-read is required.  For example, if a function
-foo absolutely must use the original completing-read, define some
-advice like this:
-
-(defadvice foo (around original-completing-read-only activate)
-  (let (ido-enable-replace-completing-read) ad-do-it))")
-
-;; Replace completing-read wherever possible, unless directed otherwise
-(defadvice completing-read
-  (around use-ido-when-possible activate)
-  (if (or (not ido-enable-replace-completing-read) ; Manual override disable ido
-          (boundp 'ido-cur-list)) ; Avoid infinite loop from ido calling this
-      ad-do-it
-    (let ((allcomp (all-completions "" collection predicate)))
-      (if allcomp
-          (setq ad-return-value
-                (ido-completing-read prompt
-                               allcomp
-                               nil require-match initial-input hist def))
-        ad-do-it))))
-
-(setq ensime-jvm-args "-server -verbose:class -verbosegc -Xloggc:/tmp/ensime_gc.log -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -XX:+PrintGCDateStamps -XX:+PrintTenuringDistribution -XX:+PrintHeapAtGC -XX:+UseConcMarkSweepGC -XX:+UseParNewGC -XX:+UseAdaptiveSizePolicy -Xms256M -Xmx2048M -Dfile.encoding=UTF-8")
-(setenv "ENSIME_JVM_ARGS" ensime-jvm-args)
-
-; Fullscreen
-(global-set-key (kbd "<s-return>") 'maximize-frame)
-(maximize-frame)
-
-(add-hook 'ido-setup-hook '(lambda ()
-                             (define-key ido-completion-map (kbd "C-c p") 'ido-toggle-prefix)
-                             (define-key ido-completion-map (kbd "C-c c") 'ido-toggle-case)
-                             (define-key ido-completion-map (kbd "C-c t") 'ido-toggle-regexp)
-                             (define-key ido-completion-map [remap viper-intercept-ESC-key] 'abort-recursive-edit)))
