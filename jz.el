@@ -39,8 +39,13 @@
 (command-frequency-mode 1)
 (command-frequency-autosave-mode 1)
 
+(defadvice save-buffers-kill-emacs (around no-query-kill-emacs activate)
+  "Prevent annoying \"Active processes exist\" query when you quit Emacs."
+  (flet ((process-list ())) ad-do-it))
+
 ;;;;;;;;;;;;;;;;;; ERC ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (require 'erc)
+(require 'erc-nicklist)
 ;; check channels
 (erc-track-mode t)
 (defun djcb-erc-start-or-switch ()
@@ -63,7 +68,9 @@
               (string= "&bitlbee" (buffer-name)))
      (erc-message "PRIVMSG" (format "%s identify %s"
                                     (erc-default-target)
-                                    bitlbee-password)))
+                                    bitlbee-password))
+     (erc-nicklist)
+)
    )
 
 ;(require 'erc-services)
@@ -91,16 +98,11 @@
                      (".*Disturb$" (:foreground "#bc8383"))
                      ))
                      
-(setq erc-auto-query 'bury)
-(if (get-buffer "localhost:6667") ;; ERC already active?
-  (erc-track-switch-buffer 1) ;; yes: switch to last active
-(erc :server "localhost" :port "6667" :nick "jz" :password bitlbee-password))
-
 ; VIA: http://hg.quodlibetor.com/emacs.d/raw-file/6634ae6dcbee/customize/chat.el
 (setq erc-modules '(netsplit fill track completion ring button autojoin smiley
-                 services match stamp page log replace
+                 services match stamp page log replace highlight-nicknames
                  scrolltobottom move-to-prompt irccontrols spelling)
-      erc-autojoin-channels-alist '(("localhost" "&bitlbee")); "#Emacs" "#ScalaFolks" "#API" "#test" ))
+      erc-autojoin-channels-alist '(("localhost" "&bitlbee" "#Emacs" "#ScalaFolks" "#API" "#test" ))
 ;      erc-pals '("forever" "alone")
 ;      erc-fools '()
       erc-hide-list '("JOIN" "PART" "QUIT" "NICK" "MODE")
@@ -109,7 +111,7 @@
                                 "324" "329" "332" "333" "353" "477")
 
       erc-fill-function 'erc-fill-static
-      erc-fill-static-center 6
+      erc-fill-static-center 10
       ;; logging! ... requires the `log' module
       ;; do it line-by-line instead of on quit
       erc-log-channels-directory (expand-file-name "~/Dropbox/logs/")
@@ -123,8 +125,30 @@
     ("\*\*\* Topic for.*" . "")
     (".*topic set by root!root@localhost.*" . "")
     (".*modes: \+t" . "")
+    ("\</?FONT>" . "")
     )
   )
+
+;; modify nickname highlighting
+(defvar is-notice-property) ;; just a symbol for use as text prop name
+(defadvice erc-highlight-notice (after note-notice-on-highlight activate)
+  "Annotate notices with is-notice-property"
+  (put-text-property 0 (length s) 'is-notice-property 't s))
+
+;; unactivated modification to erc-get-server-user to reject self.
+(defadvice erc-get-server-user (around erc-get-server-user-notself)
+  (if (not (string-equal nick (erc-current-nick)))
+    ad-do-it))
+  
+(defadvice erc-highlight-nicknames (around disable-nick-highlight-for-notice activate)
+  "only allow nick highlighting when not a notice, and disable
+   highlighting of own nick"
+  (re-search-forward "\\w+" nil t 2) ;; make sure we skip leading timestamp
+  (unless (get-text-property (point) 'is-notice-property)
+    ;; don't re-highlight self, as it does nothing but break erc-track
+    (ad-activate-regexp "erc-get-server-user-notself")
+    ad-do-it
+    (ad-deactivate-regexp "erc-get-server-user-notself")))
 
 ;; allow some channels to not auto-delay messages. This can
 ;; get you kicked from sane channels, so don't use it.
@@ -184,22 +208,38 @@
           (t 'erc-header-line-disconnected))))
 (setq erc-header-line-face-method 'erc-update-header-line-show-disconnected)
 
+(defun important-msg ()
+  (or (string-match "jz:" msg)
+      (and (string-match "justin" msg)
+           (not (string-match "\<root\>" msg)))
+      (and (string-match "zhu" msg)
+         (not (string-match "\<root\>" msg)))
+      (string-match "Message from unknown handle" msg)))
+
 ;; TODO use growl notify"
 (defun erc-notify-on-msg (msg)
   "Send a message via notify-send if a message specifically to me"
-  (if (or (string-match "jz:" msg)
-          (and (string-match "justin" msg)
-           (not (string-match "\<root\>" msg)))
-          (and (string-match "zhu" msg)
-           (not (string-match "\<root\>" msg)))
-          (string-match "Message from unknown handle" msg)
-      (and (string= "localhost" erc-session-server)
+  (if (or (important-msg)
+          (and (string= "localhost" erc-session-server)
            (not (string-match "\\*\\*\\*" msg))
            (not (string-match "\<root\>" msg))))
       (let ((nameless-msg (replace-regexp-in-string "^\<.*?\>" "" msg)))
-    (start-process-shell-command "message recv" nil "afplay ~/Dropbox/Message_Received.wav")
-    (growl (buffer-name) nameless-msg)
+        (unless (important-msg)
+          (start-process-shell-command "message recv" nil "afplay ~/Dropbox/Message_Received.wav"))
+        (growl (buffer-name) nameless-msg)
 )))
+
+(defun my-erc-page-me-PRIVMSG (proc parsed)
+  (let ((nick (car (erc-parse-user (erc-response.sender parsed))))
+        (target (car (erc-response.command-args parsed)))
+        (msg (erc-response.contents parsed)))
+    (when (and (erc-current-nick-p target)
+               (not (erc-is-message-ctcp-and-not-action-p msg)))
+               ;(my-erc-page-allowed nick))
+               (start-process-shell-command "message recv" nil "afplay ~/Dropbox/Message_Received.wav")
+               (growl nick msg)
+      nil)))
+;(add-hook 'erc-server-PRIVMSG-functions 'my-erc-page-me-PRIVMSG)
 (add-hook 'erc-insert-pre-hook 'erc-notify-on-msg)
 
 ;; The following are commented out by default, but users of other
@@ -225,10 +265,6 @@
                      (set-buffer buffer)
                      (when (eq major-mode 'erc-mode)
                        (setq erc-fill-column (- (window-width w) 2)))))))))
-
-(defadvice save-buffers-kill-emacs (around no-query-kill-emacs activate)
-  "Prevent annoying \"Active processes exist\" query when you quit Emacs."
-  (flet ((process-list ())) ad-do-it))
 
 (defun erc-cmd-FORTUNE ()
   "show some information about my system"
@@ -275,3 +311,12 @@
  (setq erc-button-url-regexp
       "\\([-a-zA-Z0-9_=!?#$@~`%&*+\\/:;,]+\\.\\)+[-a-zA-Z0-9_=!?#$@~`%&*+\\/:;,]*[-a-zA-Z0-9\\/]")
 
+(defun start-irc ()
+  (unless (get-buffer "localhost:6667") ;; ERC already active?
+    (select-frame (make-frame '((name . "Emacs IRC")
+                                (minibuffer . t))))
+    (erc :server "localhost" :port "6667" :nick "jz" :password bitlbee-password))
+)
+
+(setq erc-auto-query 'bury)
+(start-irc)
