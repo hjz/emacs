@@ -89,7 +89,7 @@
 (setq erc-modules '(netsplit fill track completion ring button autojoin smiley
                  services match stamp page log replace highlight-nicknames autoaway 
                  scrolltobottom move-to-prompt irccontrols spelling)
-      erc-autojoin-channels-alist '(("localhost" "&bitlbee" "#test"));"#Emacs" "#ScalaFolks" "#API" "#test" ))
+      erc-autojoin-channels-alist '(("localhost" "&bitlbee" "#Emacs" "#ScalaFolks" "#API"))
 ;      erc-pals '("forever" "alone")
 ;      erc-fools '()
       erc-hide-list '("JOIN" "PART" "QUIT" "NICK" "MODE")
