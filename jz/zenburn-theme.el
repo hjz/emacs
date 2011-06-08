@@ -67,17 +67,18 @@
 (defvar zenburn-blue-1 "#7cb8bb")
 (defvar zenburn-blue-2 "#6ca0a3")
 (defvar zenburn-blue-3 "#5c888b")
-(defvar zenburn-blue-4 "#ddeeee")
+(defvar zenburn-blue-4 "#4c7073")
 (defvar zenburn-cyan "#93e0e3")
-(defvar zenburn-magenta "#7f3194")
+(defvar zenburn-magenta "#dc8cc3")
 (defvar zenburn-magenta-1 "#a4a4d0")
+(defvar zenburn-magenta-2 "#7f3194")
 
-;(eval-after-load 'term
-;  '(setq ansi-term-color-vector
-;     (vector 'unspecified zenburn-bg
-;       zenburn-red zenburn-green
-;       zenburn-yellow zenburn-blue+1
-;       zenburn-magenta zenburn-cyan)))
+(eval-after-load 'term
+  '(setq ansi-term-color-vector
+     (vector 'unspecified zenburn-bg
+       zenburn-red zenburn-green
+       zenburn-yellow zenburn-blue+1
+       zenburn-magenta zenburn-cyan)))
 
 ;; Faces for inheriting
 (defface zenburn-primary-1 `((t :foreground "#9f9f9f"))
@@ -409,6 +410,26 @@
  `(diff-refine-change ((t (:background "grey35" :bold t))))
  `(diff-context ((t (:inherit default))))
  `(vertical-border ((t (:background "#282828" :foreground "#282828"))))
+
+ ;; erc 
+ `(erc-action-face ((t (:inherit erc-default))))
+ `(erc-bold-face ((t (:weight bold))))
+ `(erc-current-nick-face ((t (:inherit 'zenburn-primary-1))))
+ `(erc-dangerous-host-face ((t (:inherit font-lock-warning))))
+ `(erc-direct-msg-face ((t (:inherit erc-default))))
+ `(erc-error-face ((t (:inherit font-lock-warning))))
+ `(erc-fool-face ((t (:inherit 'zenburn-lowlight-1))))
+ `(erc-highlight-face ((t (:inherit hover-highlight))))
+ `(erc-keyword-face ((t (:inherit 'zenburn-primary-1))))
+ `(erc-my-nick-face ((t (:inherit 'zenburn-red))))
+ `(erc-nick-default-face ((t (:inherit bold))))
+ `(erc-nick-msg-face ((t (:inherit erc-default))))
+ `(erc-notice-face ((t (:foreground, zenburn-green))))
+ `(erc-pal-face ((t (:inherit 'zenburn-primary-3))))
+ `(erc-timestamp-face ((t (:foreground, zenburn-blue-1))))
+ `(erc-underline-face ((t (:inherit underline))))
+ `(erc-default-face ((t (:foreground ,zenburn-fg))))
+ `(erc-input-face ((t (:foreground ,zenburn-orange))))
 )
 
 (provide-theme 'zenburn)

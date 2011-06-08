@@ -33,11 +33,8 @@
 (add-to-list 'load-path (concat user-dir "/minimap"))
 (add-to-list 'load-path (concat user-dir "/google-weather"))
 (require 'minimap)
+(require 'wotd)
 
-(require 'command-frequency)
-(command-frequency-table-load)
-(command-frequency-mode 1)
-(command-frequency-autosave-mode 1)
 
 (defadvice save-buffers-kill-emacs (around no-query-kill-emacs activate)
   "Prevent annoying \"Active processes exist\" query when you quit Emacs."
@@ -77,15 +74,6 @@
 (setq erc-prompt-for-nickserv-password nil)
 
 ;; bitlbee specific
-(defun erc-ignore-unimportant (msg)
-  (if (or (string-match "*** localhost has changed mode for &bitlbee to" msg)
-          (string-match "Account already online" msg)
-          (string-match "You're already logged in." msg)
-          (string-match "Trying to get all accounts connected" msg)
-          (string-match "Unknown error while loading configuration" msg))
-      (setq erc-insert-this nil)))
-(add-hook 'erc-insert-pre-hook 'erc-ignore-unimportant)
-
 (setq erc-keywords '((".*Online.*" (:foreground "#8fb28f"))
                      (".*Busy$" (:foreground "#bc8383"))
                      (".*Away$" (:foreground "#7cb8bb"))
@@ -96,21 +84,27 @@
                      (".*Idle$" (:foreground "#d0bf8f"))
                      (".*Disturb$" (:foreground "#bc8383"))
                      ))
+
+(require 'random-quote)
                      
 ; VIA: http://hg.quodlibetor.com/emacs.d/raw-file/6634ae6dcbee/customize/chat.el
-(setq erc-modules '(netsplit fill track completion ring button autojoin smiley
-                 services match stamp page log replace highlight-nicknames
+(setq erc-modules '(netsplit track completion ring button autojoin smiley
+                 services match stamp page log replace highlight-nicknames autoaway
                  scrolltobottom move-to-prompt irccontrols spelling)
       erc-autojoin-channels-alist '(("localhost" "&bitlbee" "#Emacs" "#ScalaFolks" "#API" "#test" ))
 ;      erc-pals '("forever" "alone")
 ;      erc-fools '()
       erc-hide-list '("JOIN" "PART" "QUIT" "NICK" "MODE")
+      erc-autoaway-idle-seconds 10
+      erc-autoaway-message (concat "Away (" (pick-random-quote)  ")")
+      erc-auto-discard-away t
+      erc-auto-set-away t
 
       erc-track-exclude-types '("JOIN" "NICK" "PART" "QUIT" "MODE" "NAMES"
                                 "324" "329" "332" "333" "353" "477")
 
       erc-fill-function 'erc-fill-static
-      erc-fill-static-center 10
+      erc-fill-static-center 15
       ;; logging! ... requires the `log' module
       ;; do it line-by-line instead of on quit
       erc-log-channels-directory (expand-file-name "~/Dropbox/logs/")
@@ -121,12 +115,23 @@
 
 (setq erc-replace-alist 
   '(
-    ("\*\*\* Topic for.*" . "")
-    (".*topic set by root!root@localhost.*" . "")
-    (".*modes: \+t" . "")
     ("\</?FONT>" . "")
     )
   )
+
+(defun erc-ignore-unimportant (msg)
+  (if (or (string-match "*** localhost has changed mode for &bitlbee to" msg)
+          (string-match "Account already online" msg)
+          (string-match "You're already logged in." msg)
+          (string-match "Trying to get all accounts connected" msg)
+          (string-match "Unknown error while loading configuration" msg)
+          (string-match "topic set by root!root@localhost" msg)
+          (string-match "modes:.*t" msg)
+          (string-match "Topic for.*BitlBee groupchat" msg))
+      (setq erc-insert-this nil)))
+(add-hook 'erc-insert-pre-hook 'erc-ignore-unimportant)
+
+
 
 ;; modify nickname highlighting
 (defvar is-notice-property) ;; just a symbol for use as text prop name
@@ -148,6 +153,12 @@
     (ad-activate-regexp "erc-get-server-user-notself")
     ad-do-it
     (ad-deactivate-regexp "erc-get-server-user-notself")))
+
+;; todo use something better
+(define-key erc-mode-map (kbd "C-c C-q")
+            (lambda (nick)
+              (interactive (list (completing-read "Nick: " channel-members)))
+              (erc-cmd-QUERY nick)))
 
 ;; allow some channels to not auto-delay messages. This can
 ;; get you kicked from sane channels, so don't use it.
@@ -238,6 +249,7 @@
                (start-process-shell-command "message recv" nil "afplay ~/Dropbox/Message_Received.wav")
                (growl nick msg)
       nil)))
+
 (add-hook 'erc-server-PRIVMSG-functions 'my-erc-page-me-PRIVMSG)
 ;(add-hook 'erc-insert-pre-hook 'erc-notify-on-msg)
 
@@ -317,5 +329,38 @@
     (erc :server "localhost" :port "6667" :nick "jz" :password bitlbee-password))
 )
 
+;; timestamps                                                                                     
+(make-variable-buffer-local
+ (defvar erc-last-datestamp nil))
+
+(defun ks-timestamp (string)
+  (erc-insert-timestamp-left string)
+  (let ((datestamp (erc-format-timestamp (current-time) erc-datestamp-format)))
+    (unless (string= datestamp erc-last-datestamp)
+      (erc-insert-timestamp-left datestamp)
+      (setq erc-last-datestamp datestamp))))
+    
+(setq erc-timestamp-only-if-changed-flag t
+      erc-timestamp-format "%H:%M "
+      erc-datestamp-format " === [%Y-%m-%d %a] ===\n" ; mandatory ascii art                          
+      erc-fill-prefix "      "
+      erc-insert-timestamp-function 'ks-timestamp)
+
 (setq erc-auto-query 'buffer)
 (start-irc)
+
+;; tip of the day
+(require 'cl)
+(defun totd ()
+ (interactive)
+ (with-output-to-temp-buffer "*Tip of the day*"
+   (let* ((commands (loop for s being the symbols
+                          when (commandp s) collect s))
+          (command (nth (random (length commands)) commands)))
+     (princ
+      (concat "Your tip for the day is:\n========================\n\n"
+              (describe-function command)
+              "\n\nInvoke with:\n\n"
+              (with-temp-buffer
+                (where-is command t)
+                (buffer-string)))))))
