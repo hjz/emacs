@@ -431,6 +431,27 @@
  `(erc-default-face ((t (:foreground ,zenburn-fg))))
  `(erc-input-face ((t (:foreground ,zenburn-blue-1))))
  `(erc-prompt-face ((t (:foreground "#daa17c" :weight bold))))
+
+ `(ediff-current-diff-A ((t (:background "#495766" :foreground ,zenburn-fg))))
+ `(ediff-current-diff-Ancestor ((t (:background "#495766" :foreground ,zenburn-fg))))
+ `(ediff-current-diff-B ((t (:background "#495766" :foreground ,zenburn-fg))))
+ `(ediff-current-diff-C ((t (:background "#495766" :foreground ,zenburn-fg))))
+
+ `(ediff-even-diff-A ((t (:background ,zenburn-bg+1))))
+ `(ediff-even-diff-Ancestor ((t (:background ,zenburn-bg+1))))
+ `(ediff-even-diff-B ((t (:background ,zenburn-bg+1))))
+ `(ediff-even-diff-C ((t (:background ,zenburn-bg+1))))
+
+ `(ediff-odd-diff-A ((t (:background ,zenburn-bg+1))))
+ `(ediff-odd-diff-Ancestor ((t (:background ,zenburn-bg+1))))
+ `(ediff-odd-diff-B ((t (:background ,zenburn-bg+1))))
+ `(ediff-odd-diff-C ((t (:background ,zenburn-bg+1))))
+
+ `(ediff-fine-diff-A ((t (:background "#668b8b"))))
+ `(ediff-fine-diff-Ancestor ((t (:background "#668b8b" :foreground ,zenburn-fg))))
+ `(ediff-fine-diff-B ((t (:background "#668b8b" :foreground ,zenburn-fg))))
+ `(ediff-fine-diff-C ((t (:background "#668b8b" :foreground ,zenburn-fg))))
+
 )
 
 (provide-theme 'zenburn)
