@@ -86,7 +86,7 @@
 (require 'random-quote)
                      
 ; VIA: http://hg.quodlibetor.com/emacs.d/raw-file/6634ae6dcbee/customize/chat.el
-(setq erc-modules '(netsplit track completion ring button autojoin smiley
+(setq erc-modules '(netsplit fill track completion ring button autojoin smiley
                  services match stamp page log replace highlight-nicknames autoaway 
                  scrolltobottom move-to-prompt irccontrols spelling)
       erc-autojoin-channels-alist '(("localhost" "&bitlbee" "#test"));"#Emacs" "#ScalaFolks" "#API" "#test" ))
@@ -102,7 +102,7 @@
                                 "324" "329" "332" "333" "353" "477")
 
       erc-fill-function 'erc-fill-static
-      erc-fill-static-center 20
+      erc-fill-static-center 15
       ;; logging! ... requires the `log' module
       ;; do it line-by-line instead of on quit
       erc-log-channels-directory (expand-file-name "~/Dropbox/logs/")
@@ -281,16 +281,8 @@
 ;; Kill buffers for server messages after quitting the server
 (setq erc-kill-server-buffer-on-quit t)
 
-(make-variable-buffer-local 'erc-fill-column)
-(add-hook 'window-configuration-change-hook 
-          '(lambda ()
-             (save-excursion
-               (walk-windows
-                 (lambda (w)
-                   (let ((buffer (window-buffer w)))
-                     (set-buffer buffer)
-                     (when (eq major-mode 'erc-mode)
-                       (setq erc-fill-column (- (window-width w) 2)))))))))
+;; dont need fill, but need it for formatting nicks
+(setq erc-fill-column 1000)
 
 (defun erc-cmd-FORTUNE ()
   "show some information about my system"
