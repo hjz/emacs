@@ -411,7 +411,7 @@
  `(diff-context ((t (:inherit default))))
  `(vertical-border ((t (:background "#282828" :foreground "#282828"))))
 
- ;; erc 
+ ;; erc
  `(erc-action-face ((t (:inherit erc-default))))
  `(erc-bold-face ((t (:weight bold))))
  `(erc-current-nick-face ((t (:inherit 'zenburn-primary-1))))
@@ -433,25 +433,24 @@
  `(erc-prompt-face ((t (:foreground "#daa17c" :weight bold))))
 
  `(ediff-current-diff-A ((t (:background "#495766" :foreground ,zenburn-fg))))
- `(ediff-current-diff-Ancestor ((t (:background "#495766" :foreground ,zenburn-fg))))
- `(ediff-current-diff-B ((t (:background "#495766" :foreground ,zenburn-fg))))
- `(ediff-current-diff-C ((t (:background "#495766" :foreground ,zenburn-fg))))
+ `(ediff-current-diff-Ancestor ((t (:background "#495766" :foreground ,zenburn-fg))))
+ `(ediff-current-diff-B ((t (:background "#495766" :foreground ,zenburn-fg))))
+ `(ediff-current-diff-C ((t (:background "#495766" :foreground ,zenburn-fg))))
 
- `(ediff-even-diff-A ((t (:background ,zenburn-bg+1))))
- `(ediff-even-diff-Ancestor ((t (:background ,zenburn-bg+1))))
- `(ediff-even-diff-B ((t (:background ,zenburn-bg+1))))
- `(ediff-even-diff-C ((t (:background ,zenburn-bg+1))))
+ `(ediff-even-diff-A ((t (:background ,zenburn-bg+1))))
+ `(ediff-even-diff-Ancestor ((t (:background ,zenburn-bg+1))))
+ `(ediff-even-diff-B ((t (:background ,zenburn-bg+1))))
+ `(ediff-even-diff-C ((t (:background ,zenburn-bg+1))))
 
- `(ediff-odd-diff-A ((t (:background ,zenburn-bg+1))))
- `(ediff-odd-diff-Ancestor ((t (:background ,zenburn-bg+1))))
- `(ediff-odd-diff-B ((t (:background ,zenburn-bg+1))))
- `(ediff-odd-diff-C ((t (:background ,zenburn-bg+1))))
+ `(ediff-odd-diff-A ((t (:background ,zenburn-bg+1))))
+ `(ediff-odd-diff-Ancestor ((t (:background ,zenburn-bg+1))))
+ `(ediff-odd-diff-B ((t (:background ,zenburn-bg+1))))
+ `(ediff-odd-diff-C ((t (:background ,zenburn-bg+1))))
 
- `(ediff-fine-diff-A ((t (:background "#668b8b"))))
- `(ediff-fine-diff-Ancestor ((t (:background "#668b8b" :foreground ,zenburn-fg))))
- `(ediff-fine-diff-B ((t (:background "#668b8b" :foreground ,zenburn-fg))))
- `(ediff-fine-diff-C ((t (:background "#668b8b" :foreground ,zenburn-fg))))
-
+ `(ediff-fine-diff-A ((t (:background "#668b8b"))))
+ `(ediff-fine-diff-Ancestor ((t (:background "#668b8b" :foreground ,zenburn-fg))))
+ `(ediff-fine-diff-B ((t (:background "#668b8b" :foreground ,zenburn-fg))))
+ `(ediff-fine-diff-C ((t (:background "#668b8b" :foreground ,zenburn-fg))))
 )
 
 (provide-theme 'zenburn)
