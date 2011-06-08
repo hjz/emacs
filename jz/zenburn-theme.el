@@ -426,10 +426,11 @@
  `(erc-nick-msg-face ((t (:inherit erc-default))))
  `(erc-notice-face ((t (:foreground, zenburn-green))))
  `(erc-pal-face ((t (:inherit 'zenburn-primary-3))))
- `(erc-timestamp-face ((t (:foreground, zenburn-blue-1))))
+ `(erc-timestamp-face ((t (:foreground "#b6b6b6"))))
  `(erc-underline-face ((t (:inherit underline))))
  `(erc-default-face ((t (:foreground ,zenburn-fg))))
- `(erc-input-face ((t (:foreground ,zenburn-orange))))
+ `(erc-input-face ((t (:foreground ,zenburn-blue-1))))
+ `(erc-prompt-face ((t (:foreground "#daa17c" :weight bold))))
 )
 
 (provide-theme 'zenburn)

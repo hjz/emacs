@@ -33,8 +33,6 @@
 (add-to-list 'load-path (concat user-dir "/minimap"))
 (add-to-list 'load-path (concat user-dir "/google-weather"))
 (require 'minimap)
-(require 'wotd)
-
 
 (defadvice save-buffers-kill-emacs (around no-query-kill-emacs activate)
   "Prevent annoying \"Active processes exist\" query when you quit Emacs."
@@ -89,13 +87,13 @@
                      
 ; VIA: http://hg.quodlibetor.com/emacs.d/raw-file/6634ae6dcbee/customize/chat.el
 (setq erc-modules '(netsplit track completion ring button autojoin smiley
-                 services match stamp page log replace highlight-nicknames autoaway
+                 services match stamp page log replace highlight-nicknames autoaway 
                  scrolltobottom move-to-prompt irccontrols spelling)
-      erc-autojoin-channels-alist '(("localhost" "&bitlbee" "#Emacs" "#ScalaFolks" "#API" "#test" ))
+      erc-autojoin-channels-alist '(("localhost" "&bitlbee" "#test"));"#Emacs" "#ScalaFolks" "#API" "#test" ))
 ;      erc-pals '("forever" "alone")
 ;      erc-fools '()
       erc-hide-list '("JOIN" "PART" "QUIT" "NICK" "MODE")
-      erc-autoaway-idle-seconds 10
+      erc-autoaway-idle-seconds 600
       erc-autoaway-message (concat "Away (" (pick-random-quote)  ")")
       erc-auto-discard-away t
       erc-auto-set-away t
@@ -104,7 +102,7 @@
                                 "324" "329" "332" "333" "353" "477")
 
       erc-fill-function 'erc-fill-static
-      erc-fill-static-center 15
+      erc-fill-static-center 20
       ;; logging! ... requires the `log' module
       ;; do it line-by-line instead of on quit
       erc-log-channels-directory (expand-file-name "~/Dropbox/logs/")
@@ -113,11 +111,26 @@
       erc-log-write-after-send t
       erc-log-write-after-insert t)
 
-(setq erc-replace-alist 
-  '(
-    ("\</?FONT>" . "")
-    )
-  )
+(defun my-concat-lines (lines str count)
+(if (> count 0)
+   (concat (my-concat-lines (cdr lines) str (- count 1)) "\n" (car lines))
+   str))
+
+(defun my-get-file-lines (filename count)
+  (with-temp-buffer 
+    (ignore-errors (insert-file-contents filename))
+    (my-concat-lines (split-string (buffer-string) "\n" t) nil count)
+))
+
+;; Insert log contents
+(add-hook 'erc-join-hook '(lambda () 
+                            (save-excursion
+                              (goto-char 0)
+                              (insert (substring (my-get-file-lines (erc-current-logfile) 16) 1))
+                            )))
+                            ;(add-hook 'erc'join-hook (goto-char (point-max)))
+
+(setq erc-replace-alist '(("\</?FONT>" . "")))
 
 (defun erc-ignore-unimportant (msg)
   (if (or (string-match "*** localhost has changed mode for &bitlbee to" msg)
@@ -190,17 +203,19 @@
 
 ;; fancy prompt with channel name, or ERC if nil
 ;; http://www.emacswiki.org/emacs/ErcConfiguration#toc5
-(setq erc-prompt (lambda ()
-           (if (and (boundp 'erc-default-recipients)
-                (erc-default-target))
-               (erc-propertize (concat (erc-default-target) "❯")
-                       'read-only t
-                       'rear-nonsticky t
-                       'front-nonsticky t)
-             (erc-propertize (concat "❯")
-                     'read-only t
-                     'rear-nonsticky t
-                     'front-nonsticky t))))
+;(setq erc-prompt (lambda ()|#
+           ;(if (and (boundp 'erc-default-recipients)
+                ;(erc-default-target))
+               ;(erc-propertize (concat (erc-default-target) ">")
+                       ;'read-only t
+                       ;'rear-nonsticky t
+                       ;'front-nonsticky t)
+             ;(erc-propertize (concat ">")
+                     ;'read-only t
+                     ;'rear-nonsticky t
+                     ;'front-nonsticky t))))
+
+(setq erc-prompt "❯❯")
 
 ;; Interpret mIRC-style color commands in IRC chats
 ;; seems to only work correctly when the irccontrols module is enabled
