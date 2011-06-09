@@ -37,7 +37,7 @@
 
 ;; Define variables for colors
 (defvar zenburn-fg-1 "#777777")
-(defvar zenburn-fg "#dcdccc")
+(defvar zenburn-fg "#afafaf")
 (defvar zenburn-bg-1 "#1b1b1b")
 (defvar zenburn-bg "#1f1f1f")
 (defvar zenburn-bg+1 "#2f2f2f")

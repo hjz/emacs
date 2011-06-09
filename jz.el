@@ -184,7 +184,6 @@
 (setq special-display-function 'popwin:special-display-popup-window)
 
 (push '("*Shell Command Output*" :height 20) popwin:special-display-config)
-;(push '("*Shell Command Output*" :height 20 :position top) popwin:special-display-config)
 
 (setq anything-samewindow nil)
 (push '("*anything*" :height 20) popwin:special-display-config)
@@ -204,24 +203,6 @@
 (push '("*Help*" :height 30 :position bottom) popwin:special-display-config)
 (push '("*Completions*" :height 30 :position bottom) popwin:special-display-config)
 (push '("*One-Key*") popwin:special-display-config)
-
-;; add to list so special fn is ran
-;; (push '"*anything*" special-display-buffer-names)
-;; (push '"*anything for files*" special-display-buffer-names)
-;; (push '"*ensime-sbt*" special-display-buffer-names)
-;; (push '"*pianobar*" special-display-buffer-names)
-;; (push '"*ENSIME-Compilation-Result*" special-display-buffer-names)
-;; (push '"*ensime-inferior-scala*" special-display-buffer-names)
-;; (push '"*scratch*" special-display-buffer-names)
-;; (push '"*viper-info*" special-display-buffer-names)
-;; (push '"*Messages*" special-display-buffer-names)
-;; (push '"*grep*" special-display-buffer-names)
-;; (push '"*Kill Ring*" special-display-buffer-names)
-;; (push '"*Inspector*" special-display-buffer-names)
-;; (push '"*Warnings*" special-display-buffer-names)
-;; (push '"*Help*" special-display-buffer-names)
-;; (push '"*Completions*" special-display-buffer-names)
-;; (push '"*One-Key*" special-display-buffer-names)
 
 ;; save a list of open files in ~/.emacs.desktop
 ;; save the desktop file automatically if it already exists
@@ -385,7 +366,7 @@
                     'face 'linum)))
 
 (global-linum-mode 1)
-(require 'vimpulse-relative-linum)
+;(require 'vimpulse-relative-linum)
 (require 'vimpulse-operator-comment)
 
 ;;;;;;;;;;;;;;;; VIM END ;;;;;;;;;;;;;;;;;;
@@ -1086,11 +1067,12 @@ advice like this:
 
 ; VIA: http://hg.quodlibetor.com/emacs.d/raw-file/6634ae6dcbee/customize/chat.el
 (setq erc-modules '(netsplit fill track completion ring button autojoin smiley
-                 services match stamp page log replace highlight-nicknames autoaway
-                 scrolltobottom move-to-prompt irccontrols spelling)
+                 services match stamp page log replace autoaway highlight-nicknames ;scrolltobottom
+                 move-to-prompt irccontrols spelling)
       erc-autojoin-channels-alist '(("localhost" "&bitlbee" "#Emacs" "#ScalaFolks" "#API"))
 ;      erc-pals '("forever" "alone")
 ;      erc-fools '()
+;      erc-input-line-position -2
       erc-hide-list '("JOIN" "PART" "QUIT" "NICK" "MODE")
       erc-autoaway-idle-seconds 600
       erc-autoaway-message (concat "Away (" (pick-random-quote)  ")")
@@ -1102,8 +1084,6 @@ advice like this:
 
       erc-fill-function 'erc-fill-static
       erc-fill-static-center 15
-      ;; logging! ... requires the `log' module
-      ;; do it line-by-line instead of on quit
       erc-log-channels-directory (expand-file-name "~/Dropbox/logs/")
       erc-save-buffer-on-part nil
       erc-save-queries-on-quit nil
@@ -1111,7 +1091,7 @@ advice like this:
       erc-log-write-after-insert t)
 
 (defun my-concat-lines (lines str count)
-(if (> count 0)
+(if (and lines (> count 0))
    (concat (my-concat-lines (cdr lines) str (- count 1)) "\n" (car lines))
    str))
 
@@ -1139,11 +1119,10 @@ advice like this:
           (string-match "Unknown error while loading configuration" msg)
           (string-match "topic set by root!root@localhost" msg)
           (string-match "modes:.*t" msg)
-          (string-match "Topic for.*BitlBee groupchat" msg))
+          (string-match "Topic for.*BitlBee groupchat" msg)
+          (string-match "*** Welcome back" msg))
       (setq erc-insert-this nil)))
 (add-hook 'erc-insert-pre-hook 'erc-ignore-unimportant)
-
-
 
 ;; modify nickname highlighting
 (defvar is-notice-property) ;; just a symbol for use as text prop name
@@ -1234,24 +1213,20 @@ advice like this:
 
 (defun important-msg ()
   (or (string-match "jz:" msg)
-      (and (string-match "justin" msg)
-           (not (string-match "\<root\>" msg)))
-      (and (string-match "zhu" msg)
-         (not (string-match "\<root\>" msg)))
+      (string-match "justin" msg)
+      (string-match "zhu" msg)
       (string-match "Message from unknown handle" msg)))
 
 ;; TODO use growl notify"
 (defun erc-notify-on-msg (msg)
   "Send a message via notify-send if a message specifically to me"
-  (if (or (important-msg)
-          (and (string= "localhost" erc-session-server)
+  (when (and (important-msg)
            (not (string-match "\\*\\*\\*" msg))
-           (not (string-match "\<root\>" msg))))
+           (not (string-match "\<root\>" msg))
+           (string-match "^#.*" (buffer-name)))
       (let ((nameless-msg (replace-regexp-in-string "^\<.*?\>" "" msg)))
-        (unless (important-msg)
-          (start-process-shell-command "message recv" nil "afplay ~/Dropbox/Message_Received.wav"))
-        (growl (buffer-name) nameless-msg)
-)))
+        (start-process-shell-command "message recv" nil "afplay ~/Dropbox/Message_Received.wav")
+        (growl (buffer-name) nameless-msg))))
 
 (defun my-erc-page-me-PRIVMSG (proc parsed)
   (let ((nick (car (erc-parse-user (erc-response.sender parsed))))
@@ -1265,7 +1240,7 @@ advice like this:
       nil)))
 
 (add-hook 'erc-server-PRIVMSG-functions 'my-erc-page-me-PRIVMSG)
-;(add-hook 'erc-insert-pre-hook 'erc-notify-on-msg)
+(add-hook 'erc-insert-pre-hook 'erc-notify-on-msg)
 
 ;; The following are commented out by default, but users of other
 ;; non-Emacs IRC clients might find them useful.
@@ -1288,17 +1263,6 @@ advice like this:
   (let ((str (shell-command-to-string "fortune | cowsay -f tux")))
     (when str (erc-send-message str))))
 
- (make-variable-buffer-local 'erc-fill-column)
- (add-hook 'window-configuration-change-hook
-           '(lambda ()
-              (save-excursion
-                (walk-windows
-                 (lambda (w)
-                   (let ((buffer (window-buffer w)))
-                     (set-buffer buffer)
-                     (when (eq major-mode 'erc-mode)
-                       (setq erc-fill-column (- (window-width w) 2)))))))))
-
 ;; auto fill last chatted user
 (defadvice erc-display-prompt (after conversation-erc-display-prompt activate)
   "Insert last recipient after prompt."
@@ -1318,6 +1282,7 @@ advice like this:
 
  ;; Ensure that ERC comes up in Insert mode. TODO for MAGIT
  ;(add-to-list 'viper-insert-state-mode-list 'erc-mode)
+(add-to-list 'viper-insert-state-mode-list 'magit-log-edit-mode)
  ;(defun ted-viper-erc-hook ()
    ;"Make RET DTRT when you use Viper and ERC together."
    ;(viper-add-local-keys 'insert-state
@@ -1365,7 +1330,7 @@ advice like this:
       erc-fill-prefix "      "
       erc-insert-timestamp-function 'ks-timestamp)
 
-(setq erc-auto-query 'buffer)
+(setq erc-auto-query 'bury)
 
 ;; tip of the day
 (require 'cl)

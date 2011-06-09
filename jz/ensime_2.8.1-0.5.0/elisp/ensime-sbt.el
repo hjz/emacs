@@ -71,6 +71,18 @@
   :group 'ensime-sbt
   :type 'boolean)
 
+(defun ensime-sbt-message-growl (string)
+  "Message minibuffer and growl if available given message"
+  (message (concat "SBT Build: " string))
+  (if (functionp 'growl) (growl "SBT Build" string)))
+
+(defun ensime-sbt-notify-build (string)
+  "Watch output and growl on sucess or failure"
+  (cond ((string-match "success.*Successful" string)
+         (ensime-sbt-message-growl "Success"))
+        ((string-match "error.*Error running compile" string)
+         (ensime-sbt-message-growl "Failed"))))
+
 (defun ensime-sbt ()
   "Setup and launch sbt."
   (interactive)
@@ -107,7 +119,7 @@
     (set (make-local-variable 'comint-scroll-to-bottom-on-output) t)
     (set (make-local-variable 'comint-prompt-read-only) t)
     (set (make-local-variable 'comint-output-filter-functions)
-	 '(ansi-color-process-output comint-postoutput-scroll-to-bottom))
+	 '(ensime-sbt-notify-build ansi-color-process-output comint-postoutput-scroll-to-bottom))
 
     (if ensime-sbt-comint-ansi-support
 	(set (make-local-variable 'ansi-color-for-comint-mode) t)
