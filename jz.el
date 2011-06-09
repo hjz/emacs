@@ -186,7 +186,7 @@
 (setq anything-samewindow nil)
 (push '("*anything*" :height 20) popwin:special-display-config)
 (push '("*anything for files*" :height 20) popwin:special-display-config)
-(push '("*ensime-sbt*" :height 25 :position left :stick t) popwin:special-display-config)
+(push '("*ensime-sbt*" :height 25 :position bottom :stick t) popwin:special-display-config)
 (push '("*pianobar*" :width 60 :position right) popwin:special-display-config)
 (push '("*ENSIME-Compilation-Result*" :height 50 :position bottom :stick t) popwin:special-display-config)
 (push '("*ensime-inferior-scala*" :width 60 :position right :stick t) popwin:special-display-config)
@@ -796,7 +796,18 @@
 (fset 'surround-brace
    (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ([105 123 escape 108 100 105 119 84 123 105 25 escape 37 105] 0 "%d")) arg)))
 
+(defun minimap-toggle ()
+  "Show minimap if hidden, hide if present."
+  (interactive)
+  (if (and minimap-bufname
+	       (get-buffer minimap-bufname)
+	       (get-buffer-window (get-buffer minimap-bufname)))
+      (minimap-kill)
+    (minimap-create))
+  )
+
 (vimpulse-map (kbd ",c") 'surround-brace)
+(vimpulse-map (kbd ",m") 'minimap-toggle)
 (vimpulse-map (kbd ",b") 'surround-paren)
 (vimpulse-map (kbd ",s") 'surround-square)
 
@@ -1081,7 +1092,7 @@ advice like this:
                                 "324" "329" "332" "333" "353" "477")
 
       erc-fill-function 'erc-fill-static
-      erc-fill-static-center 15
+      erc-fill-static-center 10
       erc-log-channels-directory (expand-file-name "~/Dropbox/logs/")
       erc-save-buffer-on-part nil
       erc-save-queries-on-quit nil
@@ -1279,8 +1290,9 @@ advice like this:
       (insert previous))))
 
  ;; Ensure that ERC comes up in Insert mode. TODO for MAGIT
- ;(add-to-list 'viper-insert-state-mode-list 'erc-mode)
+(add-to-list 'viper-insert-state-mode-list 'erc-mode)
 (add-to-list 'viper-insert-state-mode-list 'magit-log-edit-mode)
+(add-to-list 'viper-insert-state-mode-list 'comint-mode)
  ;(defun ted-viper-erc-hook ()
    ;"Make RET DTRT when you use Viper and ERC together."
    ;(viper-add-local-keys 'insert-state

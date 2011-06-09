@@ -128,7 +128,7 @@
  '(elscreen-tab-other-screen-face ((((class color)) (:background "#3D3D3D" :foreground "white"))))
  '(ensime-errline ((((class color) (background dark)) nil)))
  '(ensime-errline-highlight ((t (:underline "firebrick2"))))
- '(erc-default-face ((t (:foreground "#9f9f9f"))))
+ '(erc-default-face ((t (:foreground "#dcdccc"))))
  '(erc-header-line ((t (:inherit elscreen-tab-other-screen-face))))
  '(erc-nick-default-face ((t (:foreground "#dcdccc"))))
  '(fg:erc-color-face5 ((t nil)))

@@ -413,7 +413,7 @@
 
  ;; erc
  `(erc-action-face ((t (:inherit erc-default))))
- `(erc-bold-face ((t (:weight bold))))
+ `(erc-bold-face ((t (:weight normal))))
  `(erc-current-nick-face ((t (:inherit 'zenburn-primary-1))))
  `(erc-dangerous-host-face ((t (:inherit font-lock-warning))))
  `(erc-direct-msg-face ((t (:inherit erc-default))))
@@ -431,6 +431,9 @@
  `(erc-default-face ((t (:foreground ,zenburn-fg))))
  `(erc-input-face ((t (:foreground ,zenburn-blue-1))))
  `(erc-prompt-face ((t (:foreground "#daa17c" :weight bold))))
+ `(erc-header-line ((t (:inherit elscreen-tab-other-screen-face))))
+ `(erc-nick-default-face ((t (:foreground, zenburn-blue))))
+ `(erc-default-face ((t (:foreground, zenburn-fg))))
 
  `(ediff-current-diff-A ((t (:background "#495766" :foreground ,zenburn-fg))))
  `(ediff-current-diff-Ancestor ((t (:background "#495766" :foreground ,zenburn-fg))))
