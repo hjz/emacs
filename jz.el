@@ -181,14 +181,12 @@
 ;;--------------------------------------------------------------------------
 (require 'popwin)
 (setq display-buffer-function 'popwin:display-buffer)
-(setq special-display-function 'popwin:special-display-popup-window)
 
 (push '("*Shell Command Output*" :height 20) popwin:special-display-config)
-
 (setq anything-samewindow nil)
 (push '("*anything*" :height 20) popwin:special-display-config)
 (push '("*anything for files*" :height 20) popwin:special-display-config)
-(push '("*ensime-sbt*" :height 10 :position bottom :stick t) popwin:special-display-config)
+(push '("*ensime-sbt*" :height 25 :position left :stick t) popwin:special-display-config)
 (push '("*pianobar*" :width 60 :position right) popwin:special-display-config)
 (push '("*ENSIME-Compilation-Result*" :height 50 :position bottom :stick t) popwin:special-display-config)
 (push '("*ensime-inferior-scala*" :width 60 :position right :stick t) popwin:special-display-config)
