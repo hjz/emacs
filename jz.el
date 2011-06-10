@@ -989,7 +989,7 @@
                                     (if (> (frame-width) 150)
                                       (split-window-horizontally arg)
                                       (split-window-vertically arg))))
-;(setq debug-on-error t)
+(setq debug-on-error t)
 
 ;(remove-hook 'minibuffer-setup-hook 'viper-minibuffer-setup-sentinel)
 ;(defadvice viper-set-minibuffer-overlay (around vimpulse activate) nil)
@@ -1128,6 +1128,7 @@ advice like this:
           (string-match "Unknown error while loading configuration" msg)
           (string-match "topic set by root!root@localhost" msg)
           (string-match "modes:.*t" msg)
+          (string-match "Setting automatically away after .*" msg)
           (string-match "Topic for.*BitlBee groupchat" msg)
           (string-match "*** Welcome back" msg))
       (setq erc-insert-this nil)))
@@ -1155,10 +1156,10 @@ advice like this:
     (ad-deactivate-regexp "erc-get-server-user-notself")))
 
 ;; todo use something better
-(define-key erc-mode-map (kbd "C-c C-q")
-            (lambda (nick)
-              (interactive (list (completing-read "Nick: " channel-members)))
-              (erc-cmd-QUERY nick)))
+;; (define-key erc-mode-map (kbd "C-c C-q")
+            ;; (lambda (nick)
+              ;; (interactive (list (completing-read "Nick: " channel-members)))
+              ;; (erc-cmd-QUERY nick)))
 
 ;; allow some channels to not auto-delay messages. This can
 ;; get you kicked from sane channels, so don't use it.

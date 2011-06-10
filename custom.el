@@ -140,6 +140,7 @@
  '(linum ((t (:background "#282828" :foreground "#b6b6b6"))))
  '(magit-item-highlight ((((class color) (background dark)) (:background "#2f2f2f"))))
  '(minimap-active-region-background ((((background dark)) (:background "#233323"))))
+ '(minimap-font-face ((default (:height 30 :family "Proggyfont Tiny")) (nil nil)))
  '(one-key-keystroke ((t (:background "#2f2f2f" :foreground "#9fc59f"))))
  '(one-key-prompt ((t (:foreground "#5f7f5f"))))
  '(one-key-title ((t (:foreground "#5f7f5f"))))
