@@ -15,7 +15,7 @@
 (add-to-list 'load-path (concat user-dir "/vimpulse-plugins"))
 (add-to-list 'load-path (concat user-dir "/viper-in-more-modes"))
 (add-to-list 'load-path (concat user-dir "/ecb"))
-(add-to-list 'load-path (concat user-dir "/scala"))
+(add-to-list 'load-path (concat user-dir "/scala-mode"))
 (add-to-list 'load-path (concat user-dir "/anything-config"))
 (add-to-list 'load-path (concat user-dir "/elscreen-1.4.6"))
 (add-to-list 'load-path (concat user-dir "/yaml-mode"))
