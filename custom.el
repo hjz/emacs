@@ -130,7 +130,6 @@
  '(ensime-errline-highlight ((t (:underline "firebrick2"))))
  '(erc-default-face ((t (:foreground "#dcdccc"))))
  '(erc-header-line ((t (:inherit elscreen-tab-other-screen-face))))
- '(erc-nick-default-face ((t (:foreground "#dcdccc"))))
  '(fg:erc-color-face5 ((t nil)))
  '(flyspell-incorrect ((t (:underline "#cc9393" :weight bold))))
  '(font-lock-variable-name-face ((t (:foreground "#dcdccc"))))

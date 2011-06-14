@@ -422,7 +422,6 @@
  `(erc-highlight-face ((t (:inherit hover-highlight))))
  `(erc-keyword-face ((t (:inherit 'zenburn-primary-1))))
  `(erc-my-nick-face ((t (:inherit 'zenburn-red))))
- `(erc-nick-default-face ((t (:inherit bold))))
  `(erc-nick-msg-face ((t (:inherit erc-default))))
  `(erc-notice-face ((t (:foreground, zenburn-green))))
  `(erc-pal-face ((t (:inherit 'zenburn-primary-3))))

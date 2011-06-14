@@ -1,4 +1,3 @@
-;;;;;;;;;;;;;;;;;; ERC ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (require 'erc)
 (require 'erc-nicklist)
 (require 'vimpulse)
@@ -38,7 +37,7 @@
 
 ; VIA: http://hg.quodlibetor.com/emacs.d/raw-file/6634ae6dcbee/customize/chat.el
 (setq erc-modules '(netsplit fill track completion ring button autojoin smiley
-                 services match stamp page log replace autoaway highlight-nicknames ;scrolltobottom
+                 services match stamp page log replace autoaway highlight-nicknames keep-place
                  move-to-prompt irccontrols spelling)
       erc-autojoin-channels-alist '(("localhost" "&bitlbee" "#Emacs" "#ScalaFolks" "#API"))
 ;      erc-pals '("forever" "alone")
@@ -305,4 +304,9 @@
 
 (setq erc-auto-query 'bury)
 
-(start-irc)
+(add-hook 'erc-mode-hook '(lambda ()
+                           (make-local-variable 'ido-enable-replace-completing-read)
+                           (setq ido-enable-replace-completing-read nil)
+                          ))
+
+(djcb-erc-start-or-switch)
