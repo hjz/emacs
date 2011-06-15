@@ -88,6 +88,7 @@
           (string-match "Trying to get all accounts connected" msg)
           (string-match "Unknown error while loading configuration" msg)
           (string-match "topic set by root!root@localhost" msg)
+          (string-match "now away: Away" msg)
           (string-match "modes:.*t" msg)
           (string-match "Setting automatically away after .*" msg)
           (string-match "Topic for.*BitlBee groupchat" msg)
@@ -308,5 +309,3 @@
                            (make-local-variable 'ido-enable-replace-completing-read)
                            (setq ido-enable-replace-completing-read nil)
                           ))
-
-(djcb-erc-start-or-switch)
