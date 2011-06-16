@@ -752,8 +752,6 @@ advice like this:
      (set-selective-display
          (if selective-display nil (or column 4))))
 
-(global-set-key [f2] 'jao-toggle-selective-display)
-
 
 (setq woman-use-own-frame nil)     ; don't create new frame for manpages
 (setq woman-use-topic-at-point t)  ; don't prompt upon K key (manpage display)
@@ -991,6 +989,8 @@ advice like this:
 (vimpulse-map (kbd ",.") 'switch-between-test-and-source)
 (vimpulse-map (kbd ",,") 'call-last-kbd-macro)
 (vimpulse-map (kbd ",SPC") 'toggle-kbd-macro-recording-on)
+(vimpulse-map (kbd ",r") 'jao-toggle-selective-display)
+
 
 (define-key vimpulse-visual-basic-map "v" 'end-of-line)
 

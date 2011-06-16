@@ -308,4 +308,6 @@
 (add-hook 'erc-mode-hook '(lambda ()
                            (make-local-variable 'ido-enable-replace-completing-read)
                            (setq ido-enable-replace-completing-read nil)
+                           (define-key erc-mode-map (kbd "<C-up>") 'erc-previous-command)
+                           (define-key erc-mode-map (kbd "<C-down>") 'erc-next-command)
                           ))
