@@ -798,6 +798,7 @@ advice like this:
 (define-key my-keys-minor-mode-map (kbd "C-l") 'dired-jump)
 (define-key my-keys-minor-mode-map (kbd "C-b") 'ido-switch-buffer)
 (define-key my-keys-minor-mode-map (kbd "C-x b") 'display-buffer)
+(define-key my-keys-minor-mode-map (kbd "C-f") 'one-key-menu-find)
 
 ;; searching
 (define-key my-keys-minor-mode-map (kbd "C-f g") 'moccur-grep-find)
@@ -840,17 +841,11 @@ advice like this:
 (vimpulse-map (kbd ",m") 'minimap-toggle)
 (vimpulse-map (kbd ",b") 'surround-paren)
 (vimpulse-map (kbd ",s") 'surround-square)
+(vimpulse-map (kbd "S-C-y") 'viper-scroll-down-one)
 
 (vimpulse-imap (kbd "RET") 'reindent-then-newline-and-indent)
 (vimpulse-imap (kbd "C-SPC") 'auto-complete 'scala-mode)
 
-(vimpulse-map (kbd "C-f g") 'moccur-grep-find)
-(vimpulse-map (kbd "C-f d") 'dmoccur)
-(vimpulse-map (kbd "C-f s") 'ack-same)
-(vimpulse-map (kbd "C-f a") 'ack)
-(vimpulse-map (kbd "C-f f") 'ack-find-file)
-(vimpulse-map (kbd "C-f p") 'replace-regexp)
-(vimpulse-map (kbd "C-f l") 'lazy-search-menu)
 (vimpulse-map (kbd "&") 'lazy-search-menu)
 (vimpulse-vmap (kbd "&") 'lazy-search-menu)
 (vimpulse-vmap (kbd "Q") 'query-replace-regexp)
@@ -972,6 +967,7 @@ advice like this:
 ;; onekey
 ;;
 (vimpulse-map (kbd "C-e") 'one-key-menu-ensime 'scala-mode)
+(vimpulse-map (kbd "C-f") 'one-key-menu-find)
 
 (vimpulse-map (kbd "SPC") 'confluence-get-page-at-point 'confluence-mode)
 (vimpulse-map (kbd "C-e") 'one-key-menu-confluence 'confluence-mode)
