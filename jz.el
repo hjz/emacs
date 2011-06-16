@@ -789,6 +789,8 @@ advice like this:
 (define-key my-keys-minor-mode-map (kbd "<C-tab>") 'other-frame)
 (define-key my-keys-minor-mode-map (kbd "C-w ;") 'rotate-windows)
 (define-key my-keys-minor-mode-map (kbd "C-w C-;") 'rotate-windows)
+(define-key my-keys-minor-mode-map (kbd "C-w e") 'balance-windows)
+(define-key my-keys-minor-mode-map (kbd "C-w C-e") 'balance-windows)
 
 (define-key my-keys-minor-mode-map (kbd "C-c o") 'rename-file-and-buffer)
 (define-key my-keys-minor-mode-map (kbd "C-c g") 'customize-group)
