@@ -32,6 +32,7 @@
 (add-to-list 'load-path (concat user-dir "/confluence-mode"))
 (add-to-list 'load-path (concat user-dir "/minimap"))
 (add-to-list 'load-path (concat user-dir "/google-weather"))
+(add-to-list 'load-path (concat user-dir "/find-file-in-project"))
 (require 'minimap)
 
 (defvar ido-enable-replace-completing-read t
@@ -86,8 +87,6 @@ advice like this:
     'toggle-kbd-macro-recording-on)
   (end-kbd-macro))
 
-(global-set-key '[(f10)]          'call-last-kbd-macro)
-(global-set-key '[(shift f10)]    'toggle-kbd-macro-recording-on)
 
 (require 'dot-mode)
 (add-hook 'find-file-hooks 'dot-mode-on)
@@ -776,6 +775,7 @@ advice like this:
 
 ;; Movement
 (define-key my-keys-minor-mode-map (kbd "C-w =") 'balance-windows)
+;(define-key my-keys-minor-mode-map (kbd "C-m") 'toggle-kbd-macro-recording-on)
 (define-key my-keys-minor-mode-map (kbd "C-w h") 'windmove-left)
 (define-key my-keys-minor-mode-map (kbd "C-w l") 'windmove-right)
 (define-key my-keys-minor-mode-map (kbd "C-w k") 'windmove-up)
@@ -801,17 +801,9 @@ advice like this:
 (define-key my-keys-minor-mode-map (kbd "C-f") 'one-key-menu-find)
 
 ;; searching
-(define-key my-keys-minor-mode-map (kbd "C-f g") 'moccur-grep-find)
-(define-key my-keys-minor-mode-map (kbd "C-f d") 'dmoccur)
-(define-key my-keys-minor-mode-map (kbd "C-f s") 'ack-same)
-(define-key my-keys-minor-mode-map (kbd "C-f a") 'ack)
-(define-key my-keys-minor-mode-map (kbd "C-f f") 'ack-find-file)
-(define-key my-keys-minor-mode-map (kbd "C-f p") 'replace-regexp)
-(define-key my-keys-minor-mode-map (kbd "C-f l") 'lazy-search-menu)
 (define-key my-keys-minor-mode-map (kbd "C-c d") 'ediff-revision)
 (define-key my-keys-minor-mode-map (kbd "M-i") 'google-search-selection)
 (define-key my-keys-minor-mode-map (kbd "s-i") 'google-it)
-(define-key my-keys-minor-mode-map (kbd "C-f p") 'replace-regexp)
 
 (define-key my-keys-minor-mode-map (kbd "C-c s") 'confluence-search)
 
@@ -996,7 +988,10 @@ advice like this:
 (vimpulse-map "?" 'describe-bindings)
 
 (vimpulse-map "b" 'backward-word)
-(vimpulse-map ",," 'switch-between-test-and-source)
+(vimpulse-map (kbd ",.") 'switch-between-test-and-source)
+(vimpulse-map (kbd ",,") 'call-last-kbd-macro)
+(vimpulse-map (kbd ",SPC") 'toggle-kbd-macro-recording-on)
+
 (define-key vimpulse-visual-basic-map "v" 'end-of-line)
 
 (vimpulse-define-text-object vimpulse-sexp (arg)

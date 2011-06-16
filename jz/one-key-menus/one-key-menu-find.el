@@ -10,7 +10,7 @@
         (("g" . "dmoccur") . dmoccur)
         (("s" . "ack-same") . ack-same)
         (("a" . "ack") . ack)
-        (("f" . "ack-find-file") . ack-find-file)
+        (("f" . "find-file-in-project") . find-file-in-project)
         (("r" . "replace-regexp") . replace-regexp)
         (("l" . "lazy-search-menu") . lazy-search-menu)
         (("p" . "find-grep-dired") .  find-grep-dired)
