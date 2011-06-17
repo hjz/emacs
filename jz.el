@@ -459,20 +459,56 @@ advice like this:
 ;; when using ido, the confirmation is rather annoying...
 (setq confirm-nonexistent-file-or-buffer nil)
 
+(defvar electrify-return-match
+  "[\]}\)\"]"
+  "If this regexp matches the text after the cursor, do an \"electric\" return.")
+
+;; elisp, return
+(defun electrify-return-if-match (arg)
+  "If the text after the cursor matches `electrify-return-match' then
+open and indent an empty line between the cursor and the text.  Move the
+cursor to the new line."
+  (interactive "P")
+  (let ((case-fold-search nil))
+    (if (looking-at electrify-return-match)
+        (save-excursion (newline-and-indent)))
+    (newline arg)
+    (indent-according-to-mode)))
+
+;; TODO remove other paredit mode invotations
+                                        ; (autoload 'paredit-mode "paredit"
+                                        ; "Minor mode for pseudo-structurally editing Lisp code." t)
+(when (fboundp 'paredit-mode)
+  (mapc (lambda (hook)
+          (add-hook hook (lambda ()
+                           (paredit-mode +1)
+                           (local-set-key (kbd "RET") 'electrify-return-if-match)
+                           (show-paren-mode t))))
+        '(emacs-lisp-mode-hook lisp-mode-hook lisp-interaction-mode-hook slime-repl-mode-hook)))
+
+; (add-hook 'el-mode-hook
+;         (lambda () (local-set-key [return] 'newline-and-indent)))
+
+;; Stop SLIME's REPL from grabbing DEL,
+;; which is annoying when backspacing over a '('
+(defun override-slime-repl-bindings-with-paredit ()
+  (define-key slime-repl-mode-map
+    (read-kbd-macro paredit-backward-delete-key) nil))
+
 ;;; SCALA
 
 (require 'scala-mode-auto)
 
-(add-hook 'scala-mode-hook
-  (lambda ()
-    (local-set-key [return] '(lambda () (interactive) (setq last-command nil) (newline-and-indent))))
-    (local-set-key (kbd "C-c j") 'ensime-sbt-switch)
-  )
-
-(add-hook 'el-mode-hook
-          (lambda ()
-            (local-set-key [return] 'newline-and-indent))
-  )
+(defun electrify-return-if-match-scala (arg)
+  "If the text after the cursor matches `electrify-return-match' then
+open and indent an empty line between the cursor and the text.  Move the
+cursor to the new line."
+  (interactive "P")
+  (let ((case-fold-search nil))
+    (if (looking-at electrify-return-match)
+        (save-excursion (setq last-command nil) (newline-and-indent)))
+    (newline arg)
+    (indent-according-to-mode)))
 
 (add-hook 'el-mode-hook 'highlight-fixmes-mode)
 
@@ -501,14 +537,10 @@ advice like this:
 ;; the shell mode and associated mode and commands use keys in comint-mode-map.
 (add-hook 'comint-mode-hook
  (lambda ()
-   (define-key comint-mode-map (kbd "M-l") 'recenter) ; was comint-previous-input. Use Ctrl+â†‘ or f11
-;;   (define-key comint-mode-map (kbd "M-n") 'nil) ; was comint-next-input. Use Ctrl+â†“ or f12
-
    ;; rebind displaced commands that i still want a key
    (define-key comint-mode-map (kbd "TAB") 'comint-dynamic-complete)
-   (define-key comint-mode-map (kbd "Â§ <up") 'comint-previous-matching-input)
-   (define-key comint-mode-map (kbd "Â§ <down>") 'comint-next-matching-input)
-))
+   (define-key comint-mode-map (kbd "<up") 'comint-previous-input)
+   (define-key comint-mode-map (kbd "<down>") 'comint-next-input)))
 ;; ECB support
 ;(require 'ensime-ecb)
 ;;;;;;;;;;;;;;; END Scala ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -834,8 +866,12 @@ advice like this:
 (vimpulse-map (kbd ",b") 'surround-paren)
 (vimpulse-map (kbd ",s") 'surround-square)
 (vimpulse-map (kbd "S-C-y") 'viper-scroll-down-one)
+(vimpulse-map (kbd "<up>") 'comint-previous-input 'comint-mode)
+(vimpulse-map (kbd "<down>") 'comint-next-input 'comint-mode)
 
 (vimpulse-imap (kbd "RET") 'reindent-then-newline-and-indent)
+
+(vimpulse-imap (kbd "RET") 'electrify-return-if-match-scala 'scala-mode)
 (vimpulse-imap (kbd "C-SPC") 'auto-complete 'scala-mode)
 
 (vimpulse-map (kbd "&") 'lazy-search-menu)
@@ -982,14 +1018,14 @@ advice like this:
 
 (vimpulse-map ";" 'viper-ex)
 (vimpulse-vmap ";" 'vimpulse-visual-ex)
-(vimpulse-map (kbd "]") 'hs-toggle-hiding)
+(vimpulse-map (kbd "SPC") 'hs-toggle-hiding)
 (vimpulse-vmap (kbd "SPC") 'vimpulse-indent)
-(vimpulse-map (kbd "SPC") 'vimpulse-indent)
+;(vimpulse-map (kbd "SPC") 'vimpulse-indent)
 (vimpulse-map "?" 'describe-bindings)
 
 (vimpulse-map "b" 'backward-word)
-(vimpulse-map (kbd ",.") 'switch-between-test-and-source)
-(vimpulse-map (kbd ",,") 'call-last-kbd-macro)
+(vimpulse-map (kbd ",,") 'switch-between-test-and-source 'scala-mode)
+(vimpulse-map (kbd "C-m") 'call-last-kbd-macro)
 (vimpulse-map (kbd ",SPC") 'toggle-kbd-macro-recording-on)
 (vimpulse-map (kbd ",r") 'jao-toggle-selective-display)
 
@@ -1033,4 +1069,7 @@ advice like this:
                              (define-key ido-completion-map (kbd "C-c p") 'ido-toggle-prefix)
                              (define-key ido-completion-map (kbd "C-c c") 'ido-toggle-case)
                              (define-key ido-completion-map (kbd "C-c t") 'ido-toggle-regexp)
+                             (define-key ido-completion-map (kbd "C-c e") 'ido-edit-input)
+                             (define-key ido-completion-map (kbd "C-c o") 'ido-copy-current-file-name)
                              (define-key ido-completion-map [remap viper-intercept-ESC-key] 'abort-recursive-edit)))
+

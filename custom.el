@@ -4,6 +4,10 @@
   ;; Your init file should contain only one such instance.
   ;; If there is more than one, they won't work right.
  '(ansi-color-names-vector ["#1f1f1f" "#dca3a3" "#7f9f7f" "#f0dfaf" "#7cb8bb" "#7f3194" "#93e0e3" "#dcdccc"])
+ '(browse-kill-ring-highlight-current-entry t)
+ '(browse-kill-ring-highlight-inserted-item t)
+ '(browse-kill-ring-quit-action (quote save-and-restore))
+ '(browse-kill-ring-separator "-------------------")
  '(column-number-mode t)
  '(comint-input-ignoredups t)
  '(comint-process-echoes t)
