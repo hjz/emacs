@@ -1026,7 +1026,7 @@ cursor to the new line."
 (vimpulse-map "b" 'backward-word)
 (vimpulse-map (kbd ",,") 'switch-between-test-and-source 'scala-mode)
 (vimpulse-map (kbd "C-m") 'call-last-kbd-macro)
-(vimpulse-map (kbd ",SPC") 'toggle-kbd-macro-recording-on)
+(vimpulse-map (kbd "C-/") 'toggle-kbd-macro-recording-on)
 (vimpulse-map (kbd ",r") 'jao-toggle-selective-display)
 
 
@@ -1073,3 +1073,4 @@ cursor to the new line."
                              (define-key ido-completion-map (kbd "C-c o") 'ido-copy-current-file-name)
                              (define-key ido-completion-map [remap viper-intercept-ESC-key] 'abort-recursive-edit)))
 
+(add-hook 'scala-mode-hook 'viper-mode)
