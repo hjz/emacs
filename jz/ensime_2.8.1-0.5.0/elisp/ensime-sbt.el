@@ -134,7 +134,14 @@
 		 nil nil)
 
     (let ((proc (get-buffer-process (current-buffer))))
-      (ensime-set-query-on-exit-flag proc))))
+      (ensime-set-query-on-exit-flag proc))
+
+    (if ensime-sbt-mode-hook
+        (run-hooks 'ensime-sbt-mode-hook))
+    ))
+
+(defvar ensime-sbt-mode-hook nil
+  "Hook to run after installing scala mode")
 
 (defun ensime-sbt-switch ()
   "Switch to the sbt shell (create if necessary) if or if already there, back.

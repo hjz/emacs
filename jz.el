@@ -35,6 +35,8 @@
 (add-to-list 'load-path (concat user-dir "/find-file-in-project"))
 (require 'minimap)
 
+(vendor 'gist)
+
 (defvar ido-enable-replace-completing-read t
   "If t, use ido-completing-read instead of completing-read if possible.
 
@@ -721,6 +723,7 @@ cursor to the new line."
 ;(define-key (current-global-map) [remap viper-backward-word] 'backward-word)
 ;(define-key (current-global-map) [remap vimpulse-operator-backward-word] 'backward-word)
 (define-key (current-global-map) [remap vimpulse-operator-forward-word] 'subword-forward)
+;(define-key (current-global-map) [remap vimpulse-operator-forward-word] 'viper-forward-word)
 
 (setq campfire-room-name "API")
 (setq campfire-room-id "188551")
@@ -862,7 +865,6 @@ cursor to the new line."
   )
 
 (vimpulse-map (kbd ",c") 'surround-brace)
-(vimpulse-map (kbd ",m") 'minimap-toggle)
 (vimpulse-map (kbd ",b") 'surround-paren)
 (vimpulse-map (kbd ",s") 'surround-square)
 (vimpulse-map (kbd "S-C-y") 'viper-scroll-down-one)
@@ -1012,6 +1014,7 @@ cursor to the new line."
 (vimpulse-map (kbd "C-k") 'viper-backward-paragraph)
 (vimpulse-map (kbd "C-j") 'viper-forward-paragraph)
 (vimpulse-map (kbd "C-i") 'vimpulse-jump-forward)
+(vimpulse-map (kbd "K") 'vimpulse-search-forward-for-symbol-at-point)
 (vimpulse-vmap (kbd "]") 'sort-lines)
 
 (vimpulse-vmap (kbd "m") 'apply-macro-to-region-lines)
@@ -1026,6 +1029,9 @@ cursor to the new line."
 (vimpulse-map "b" 'backward-word)
 (vimpulse-map (kbd ",,") 'switch-between-test-and-source 'scala-mode)
 (vimpulse-map (kbd "C-m") 'call-last-kbd-macro)
+(vimpulse-map (kbd ",.") '(lambda () (interactive) (ensime-sbt-action "compile"))  'scala-mode)
+(vimpulse-map (kbd ",m") '(lambda () (interactive) (ensime-sbt-action "test-only")) 'scala-mode)
+(vimpulse-map (kbd ",/") 'minimap-toggle)
 (vimpulse-map (kbd "C-/") 'toggle-kbd-macro-recording-on)
 (vimpulse-map (kbd ",r") 'jao-toggle-selective-display)
 
@@ -1073,4 +1079,15 @@ cursor to the new line."
                              (define-key ido-completion-map (kbd "C-c o") 'ido-copy-current-file-name)
                              (define-key ido-completion-map [remap viper-intercept-ESC-key] 'abort-recursive-edit)))
 
-(add-hook 'scala-mode-hook 'viper-mode)
+;(add-hook 'scala-mode-hook 'viper-mode)
+
+ (defun my-func-switch-to-erc-buffer nil
+       "Switch to ERC buffer using IDO to choose which one, or start ERC if not already started."
+       (interactive)
+       (let (final-list (list ))
+         (dolist (buf (buffer-list) final-list)
+           (if (equal 'erc-mode (with-current-buffer buf major-mode))
+     	  (setq final-list (append (list (buffer-name buf)) final-list))))
+         (if final-list
+     	(switch-to-buffer (ido-completing-read "Buffer: " final-list))
+           (call-interactively 'erc))))
