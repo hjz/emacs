@@ -79,9 +79,16 @@
 (defun ensime-sbt-notify-build (string)
   "Watch output and growl on sucess or failure"
   (cond ((string-match "success.*Successful" string)
-         (ensime-sbt-message-growl "Success"))
+         (ensime-sbt-message-growl "Success!"))
+        ((string-match "error.*Error running test-compile" string)
+         (ensime-sbt-message-growl "Test Compile Failed"))
+        ((string-match "error.*Error running test.*" string)
+         (ensime-sbt-message-growl "Test Failed"))
         ((string-match "error.*Error running compile" string)
-         (ensime-sbt-message-growl "Failed"))))
+         (ensime-sbt-message-growl "Compile Failed"))))
+
+(defvar ensime-sbt-mode-hook nil
+  "Hook to run after installing scala mode")
 
 (defun ensime-sbt ()
   "Setup and launch sbt."
@@ -139,9 +146,6 @@
     (if ensime-sbt-mode-hook
         (run-hooks 'ensime-sbt-mode-hook))
     ))
-
-(defvar ensime-sbt-mode-hook nil
-  "Hook to run after installing scala mode")
 
 (defun ensime-sbt-switch ()
   "Switch to the sbt shell (create if necessary) if or if already there, back.

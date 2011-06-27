@@ -1,4 +1,8 @@
-((("isDebugEnabled" .
+((("newSingleThreadExecutor" .
+   [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1])
+  ("BlockingDatabaseWrapper" .
+   [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1])
+  ("isDebugEnabled" .
    [1 0 0 0 0 0 0 0 0 0 0 0 0 0])
   ("booleanValue" .
    [1 0 0 0 0 0 0 0 0 0 0 0])

@@ -35,6 +35,20 @@
 (add-to-list 'load-path (concat user-dir "/find-file-in-project"))
 (require 'minimap)
 
+(defun vendor (library)
+  (let* ((file (symbol-name library))
+         (normal (concat "~/.emacs.d/vendor/" file))
+         (suffix (concat normal ".el")))
+    (cond
+     ((file-directory-p normal)
+      (add-to-list 'load-path normal)
+      (require library))
+     ((file-directory-p suffix)
+      (add-to-list 'load-path suffix)
+      (require library))
+     ((file-exists-p suffix)
+      (require library)))))
+
 (vendor 'gist)
 
 (defvar ido-enable-replace-completing-read t
@@ -217,7 +231,7 @@ advice like this:
 (setq anything-samewindow nil)
 (push '("*anything*" :height 20) popwin:special-display-config)
 (push '("*anything for files*" :height 20) popwin:special-display-config)
-(push '("*ensime-sbt*" :height 25 :position bottom :stick t) popwin:special-display-config)
+;(push '("*ensime-sbt*" :height 25 :position bottom :stick t) popwin:special-display-config)
 (push '("*pianobar*" :width 60 :position right) popwin:special-display-config)
 (push '("*ENSIME-Compilation-Result*" :height 50 :position bottom :stick t) popwin:special-display-config)
 (push '("*ensime-inferior-scala*" :width 60 :position right :stick t) popwin:special-display-config)
@@ -543,6 +557,8 @@ cursor to the new line."
    (define-key comint-mode-map (kbd "TAB") 'comint-dynamic-complete)
    (define-key comint-mode-map (kbd "<up") 'comint-previous-input)
    (define-key comint-mode-map (kbd "<down>") 'comint-next-input)))
+
+(add-hook 'ensime-sbt-mode-hook (lambda () (setq left-fringe-width 5)))
 ;; ECB support
 ;(require 'ensime-ecb)
 ;;;;;;;;;;;;;;; END Scala ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -819,8 +835,7 @@ cursor to the new line."
 (define-key my-keys-minor-mode-map (kbd "C-w C-j") 'windmove-down)
 (define-key my-keys-minor-mode-map (kbd "C-w ,") '(lambda () (interactive) (split-window-vertically) (other-window 1)))
 (define-key my-keys-minor-mode-map (kbd "C-w .") '(lambda () (interactive) (split-window-horizontally) (other-window 1)))
-(define-key my-keys-minor-mode-map (kbd "C-w SPC") 'delete-window)
-(define-key my-keys-minor-mode-map (kbd "C-w C-SPC") 'delete-window)
+(define-key my-keys-minor-mode-map (kbd "C-SPC") 'delete-window)
 (define-key my-keys-minor-mode-map (kbd "<C-tab>") 'other-frame)
 (define-key my-keys-minor-mode-map (kbd "C-w ;") 'rotate-windows)
 (define-key my-keys-minor-mode-map (kbd "C-w C-;") 'rotate-windows)
@@ -1031,6 +1046,9 @@ cursor to the new line."
 (vimpulse-map (kbd "C-m") 'call-last-kbd-macro)
 (vimpulse-map (kbd ",.") '(lambda () (interactive) (ensime-sbt-action "compile"))  'scala-mode)
 (vimpulse-map (kbd ",m") '(lambda () (interactive) (ensime-sbt-action "test-only")) 'scala-mode)
+(vimpulse-map (kbd ",l") '(lambda () (interactive) (ensime-sbt-action "console")) 'scala-mode)
+(vimpulse-map (kbd ",j") '(lambda () (interactive) (ensime-sbt-action "update")) 'scala-mode)
+(vimpulse-map (kbd ",n") '(lambda () (interactive) (ensime-sbt-action "; clear ; update ; compile-thrift-java- ; compile")) 'scala-mode)
 (vimpulse-map (kbd ",/") 'minimap-toggle)
 (vimpulse-map (kbd "C-/") 'toggle-kbd-macro-recording-on)
 (vimpulse-map (kbd ",r") 'jao-toggle-selective-display)
@@ -1091,3 +1109,18 @@ cursor to the new line."
          (if final-list
      	(switch-to-buffer (ido-completing-read "Buffer: " final-list))
            (call-interactively 'erc))))
+
+(defun toggle-current-window-dedication ()
+ (interactive)
+ (let* ((window    (selected-window))
+        (dedicated (window-dedicated-p window)))
+   (set-window-dedicated-p window (not dedicated))
+   (message "Window %sdedicated to %s"
+            (if dedicated "no longer " "")
+            (buffer-name))))
+
+(defun delete-file-and-buffer ()
+   "Deletes the current file and buffer, assumes file exists"
+     (interactive)
+       (delete-file buffer-file-name)
+         (kill-buffer (buffer-name)))
