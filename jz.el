@@ -204,6 +204,15 @@ advice like this:
 (require 'google-search)
 (require 'magit)
 
+(defun quit-close ()
+  (interactive)
+  (quit-window)
+  (delete-window))
+
+(add-hook 'magit-mode-hook '
+          (lambda ()
+            (local-set-key (kbd "q") 'quit-close)))
+
 ;; PATH
 ;; (defun read-system-path ()
 ;;   (with-temp-buffer
@@ -498,7 +507,8 @@ cursor to the new line."
   (mapc (lambda (hook)
           (add-hook hook (lambda ()
                            (paredit-mode +1)
-                           (local-set-key (kbd "RET") 'electrify-return-if-match)
+                           ;; TODO this my be bad.. mkay
+                           (vimpulse-imap (kbd "RET") 'electrify-return-if-match)
                            (show-paren-mode t))))
         '(emacs-lisp-mode-hook lisp-mode-hook lisp-interaction-mode-hook slime-repl-mode-hook)))
 
@@ -626,7 +636,7 @@ cursor to the new line."
 (setq delete-by-moving-to-trash t)
 
 ; run macro
-(global-set-key [f5] 'call-last-kbd-macro)
+(global-set-key [f6] 'call-last-kbd-macro)
 
 (autoload 'idomenu "idomenu" nil t)
 
@@ -848,7 +858,19 @@ cursor to the new line."
 (define-key my-keys-minor-mode-map (kbd "C-l") 'dired-jump)
 (define-key my-keys-minor-mode-map (kbd "C-b") 'ido-switch-buffer)
 (define-key my-keys-minor-mode-map (kbd "C-x b") 'display-buffer)
-(define-key my-keys-minor-mode-map (kbd "C-f") 'one-key-menu-find)
+
+(define-key my-keys-minor-mode-map (kbd "C-f d") 'moccur-grep)
+(define-key my-keys-minor-mode-map (kbd "C-f h") 'moccur-grep-find)
+(define-key my-keys-minor-mode-map (kbd "C-f g") 'dmoccur)
+(define-key my-keys-minor-mode-map (kbd "C-f s") 'ack-same)
+(define-key my-keys-minor-mode-map (kbd "C-f a") 'ack)
+(define-key my-keys-minor-mode-map (kbd "C-f f") 'find-file-in-project)
+(define-key my-keys-minor-mode-map (kbd "C-f r") 'replace-regexp)
+(define-key my-keys-minor-mode-map (kbd "C-f l") 'lazy-search-menu)
+(define-key my-keys-minor-mode-map (kbd "C-f p") 'find-grep-dired)
+(define-key my-keys-minor-mode-map (kbd "C-f n") 'find-name-dired)
+(define-key my-keys-minor-mode-map (kbd "C-f o") 'dired-do-moccur)
+(define-key my-keys-minor-mode-map (kbd "C-f i") 'ibuffer-do-occur)
 
 ;; searching
 (define-key my-keys-minor-mode-map (kbd "C-c d") 'ediff-revision)
@@ -1012,7 +1034,7 @@ cursor to the new line."
 ;; onekey
 ;;
 (vimpulse-map (kbd "C-e") 'one-key-menu-ensime 'scala-mode)
-(vimpulse-map (kbd "C-f") 'one-key-menu-find)
+;(vimpulse-map (kbd "C-f") 'one-key-menu-find)
 
 (vimpulse-map (kbd "SPC") 'confluence-get-page-at-point 'confluence-mode)
 (vimpulse-map (kbd "C-e") 'one-key-menu-confluence 'confluence-mode)
@@ -1043,18 +1065,48 @@ cursor to the new line."
 
 (vimpulse-map "b" 'backward-word)
 (vimpulse-map (kbd ",,") 'switch-between-test-and-source 'scala-mode)
-(vimpulse-map (kbd "C-m") 'call-last-kbd-macro)
+;(vimpulse-map (kbd "C-m") 'call-last-kbd-macro) ;; This seems to intercept Enter
 (vimpulse-map (kbd ",.") '(lambda () (interactive) (ensime-sbt-action "compile"))  'scala-mode)
 (vimpulse-map (kbd ",m") '(lambda () (interactive) (ensime-sbt-action "test-only")) 'scala-mode)
+(vimpulse-map (kbd ",j") '(lambda () (interactive) (ensime-sbt-action "test-quick")) 'scala-mode)
+(vimpulse-map (kbd ",k") '(lambda () (interactive) (ensime-sbt-action "test")) 'scala-mode)
 (vimpulse-map (kbd ",l") '(lambda () (interactive) (ensime-sbt-action "console")) 'scala-mode)
 (vimpulse-map (kbd ",j") '(lambda () (interactive) (ensime-sbt-action "update")) 'scala-mode)
-(vimpulse-map (kbd ",n") '(lambda () (interactive) (ensime-sbt-action "; clear ; update ; compile-thrift-java- ; compile")) 'scala-mode)
+(vimpulse-map (kbd ",n") '(lambda () (interactive) (ensime-sbt-action "; clean ; update ; compile-thrift-java ; compile")) 'scala-mode)
+(vimpulse-map (kbd ",g") 'magit-status)
 (vimpulse-map (kbd ",/") 'minimap-toggle)
 (vimpulse-map (kbd "C-/") 'toggle-kbd-macro-recording-on)
 (vimpulse-map (kbd ",r") 'jao-toggle-selective-display)
 
+;; search functions
+(vimpulse-map (kbd "C-f d") 'moccur-grep)
+(vimpulse-map (kbd "C-f h") 'moccur-grep-find)
+(vimpulse-map (kbd "C-f g") 'dmoccur)
+(vimpulse-map (kbd "C-f s") 'ack-same)
+(vimpulse-map (kbd "C-f a") 'ack)
+(vimpulse-map (kbd "C-f f") 'find-file-in-project)
+(vimpulse-map (kbd "C-f r") 'replace-regexp)
+(vimpulse-map (kbd "C-f l") 'lazy-search-menu)
+(vimpulse-map (kbd "C-f p") 'find-grep-dired)
+(vimpulse-map (kbd "C-f n") 'find-name-dired)
+(vimpulse-map (kbd "C-f o") 'dired-do-moccur)
+(vimpulse-map (kbd "C-f i") 'ibuffer-do-occur)
 
-(define-key vimpulse-visual-basic-map "v" 'end-of-line)
+;; search functions
+(vimpulse-imap (kbd "C-f d") 'moccur-grep)
+(vimpulse-imap (kbd "C-f h") 'moccur-grep-find)
+(vimpulse-imap (kbd "C-f g") 'dmoccur)
+(vimpulse-imap (kbd "C-f s") 'ack-same)
+(vimpulse-imap (kbd "C-f a") 'ack)
+(vimpulse-imap (kbd "C-f f") 'find-file-in-project)
+(vimpulse-imap (kbd "C-f r") 'replace-regexp)
+(vimpulse-imap (kbd "C-f l") 'lazy-search-menu)
+(vimpulse-imap (kbd "C-f p") 'find-grep-dired)
+(vimpulse-imap (kbd "C-f n") 'find-name-dired)
+(vimpulse-imap (kbd "C-f o") 'dired-do-moccur)
+(vimpulse-imap (kbd "C-f i") 'ibuffer-do-occur)
+
+(define-key vimpulse-visual-basic-imap "v" 'end-of-line)
 
 (vimpulse-define-text-object vimpulse-sexp (arg)
   "Select a S-expression."
@@ -1086,7 +1138,8 @@ cursor to the new line."
 (setenv "ENSIME_JVM_ARGS" ensime-jvm-args)
 
 ; Fullscreen
-(global-set-key (kbd "<s-return>") 'maximize-frame)
+;(global-set-key (kbd "<s-return>") 'maximize-frame)
+
 (maximize-frame)
 
 (add-hook 'ido-setup-hook '(lambda ()

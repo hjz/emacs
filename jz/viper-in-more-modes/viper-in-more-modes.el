@@ -554,4 +554,20 @@ work on closed parens like one can expect in vi."
 
 (provide 'viper-in-more-modes)
 
+;;;;;;;;;;;;;;;;;;
+;; Scala Mode   ;;
+;;;;;;;;;;;;;;;;;;
+
+(defun sbt-send (string)
+ (comint-simple-send (get-buffer-process "*ensime-sbt*") string))
+
+(defun viper-imm-sbt-send-region (&optional arg)
+  (interactive "P")
+  (if (and (boundp 'vimpulse-visual-mode)
+           (not vimpulse-visual-mode))
+      (error "Select the region in Visual Mode.")
+    (sbt-send (buffer-substring (min (mark) (point)) (max (mark) (point))))
+    (vimpulse-visual-mode 'toggle)))
+
 ;;; viper-in-more-modes.el ends here
+
