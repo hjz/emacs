@@ -647,7 +647,7 @@ cursor to the new line."
 ; nicer naming of buffers with identical names
 (require 'uniquify)
 (setq uniquify-buffer-name-style 'reverse)
-(setq uniquify-separator " â€¢ ")
+(setq uniquify-separator " • ")
 (setq uniquify-after-kill-buffer-p t)
 (setq uniquify-ignore-buffers-re "^\\*")
 
@@ -817,9 +817,7 @@ cursor to the new line."
 (setq woman-use-own-frame nil)     ; don't create new frame for manpages
 (setq woman-use-topic-at-point t)  ; don't prompt upon K key (manpage display)
 
-
 ;; multi buffer occur
-
 (require 'color-moccur)
 (require 'moccur-edit)
 (defadvice moccur-edit-change-file
@@ -1106,7 +1104,7 @@ cursor to the new line."
 (vimpulse-imap (kbd "C-f o") 'dired-do-moccur)
 (vimpulse-imap (kbd "C-f i") 'ibuffer-do-occur)
 
-(define-key vimpulse-visual-basic-imap "v" 'end-of-line)
+(define-key vimpulse-visual-basic-map "v" 'end-of-line)
 
 (vimpulse-define-text-object vimpulse-sexp (arg)
   "Select a S-expression."
