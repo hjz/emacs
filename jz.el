@@ -103,9 +103,11 @@ advice like this:
     'toggle-kbd-macro-recording-on)
   (end-kbd-macro))
 
-
 (require 'dot-mode)
+
 (add-hook 'find-file-hooks 'dot-mode-on)
+; C-. mapped to flyspell... remap it do dotmode
+(define-key (current-global-map) [remap flyspell-auto-correct-word] 'dot-mode-execute)
 
 (require 'confluence)
 ;(require 'rinari)
@@ -637,6 +639,7 @@ cursor to the new line."
 
 ; run macro
 (global-set-key [f6] 'call-last-kbd-macro)
+(global-set-key (kbd "C-/") 'toggle-kbd-macro-recording-on)
 
 (autoload 'idomenu "idomenu" nil t)
 
@@ -831,24 +834,46 @@ cursor to the new line."
 (define-key my-keys-minor-mode-map (kbd "M-;") 'repeat-complex-command)
 
 ;; Movement
-(define-key my-keys-minor-mode-map (kbd "C-w =") 'balance-windows)
+(define-key my-keys-minor-mode-map (kbd "s-=") 'balance-windows)
 ;(define-key my-keys-minor-mode-map (kbd "C-m") 'toggle-kbd-macro-recording-on)
-(define-key my-keys-minor-mode-map (kbd "C-w h") 'windmove-left)
-(define-key my-keys-minor-mode-map (kbd "C-w l") 'windmove-right)
-(define-key my-keys-minor-mode-map (kbd "C-w k") 'windmove-up)
-(define-key my-keys-minor-mode-map (kbd "C-w j") 'windmove-down)
-(define-key my-keys-minor-mode-map (kbd "C-w C-h") 'windmove-left)
-(define-key my-keys-minor-mode-map (kbd "C-w C-l") 'windmove-right)
-(define-key my-keys-minor-mode-map (kbd "C-w C-k") 'windmove-up)
-(define-key my-keys-minor-mode-map (kbd "C-w C-j") 'windmove-down)
+(define-key my-keys-minor-mode-map (kbd "s-h") 'windmove-left)
+(define-key my-keys-minor-mode-map (kbd "s-l") 'windmove-right)
+(define-key my-keys-minor-mode-map (kbd "s-k") 'windmove-up)
+(define-key my-keys-minor-mode-map (kbd "s-j") 'windmove-down)
 (define-key my-keys-minor-mode-map (kbd "C-w ,") '(lambda () (interactive) (split-window-vertically) (other-window 1)))
 (define-key my-keys-minor-mode-map (kbd "C-w .") '(lambda () (interactive) (split-window-horizontally) (other-window 1)))
+(define-key my-keys-minor-mode-map (kbd "s-,") '(lambda () (interactive) (split-window-vertically) (other-window 1)))
+(define-key my-keys-minor-mode-map (kbd "s-.") '(lambda () (interactive) (split-window-horizontally) (other-window 1)))
 (define-key my-keys-minor-mode-map (kbd "C-SPC") 'delete-window)
 (define-key my-keys-minor-mode-map (kbd "<C-tab>") 'other-frame)
 (define-key my-keys-minor-mode-map (kbd "C-w ;") 'rotate-windows)
 (define-key my-keys-minor-mode-map (kbd "C-w C-;") 'rotate-windows)
 (define-key my-keys-minor-mode-map (kbd "C-w e") 'balance-windows)
 (define-key my-keys-minor-mode-map (kbd "C-w C-e") 'balance-windows)
+(defun swap-with (dir)
+  (interactive)
+  (let ((other-window (windmove-find-other-window dir)))
+    (when other-window
+      (let* ((this-window  (selected-window))
+             (this-buffer  (window-buffer this-window))
+             (other-buffer (window-buffer other-window))
+             (this-start   (window-start this-window))
+             (other-start  (window-start other-window)))
+        (set-window-buffer this-window  other-buffer)
+        (set-window-buffer other-window this-buffer)
+        (set-window-start  this-window  other-start)
+        (set-window-start  other-window this-start)))))
+
+(define-key my-keys-minor-mode-map (kbd "C-s-J") (lambda () (interactive) (swap-with 'down)))
+(define-key my-keys-minor-mode-map (kbd "C-s-K") (lambda () (interactive) (swap-with 'up)))
+(define-key my-keys-minor-mode-map (kbd "C-s-H") (lambda () (interactive) (swap-with 'left)))
+(define-key my-keys-minor-mode-map (kbd "C-s-L") (lambda () (interactive) (swap-with 'right)))
+
+(define-key my-keys-minor-mode-map (kbd "s-J") (lambda () (interactive) (enlarge-window 1)))
+(define-key my-keys-minor-mode-map (kbd "s-K") (lambda () (interactive) (enlarge-window -1)))
+(define-key my-keys-minor-mode-map (kbd "s-H") (lambda () (interactive) (enlarge-window -1 t)))
+(define-key my-keys-minor-mode-map (kbd "s-L") (lambda () (interactive) (enlarge-window 1 t)))
+
 
 (define-key my-keys-minor-mode-map (kbd "C-c o") 'rename-file-and-buffer)
 (define-key my-keys-minor-mode-map (kbd "C-c g") 'customize-group)
@@ -1044,8 +1069,7 @@ cursor to the new line."
 ;; (vimpulse-imap (kbd "TAB") 'auto-complete 'confluence-mode)
 (vimpulse-imap (kbd "TAB") 'confluence-list-indent-dwim 'confluence-mode)
 (vimpulse-imap (kbd "<S-tab>") '(lambda () (interactive) (confluence-list-indent-dwim -1)) 'confluence-mode)
-(vimpulse-map (kbd "s-k") 'kill-line)
-(vimpulse-map (kbd "s-j") 'newline-and-indent)
+
 (vimpulse-map (kbd "C-k") 'viper-backward-paragraph)
 (vimpulse-map (kbd "C-j") 'viper-forward-paragraph)
 (vimpulse-map (kbd "C-i") 'vimpulse-jump-forward)
@@ -1061,19 +1085,26 @@ cursor to the new line."
 ;(vimpulse-map (kbd "SPC") 'vimpulse-indent)
 (vimpulse-map "?" 'describe-bindings)
 
+(defun save-sbt-action (string)
+  (save-buffer)
+  (ensime-sbt-action string))
+
 (vimpulse-map "b" 'backward-word)
+
+;; Scala stuff
 (vimpulse-map (kbd ",,") 'switch-between-test-and-source 'scala-mode)
 ;(vimpulse-map (kbd "C-m") 'call-last-kbd-macro) ;; This seems to intercept Enter
-(vimpulse-map (kbd ",.") '(lambda () (interactive) (ensime-sbt-action "compile"))  'scala-mode)
-(vimpulse-map (kbd ",m") '(lambda () (interactive) (ensime-sbt-action "test-only")) 'scala-mode)
-(vimpulse-map (kbd ",j") '(lambda () (interactive) (ensime-sbt-action "test-quick")) 'scala-mode)
-(vimpulse-map (kbd ",k") '(lambda () (interactive) (ensime-sbt-action "test")) 'scala-mode)
-(vimpulse-map (kbd ",l") '(lambda () (interactive) (ensime-sbt-action "console")) 'scala-mode)
-(vimpulse-map (kbd ",j") '(lambda () (interactive) (ensime-sbt-action "update")) 'scala-mode)
-(vimpulse-map (kbd ",n") '(lambda () (interactive) (ensime-sbt-action "; clean ; update ; compile-thrift-java ; compile")) 'scala-mode)
+(vimpulse-map (kbd ",.") '(lambda () (interactive) (save-sbt-action "compile"))  'scala-mode)
+(vimpulse-map (kbd ",m") '(lambda () (interactive) (save-sbt-action "test-only")) 'scala-mode)
+(vimpulse-map (kbd ",j") '(lambda () (interactive) (save-sbt-action "test-quick")) 'scala-mode)
+(vimpulse-map (kbd ",k") '(lambda () (interactive) (save-sbt-action "test")) 'scala-mode)
+(vimpulse-map (kbd ",l") '(lambda () (interactive) (save-sbt-action "!!")) 'scala-mode)
+(vimpulse-map (kbd ",t") '(lambda () (interactive) (save-sbt-action "console")) 'scala-mode)
+(vimpulse-map (kbd ",j") '(lambda () (interactive) (save-sbt-action "update")) 'scala-mode)
+(vimpulse-map (kbd ",n") '(lambda () (interactive) (save-sbt-action "; clean ; update ; compile-thrift-java ; compile")) 'scala-mode)
+
 (vimpulse-map (kbd ",g") 'magit-status)
 (vimpulse-map (kbd ",/") 'minimap-toggle)
-(vimpulse-map (kbd "C-/") 'toggle-kbd-macro-recording-on)
 (vimpulse-map (kbd ",r") 'jao-toggle-selective-display)
 
 ;; search functions
@@ -1175,3 +1206,24 @@ cursor to the new line."
      (interactive)
        (delete-file buffer-file-name)
          (kill-buffer (buffer-name)))
+
+;; ORG MODE
+(add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
+(global-set-key "\C-cl" 'org-store-link)
+(global-set-key "\C-cc" 'org-capture)
+(global-set-key "\C-ca" 'org-agenda)
+(global-set-key "\C-cb" 'org-iswitchb)
+(setq org-directory "~/Dropbox/org")
+(setq org-agenda-files '("~/Dropbox/org"))
+
+(require 'remember)
+(require 'org-remember)
+(setq remember-annotation-functions '(org-remember-annotation))
+
+(setq remember-handler-functions '(org-remember-handler))
+(add-hook 'remember-mode-hook 'org-remember-apply-template)
+(setq org-default-notes-file (concat org-directory "/gtd.org"))
+(define-key global-map "\C-cr" 'org-remember)
+
+
+
