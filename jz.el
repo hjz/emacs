@@ -1207,6 +1207,10 @@ cursor to the new line."
        (delete-file buffer-file-name)
          (kill-buffer (buffer-name)))
 
+
+(autoload 'formfeed-hline-mode "formfeed-hline" nil t)
+(formfeed-hline-mode 1)
+
 ;; ORG MODE
 (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
 (global-set-key "\C-cl" 'org-store-link)
