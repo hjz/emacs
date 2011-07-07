@@ -229,6 +229,8 @@
  '(compilation-info ((t (:inherit zenburn-primary-1))))
  '(compilation-warning ((t (:inherit font-lock-warning-face))))
 
+ '(compilation-error-face ((t (:foreground ,zenburn-red-3))))
+
  '(custom-button
    ((t (:inherit fancy-widget-button))))
  '(custom-button-pressed
