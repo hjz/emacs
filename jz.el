@@ -33,6 +33,7 @@
 (add-to-list 'load-path (concat user-dir "/minimap"))
 (add-to-list 'load-path (concat user-dir "/google-weather"))
 (add-to-list 'load-path (concat user-dir "/find-file-in-project"))
+(add-to-list 'load-path (concat user-dir "/org-mode"))
 (require 'minimap)
 
 (defun vendor (library)
@@ -1212,6 +1213,7 @@ cursor to the new line."
 (formfeed-hline-mode 1)
 
 ;; ORG MODE
+(require 'org-install)
 (add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
 (global-set-key "\C-cl" 'org-store-link)
 (global-set-key "\C-cc" 'org-capture)
@@ -1228,6 +1230,3 @@ cursor to the new line."
 (add-hook 'remember-mode-hook 'org-remember-apply-template)
 (setq org-default-notes-file (concat org-directory "/gtd.org"))
 (define-key global-map "\C-cr" 'org-remember)
-
-
-

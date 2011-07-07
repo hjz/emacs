@@ -90,6 +90,13 @@
 (defvar ensime-sbt-mode-hook nil
   "Hook to run after installing scala mode")
 
+
+(defun ensime-ignore-unimportant (msg)
+  (if (or (string-match "error.*org.specs" msg)
+          (string-match "error.*scala.Option" msg)
+          (string-match "error.*sbt" msg))
+      "" msg))
+
 (defun ensime-sbt ()
   "Setup and launch sbt."
   (interactive)
@@ -128,6 +135,8 @@
     (set (make-local-variable 'comint-output-filter-functions)
 	 '(ensime-sbt-notify-build ansi-color-process-output comint-postoutput-scroll-to-bottom))
 
+    (add-hook 'comint-preoutput-filter-functions 'ensime-ignore-unimportant)
+
     (if ensime-sbt-comint-ansi-support
 	(set (make-local-variable 'ansi-color-for-comint-mode) t)
       (set (make-local-variable 'ansi-color-for-comint-mode) 'filter))
@@ -144,8 +153,7 @@
       (ensime-set-query-on-exit-flag proc))
 
     (if ensime-sbt-mode-hook
-        (run-hooks 'ensime-sbt-mode-hook))
-    ))
+        (run-hooks 'ensime-sbt-mode-hook))))
 
 (defun ensime-sbt-switch ()
   "Switch to the sbt shell (create if necessary) if or if already there, back.
