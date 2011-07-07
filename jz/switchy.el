@@ -44,6 +44,9 @@
     )
 )
 
+(defun src-to-spec-filename (bse)
+  (replace-regexp-in-string "main" "test" (concat bse "Spec.scala")))
+
 (defun switch-between-test-and-source ()
   "Switch between a scala test (*Spec) and its corresponding source"
   (interactive)
@@ -65,7 +68,7 @@
     )
    ;; second condition - switch to test file
    ((or (equal ext "scala"))
-    (setq nfn (replace-regexp-in-string "main" "test" (concat bse "Spec.scala")))
+    (setq nfn (src-to-spec-filename bse))
     (setq dirname (file-name-directory nfn))
     (unless (file-accessible-directory-p dirname) (make-directory dirname t))
     (auto-insert-mode 1)
@@ -73,6 +76,17 @@
     )
    )
   )
+
+(defun get-spec-path ()
+  (interactive)
+  (setq bse (file-name-sans-extension buffer-file-name))
+  (setq typ (substring bse -4 nil))
+  (if (equal typ "Spec") buffer-file-name (src-to-spec-filename bse)))
+
+(defun get-spec-class ()
+  (interactive)
+  (substring (filepath-to-package-name (get-spec-path)) 0 -7))
+
 (add-hook 'scala-mode-hook
   (lambda () (local-set-key (kbd "C-c SPC") 'switch-between-test-and-source)))
 

@@ -90,7 +90,6 @@
 (defvar ensime-sbt-mode-hook nil
   "Hook to run after installing scala mode")
 
-
 (defun ensime-ignore-unimportant (msg)
   (if (or (string-match "error.*org.specs" msg)
           (string-match "error.*scala.Option" msg)
@@ -231,7 +230,6 @@
       (if (not (ensime-sbt-project-dir-p parent-path))
 	  path
 	parent-path))))
-
 
 
 (provide 'ensime-sbt)

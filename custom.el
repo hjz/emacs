@@ -9,7 +9,6 @@
  '(browse-kill-ring-quit-action (quote save-and-restore))
  '(browse-kill-ring-separator "-------------------")
  '(column-number-mode t)
- '(comint-input-autoexpand nil)
  '(comint-input-ignoredups t)
  '(comint-process-echoes t)
  '(comint-scroll-to-bottom-on-input (quote all))
