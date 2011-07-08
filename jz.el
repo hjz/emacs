@@ -123,7 +123,6 @@ advice like this:
 
 ;; open confluence page
 (global-set-key "\C-xwf" 'confluence-get-page)
-(global-set-key (kbd ("C-,") 'confluence-get-page)
 
 ;(add-to-list 'load-path (concat user-dir "/scamacs/scamacs"))
 ;(add-to-list 'load-path (concat user-dir "/scamacs/ecb"))
@@ -686,7 +685,7 @@ cursor to the new line."
 ;; ---------------------------------------
 ;; F9 creates a new elscreen, shift-F9 kills it
 (global-set-key (kbd "s-t"  ) 'elscreen-create)
-(global-set-key (kbd "s-SPC"  ) 'elscreen-kill)
+(global-set-key (kbd "s-d"  ) 'elscreen-kill)
 
 ;; Windowskey+PgUP/PgDown switches between elscreens
 (global-set-key (kbd "<C-prior>") 'elscreen-previous)
@@ -836,12 +835,11 @@ cursor to the new line."
 (define-key my-keys-minor-mode-map (kbd "M-;") 'repeat-complex-command)
 
 ;; Movement
-(define-key my-keys-minor-mode-map (kbd "C-=") 'balance-windows)
-;(define-key my-keys-minor-mode-map (kbd "C-m") 'toggle-kbd-macro-recording-on)
-(define-key my-keys-minor-mode-map (kbd "C-h") 'windmove-left)
-(define-key my-keys-minor-mode-map (kbd "C-l") 'windmove-right)
-(define-key my-keys-minor-mode-map (kbd "C-k") 'windmove-up)
-(define-key my-keys-minor-mode-map (kbd "C-j") 'windmove-down)
+(define-key my-keys-minor-mode-map (kbd "s-h") 'windmove-left)
+(define-key my-keys-minor-mode-map (kbd "s-l") 'windmove-right)
+(define-key my-keys-minor-mode-map (kbd "s-k") 'windmove-up)
+(define-key my-keys-minor-mode-map (kbd "s-j") 'windmove-down)
+(define-key my-keys-minor-mode-map (kbd "s-SPC") 'delete-window)
 (define-key my-keys-minor-mode-map (kbd "C-w ,") '(lambda () (interactive) (split-window-vertically) (other-window 1)))
 (define-key my-keys-minor-mode-map (kbd "C-w .") '(lambda () (interactive) (split-window-horizontally) (other-window 1)))
 (define-key my-keys-minor-mode-map (kbd "s-,") '(lambda () (interactive) (split-window-vertically) (other-window 1)))
@@ -925,8 +923,6 @@ cursor to the new line."
       (minimap-kill)
     (minimap-create))
   )
-
-(global-set-key (kbd "<C-escape>") 'help-command)
 
 (vimpulse-map (kbd ",c") 'surround-brace)
 (vimpulse-map (kbd ",b") 'surround-paren)
@@ -1074,8 +1070,8 @@ cursor to the new line."
 (vimpulse-imap (kbd "TAB") 'confluence-list-indent-dwim 'confluence-mode)
 (vimpulse-imap (kbd "<S-tab>") '(lambda () (interactive) (confluence-list-indent-dwim -1)) 'confluence-mode)
 
-(vimpulse-map (kbd "s-k") 'viper-backward-paragraph)
-(vimpulse-map (kbd "s-j") 'viper-forward-paragraph)
+(vimpulse-map (kbd "C-k") 'viper-backward-paragraph)
+(vimpulse-map (kbd "C-j") 'viper-forward-paragraph)
 (vimpulse-map (kbd "C-i") 'vimpulse-jump-forward)
 (vimpulse-map (kbd "K") 'vimpulse-search-forward-for-symbol-at-point)
 (vimpulse-vmap (kbd "]") 'sort-lines)

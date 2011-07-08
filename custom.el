@@ -58,6 +58,7 @@
  '(global-hl-line-mode nil)
  '(grep-files-aliases (quote (("all" . "* .*") ("el" . "*.el") ("ch" . "*.[ch]") ("c" . "*.c") ("cc" . "*.cc *.cxx *.cpp *.C *.CC *.c++") ("cchh" . "*.cc *.[ch]xx *.[ch]pp *.[CHh] *.CC *.HH *.[ch]++") ("hh" . "*.hxx *.hpp *.[Hh] *.HH *.h++") ("h" . "*.h") ("l" . "[Cc]hange[Ll]og*") ("m" . "[Mm]akefile*") ("tex" . "*.tex") ("texi" . "*.texi") ("asm" . "*.[sS]") ("s" . "*.scala"))))
  '(grep-highlight-matches (quote auto))
+ '(help-char 167)
  '(highlight-80+-columns 100)
  '(history-delete-duplicates nil)
  '(history-length 500)
