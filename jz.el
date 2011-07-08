@@ -34,6 +34,7 @@
 (add-to-list 'load-path (concat user-dir "/google-weather"))
 (add-to-list 'load-path (concat user-dir "/find-file-in-project"))
 (add-to-list 'load-path (concat user-dir "/org-mode"))
+(add-to-list 'load-path (concat user-dir "/cc-mode-5.31.3"))
 (require 'minimap)
 
 (defun vendor (library)
@@ -870,8 +871,8 @@ cursor to the new line."
 
 (define-key my-keys-minor-mode-map (kbd "C-c o") 'rename-file-and-buffer)
 (define-key my-keys-minor-mode-map (kbd "C-c g") 'customize-group)
-(define-key my-keys-minor-mode-map (kbd "s-L") 'dired-jump-other-window)
-(define-key my-keys-minor-mode-map (kbd "s-l") 'dired-jump)
+(define-key my-keys-minor-mode-map (kbd "C-c C-l") 'dired-jump-other-window)
+(define-key my-keys-minor-mode-map (kbd "C-l") 'dired-jump)
 (define-key my-keys-minor-mode-map (kbd "C-b") 'ido-switch-buffer)
 (define-key my-keys-minor-mode-map (kbd "C-x b") 'display-buffer)
 
