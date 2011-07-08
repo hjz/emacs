@@ -604,13 +604,6 @@ cursor to the new line."
 
 (global-set-key (kbd "C-c v") 'halve-other-window-height)
 
-; Window Spliting
-(global-set-key (kbd "M-6") 'delete-window) ; was digit-argument
-(global-set-key (kbd "M-7") 'other-window) ; was center-line
-(global-set-key (kbd "M-8") 'split-window-vertically) ; was digit-argument
-(global-set-key (kbd "M-9") 'split-window-horizontally) ; was digit-argument
-(global-set-key (kbd "M-0") 'delete-other-windows) ; was digit-argument
-
 ;; TODO try these?
 ; open file
 ;(global-set-key [(super o)] 'find-file)
