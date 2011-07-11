@@ -305,6 +305,81 @@ advice like this:
 (add-to-list 'desktop-modes-not-to-save 'info-lookup-mode)
 (add-to-list 'desktop-modes-not-to-save 'fundamental-mode)
 
+(defun emacs-process-p (pid)
+  "If pid is the process ID of an emacs process, return t, else nil.
+Also returns nil if pid is nil."
+  (when pid
+    (let ((attributes (process-attributes pid)) (cmd))
+      (dolist (attr attributes)
+        (if (string= "comm" (car attr))
+            (setq cmd (cdr attr))))
+      (if (and cmd (or (string= "emacs" cmd) (string= "Emacs.app" cmd))) t))))
+
+(defadvice desktop-owner (after pry-from-cold-dead-hands activate)
+  "Don't allow dead emacsen to own the desktop file."
+  (when (not (emacs-process-p ad-return-value))
+    (setq ad-return-value nil)))
+
+;; file cache
+(require 'filecache)
+
+(defun file-cache-ido-find-file (file)
+  "Using ido, interactively open file from file cache'.
+First select a file, matched using ido-switch-buffer against the contents
+in `file-cache-alist'. If the file exist in more than one
+directory, select directory. Lastly the file is opened."
+  (interactive (list (file-cache-ido-read "File: "
+                                          (mapcar
+                                           (lambda (x)
+                                             (car x))
+                                           file-cache-alist))))
+  (let* ((record (assoc file file-cache-alist)))
+    (find-file
+     (expand-file-name
+      file
+      (if (= (length record) 2)
+          (car (cdr record))
+        (file-cache-ido-read
+         (format "Find %s in dir: " file) (cdr record)))))))
+
+(defun file-cache-ido-read (prompt choices)
+  (let ((ido-make-buffer-list-hook
+	 (lambda ()
+	   (setq ido-temp-list choices))))
+    (ido-read-buffer prompt)))
+
+
+(defun file-cache-refresh ()
+  (message "Loading file cache...")
+  (file-cache-clear-cache)
+  (file-cache-add-directory-using-find "~/ps/birdcage")
+;  (file-cache-add-directory-using-find "~/ps/science")
+  (file-cache-add-directory-using-find "~/ps/macaw")
+  (file-cache-add-directory-using-find "~/ps/querulous")
+;  (file-cache-add-directory-using-find "~/ps/twitter")
+  (file-cache-add-directory-using-find dotfiles-dir)
+  ;	    (file-cache-add-directory "~/")
+  ;	    (file-cache-add-file-list (list "~/foo/bar" "~/baz/bar"))
+  )
+
+(file-cache-refresh)
+
+(add-to-list 'file-cache-filter-regexps "project/boot")
+(add-to-list 'file-cache-filter-regexps "target")
+
+(add-to-list 'file-cache-filter-regexps "\\.sw\w$")
+(add-to-list 'file-cache-filter-regexps "/[.]#.*")
+(add-to-list 'file-cache-filter-regexps "\\.class$")
+(add-to-list 'file-cache-filter-regexps "\\.gz$")
+(add-to-list 'file-cache-filter-regexps "\\.jpg$")
+(add-to-list 'file-cache-filter-regexps "\\.gif$")
+(add-to-list 'file-cache-filter-regexps "\\.png$")
+(add-to-list 'file-cache-filter-regexps "\\.jar$")
+(add-to-list 'file-cache-filter-regexps "\\.svn-base$")
+(add-to-list 'file-cache-filter-regexps "\\.dump$")
+(add-to-list 'file-cache-filter-regexps "/[.]\w+$")
+(add-to-list 'file-cache-filter-regexps "/[.]git")
+(add-to-list 'file-cache-filter-regexps "/[.]svn")
 ;(require 'sunrise-commander)
 
 ;;
@@ -890,6 +965,9 @@ cursor to the new line."
 (define-key my-keys-minor-mode-map (kbd "C-f n") 'find-name-dired)
 (define-key my-keys-minor-mode-map (kbd "C-f o") 'dired-do-moccur)
 (define-key my-keys-minor-mode-map (kbd "C-f i") 'ibuffer-do-occur)
+(define-key my-keys-minor-mode-map (kbd "C-f c") 'file-cache-refresh)
+(define-key my-keys-minor-mode-map (kbd "C-f j") 'file-cache-ido-find-file)
+(define-key my-keys-minor-mode-map (kbd "C-f k") 'recentf-ido-find-file)
 
 ;; searching
 (define-key my-keys-minor-mode-map (kbd "C-c d") 'ediff-revision)
@@ -1236,3 +1314,4 @@ cursor to the new line."
 
 (setq org-refile-targets (quote (("gtd.org" :maxlevel . 1)
                               ("someday.org" :level . 2))))
+
