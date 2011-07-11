@@ -37,6 +37,8 @@
 (add-to-list 'load-path (concat user-dir "/cc-mode-5.31.3"))
 (require 'minimap)
 
+(setq locate-command "mdfind")
+
 (defun vendor (library)
   (let* ((file (symbol-name library))
          (normal (concat "~/.emacs.d/vendor/" file))
@@ -1226,3 +1228,4 @@ cursor to the new line."
 (add-hook 'remember-mode-hook 'org-remember-apply-template)
 (setq org-default-notes-file (concat org-directory "/gtd.org"))
 (define-key global-map "\C-cr" 'org-remember)
+
