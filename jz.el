@@ -1229,3 +1229,10 @@ cursor to the new line."
 (setq org-default-notes-file (concat org-directory "/gtd.org"))
 (define-key global-map "\C-cr" 'org-remember)
 
+(setq org-remember-templates
+      '(("Todo" ?t "* TODO %^{Brief Description} %^g\n%?\n  Added: %U" "~/Dropbox/org/gtd.org" "Tasks")
+        ("Journal" ?j "* %U %?\n\n  %i\n  %a" "~/Dropbox/org/journal.org")
+        ("Idea" ?i "* %^{Title}\n  %i\n  %a" "~/Dropbox/org/maybe.org" "Ideas")))
+
+(setq org-refile-targets (quote (("gtd.org" :maxlevel . 1)
+                              ("someday.org" :level . 2))))
