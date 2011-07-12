@@ -35,9 +35,23 @@
 (add-to-list 'load-path (concat user-dir "/find-file-in-project"))
 (add-to-list 'load-path (concat user-dir "/org-mode"))
 (add-to-list 'load-path (concat user-dir "/cc-mode-5.31.3"))
+(add-to-list 'load-path (concat user-dir "/switch-window"))
 (require 'minimap)
 
+(require 'switch-window)
+
 (setq locate-command "mdfind")
+
+;; backup and autosave settings
+(defvar temporary-file-directory "~/.saves")
+(setq
+   backup-by-copying t      ; don't clobber symlinks
+   backup-directory-alist `((".*" . ,temporary-file-directory))
+   auto-save-file-name-transforms `((".*" ,temporary-file-directory t))
+   delete-old-versions t
+   kept-new-versions 16
+   kept-old-versions 2
+   version-control t)       ; use versioned backups
 
 (defun vendor (library)
   (let* ((file (symbol-name library))
