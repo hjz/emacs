@@ -84,7 +84,9 @@ advice like this:
 (defun load-config (module)
   (load (concat dotfiles-dir "config/" module "-config.el")))
 
+;(load-config "desktop")
 (load-config "erc")
+(load-config "twittering")
 ;(load-config "filecache")
 
 (defadvice save-buffers-kill-emacs (around no-query-kill-emacs activate)
@@ -161,45 +163,6 @@ advice like this:
       (set-window-start w2 s1)
       (setq i (1+ i)))))))
 
-;; twittering-mode
-(require 'twittering-mode)
-(setq twittering-use-master-password t)
-(setq twittering-initial-timeline-spec-string
-      '(":home"
-        ":replies"
-        ":favorites"
-        ":direct_messages"))
-
-(add-hook 'twittering-mode-hook
-   (lambda ()
-     (mapc (lambda (pair)
-             (let ((key (car pair))
-                   (func (cdr pair)))
-               (define-key twittering-mode-map
-                 (read-kbd-macro key) func)))
-           '(("F" . twittering-friends-timeline)
-             ("R" . twittering-replies-timeline)
-             ("U" . twittering-user-timeline)
-             (";" . twittering-home-timeline)
-             ("W" . twittering-update-status-interactive)))))
-
-(setq twittering-icon-mode t)                ; Show icons
-(setq twittering-timer-interval 300)         ; Update your timeline each 300 seconds (5 minutes)
-(setq twittering-url-show-status nil)        ; Keeps the echo area from showing all the http processes
-
-(add-hook 'twittering-new-tweets-hook (lambda ()
-(let ((n twittering-new-tweets-count))
-(start-process "twittering-notify" nil "notify-send"
-            "-i" "/usr/share/pixmaps/gnome-emacs.png"
-            "New tweets"
-            (format "You have %d new tweet%s"
-                    n (if (> n 1) "s" ""))))))
-
-(add-hook 'twittering-edit-mode-hook (lambda () (ispell-minor-mode) (flyspell-mode)))
-
-(autoload 'twittering-numbering "twittering-numbering" nil t)
-(add-hook 'twittering-mode-hook 'twittering-numbering)
-
 ;; M-x IDO
 (require 'smex)
 (smex-initialize)
@@ -241,86 +204,28 @@ advice like this:
 ;--------------------------------------------------------------------------
 ;; popwin.el
 ;;--------------------------------------------------------------------------
-(require 'popwin)
-(setq display-buffer-function 'popwin:display-buffer)
+;; (require 'popwin)
+;; (setq display-buffer-function 'popwin:display-buffer)
 
-(push '("*Shell Command Output*" :height 20) popwin:special-display-config)
-(setq anything-samewindow nil)
-(push '("*anything*" :height 20) popwin:special-display-config)
-(push '("*anything for files*" :height 20) popwin:special-display-config)
-;(push '("*ensime-sbt*" :height 25 :position bottom :stick t) popwin:special-display-config)
-(push '("*pianobar*" :width 60 :position right) popwin:special-display-config)
-(push '("*ENSIME-Compilation-Result*" :height 50 :position bottom :stick t) popwin:special-display-config)
-(push '("*ensime-inferior-scala*" :width 60 :position right :stick t) popwin:special-display-config)
-(push '("*scratch*") popwin:special-display-config)
-(push '("*viper-info*") popwin:special-display-config)
-(push '("*Messages*") popwin:special-display-config)
-(push '("*grep*" :height 50) popwin:special-display-config)
-(push '("*Kill Ring*" :height 30) popwin:special-display-config)
-(push '("*Inspector*" :width 60 :position right) popwin:special-display-config)
-(push '(dired-mode :position right :width 70) popwin:special-display-config) ; dired-jump-other-window (C-x 4 C-j)
-(push '("*Warnings*") popwin:special-display-config)
-(push '("*Help*" :height 30 :position bottom) popwin:special-display-config)
-(push '("*Completions*" :height 30 :position bottom) popwin:special-display-config)
-(push '("*One-Key*") popwin:special-display-config)
-
-;; save a list of open files in ~/.emacs.desktop
-;; save the desktop file automatically if it already exists
-(setq desktop-save 'if-exists)
-(desktop-save-mode 1)
-
-;; save a bunch of variables to the desktop file
-;; for lists specify the len of the maximal saved data also
-(setq desktop-globals-to-save
-      (append '((extended-command-history . 100)
-                (file-name-history        . 100)
-                (grep-history             . 100)
-                (compile-history          . 100)
-                (minibuffer-history       . 100)
-                (query-replace-history    . 100)
-                (read-expression-history  . 100)
-                (regexp-history           . 100)
-                (regexp-search-ring       . 100)
-                (search-ring              . 100)
-                (shell-command-history    . 100)
-                tags-file-name
-                register-alist)))
-
-;; auto save desktop on emacs idle
-(add-hook 'auto-save-hook (lambda () (desktop-save-in-desktop-dir)))
-
-;; redefine save to remove Desktop saved in ...
-(defun desktop-save-in-desktop-dir ()
-  "Save the desktop in directory `desktop-dirname'."
-  (interactive)
-  (if desktop-dirname
-      (desktop-save desktop-dirname)
-    (call-interactively 'desktop-save)))
-
-(setq desktop-buffers-not-to-save
-      (concat "\\("
-              "^nn\\.a[0-9]+\\|\\.log\\|(ftp)\\|^tags\\|^TAGS"
-              "\\|\\.emacs.*\\|\\.diary\\|\\.newsrc-dribble\\|\\.bbdb"
-              "\\)$"))
-(add-to-list 'desktop-modes-not-to-save 'dired-mode)
-(add-to-list 'desktop-modes-not-to-save 'Info-mode)
-(add-to-list 'desktop-modes-not-to-save 'info-lookup-mode)
-(add-to-list 'desktop-modes-not-to-save 'fundamental-mode)
-
-(defun emacs-process-p (pid)
-  "If pid is the process ID of an emacs process, return t, else nil.
-Also returns nil if pid is nil."
-  (when pid
-    (let ((attributes (process-attributes pid)) (cmd))
-      (dolist (attr attributes)
-        (if (string= "comm" (car attr))
-            (setq cmd (cdr attr))))
-      (if (and cmd (or (string= "emacs" cmd) (string= "Emacs.app" cmd))) t))))
-
-(defadvice desktop-owner (after pry-from-cold-dead-hands activate)
-  "Don't allow dead emacsen to own the desktop file."
-  (when (not (emacs-process-p ad-return-value))
-    (setq ad-return-value nil)))
+;; (push '("*Shell Command Output*" :height 20) popwin:special-display-config)
+;; (setq anything-samewindow nil)
+;; (push '("*anything*" :height 20) popwin:special-display-config)
+;; (push '("*anything for files*" :height 20) popwin:special-display-config)
+;; ;(push '("*ensime-sbt*" :height 25 :position bottom :stick t) popwin:special-display-config)
+;; (push '("*pianobar*" :width 60 :position right) popwin:special-display-config)
+;; (push '("*ENSIME-Compilation-Result*" :height 50 :position bottom :stick t) popwin:special-display-config)
+;; (push '("*ensime-inferior-scala*" :width 60 :position right :stick t) popwin:special-display-config)
+;; (push '("*scratch*") popwin:special-display-config)
+;; (push '("*viper-info*") popwin:special-display-config)
+;; (push '("*Messages*") popwin:special-display-config)
+;; (push '("*grep*" :height 50) popwin:special-display-config)
+;; (push '("*Kill Ring*" :height 30) popwin:special-display-config)
+;; (push '("*Inspector*" :width 60 :position right) popwin:special-display-config)
+;; (push '(dired-mode :position right :width 70) popwin:special-display-config) ; dired-jump-other-window (C-x 4 C-j)
+;; (push '("*Warnings*") popwin:special-display-config)
+;; (push '("*Help*" :height 30 :position bottom) popwin:special-display-config)
+;; (push '("*Completions*" :height 30 :position bottom) popwin:special-display-config)
+;; (push '("*One-Key*") popwin:special-display-config)
 
 ;(require 'sunrise-commander)
 
