@@ -91,8 +91,7 @@
   "Hook to run after installing scala mode")
 
 (defun ensime-ignore-unimportant (msg)
-  (if (or (string-match "error.*org.specs" msg)
-          (string-match "error.*scala.Option" msg)
+  (if (or (string-match "error.*scala.Option" msg)
           (string-match "error.*sbt" msg))
       "" msg))
 

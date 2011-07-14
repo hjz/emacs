@@ -28,6 +28,23 @@ directory, select directory. Lastly the file is opened."
     (ido-read-buffer prompt)))
 
 
+(add-to-list 'file-cache-filter-regexps "project/boot")
+(add-to-list 'file-cache-filter-regexps "target")
+
+(add-to-list 'file-cache-filter-regexps "\\.sw\w$")
+(add-to-list 'file-cache-filter-regexps "/#.*")
+(add-to-list 'file-cache-filter-regexps "\\.class$")
+(add-to-list 'file-cache-filter-regexps "\\.gz$")
+(add-to-list 'file-cache-filter-regexps "\\.jpg$")
+(add-to-list 'file-cache-filter-regexps "\\.gif$")
+(add-to-list 'file-cache-filter-regexps "\\.png$")
+(add-to-list 'file-cache-filter-regexps "\\.jar$")
+(add-to-list 'file-cache-filter-regexps "\\.svn-base$")
+(add-to-list 'file-cache-filter-regexps "\\.dump$")
+(add-to-list 'file-cache-filter-regexps "/[.]\w+$")
+(add-to-list 'file-cache-filter-regexps "/[.]git")
+(add-to-list 'file-cache-filter-regexps "/[.]svn")
+
 (defun file-cache-refresh ()
   (message "Loading file cache...")
   (file-cache-clear-cache)
@@ -42,20 +59,3 @@ directory, select directory. Lastly the file is opened."
   )
 
 (file-cache-refresh)
-
-(add-to-list 'file-cache-filter-regexps "project/boot")
-(add-to-list 'file-cache-filter-regexps "target")
-
-(add-to-list 'file-cache-filter-regexps "\\.sw\w$")
-(add-to-list 'file-cache-filter-regexps "/\\.#.*")
-(add-to-list 'file-cache-filter-regexps "\\.class$")
-(add-to-list 'file-cache-filter-regexps "\\.gz$")
-(add-to-list 'file-cache-filter-regexps "\\.jpg$")
-(add-to-list 'file-cache-filter-regexps "\\.gif$")
-(add-to-list 'file-cache-filter-regexps "\\.png$")
-(add-to-list 'file-cache-filter-regexps "\\.jar$")
-(add-to-list 'file-cache-filter-regexps "\\.svn-base$")
-(add-to-list 'file-cache-filter-regexps "\\.dump$")
-(add-to-list 'file-cache-filter-regexps "/[.]\w+$")
-(add-to-list 'file-cache-filter-regexps "/[.]git")
-(add-to-list 'file-cache-filter-regexps "/[.]svn")

@@ -98,10 +98,10 @@ advice like this:
 (defun load-config (module)
   (load (concat dotfiles-dir "config/" module "-config.el")))
 
-;(load-config "desktop")
+(load-config "desktop")
 (load-config "erc")
 (load-config "twittering")
-;(load-config "filecache")
+(load-config "filecache")
 
 (defadvice save-buffers-kill-emacs (around no-query-kill-emacs activate)
   "Prevent annoying \"Active processes exist\" query when you quit Emacs."
@@ -889,11 +889,6 @@ cursor to the new line."
 (vimpulse-vmap (kbd "<S-tab>") 'vimpulse-shift-left)
 ;; TODO unbind , C-e
 
-(global-set-key (kbd "C-c k") 'ecb-toggle-ecb-windows)
-;(global-set-key (kbd "M-w") 'subword-forward)
-(global-set-key (kbd "C-c l") 'ensime) ;; replace lambda
-;(global-set-key (kbd "C-c ;") 'ensime-ecb)
-
 (define-minor-mode my-keys-minor-mode
   "A minor mode so that my key settings override annoying major modes."
   t " M " 'my-keys-minor-mode-map)
@@ -1057,6 +1052,9 @@ cursor to the new line."
 (vimpulse-map (kbd "C-f n") 'find-name-dired)
 (vimpulse-map (kbd "C-f o") 'dired-do-moccur)
 (vimpulse-map (kbd "C-f i") 'ibuffer-do-occur)
+(vimpulse-map (kbd "C-f c") 'file-cache-refresh)
+(vimpulse-map (kbd "C-f j") 'file-cache-ido-find-file)
+(vimpulse-map (kbd "C-f k") 'recentf-ido-find-file)
 
 ;; search functions
 (vimpulse-imap (kbd "C-f d") 'moccur-grep)
@@ -1139,10 +1137,19 @@ cursor to the new line."
             (buffer-name))))
 
 (defun delete-file-and-buffer ()
-   "Deletes the current file and buffer, assumes file exists"
-     (interactive)
-       (delete-file buffer-file-name)
-         (kill-buffer (buffer-name)))
+   "Deletes the current file and buffer"
+  (interactive)
+  (or (buffer-file-name) (error "No file is currently being edited"))
+  (when (yes-or-no-p "Really delete this file?")
+    (delete-file (buffer-file-name))
+    (kill-this-buffer)))
+
+;(global-set-key (kbd "C-c k") 'ecb-toggle-ecb-windows)
+(global-set-key (kbd "C-c k") 'delete-file-and-buffer)
+
+;(global-set-key (kbd "M-w") 'subword-forward)
+;(global-set-key (kbd "C-c l") 'ensime) ;; replace lambda
+;(global-set-key (kbd "C-c ;") 'ensime-ecb)
 
 
 (autoload 'formfeed-hline-mode "formfeed-hline" nil t)
