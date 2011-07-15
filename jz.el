@@ -96,12 +96,13 @@ advice like this:
 
 
 (defun load-config (module)
-  (load (concat dotfiles-dir "config/" module "-config.el")))
+  (load (concat dotfiles-dir "config/" module ".el")))
 
 (load-config "desktop")
 (load-config "erc")
 (load-config "twittering")
 (load-config "filecache")
+(load-config "aliases")
 
 (defadvice save-buffers-kill-emacs (around no-query-kill-emacs activate)
   "Prevent annoying \"Active processes exist\" query when you quit Emacs."
@@ -551,10 +552,8 @@ cursor to the new line."
 ;(global-set-key [(super F)] 'ack)
 
 ; close window
-(global-set-key [(super w)]
-  (lambda ()
-      (interactive)
-          (kill-buffer (current-buffer))))
+(global-set-key (kbd "s-w") 'kill-buffer-and-window)
+(global-set-key (kbd "s-W") 'kill-this-buffer)
 
 ; navigating through errors
 (global-set-key [(meta j)] 'next-error)
@@ -1144,12 +1143,19 @@ cursor to the new line."
     (delete-file (buffer-file-name))
     (kill-this-buffer)))
 
+(defun word-count ()
+  "Count words in buffer"
+  (interactive)
+  (shell-command-on-region (point-min) (point-max) "wc -w"))
+
 ;(global-set-key (kbd "C-c k") 'ecb-toggle-ecb-windows)
 (global-set-key (kbd "C-c k") 'delete-file-and-buffer)
+(global-set-key (kbd "C-c l") 'revert-buffer)
 
 ;(global-set-key (kbd "M-w") 'subword-forward)
-;(global-set-key (kbd "C-c l") 'ensime) ;; replace lambda
+; Use up m-W
 ;(global-set-key (kbd "C-c ;") 'ensime-ecb)
+;
 
 
 (autoload 'formfeed-hline-mode "formfeed-hline" nil t)

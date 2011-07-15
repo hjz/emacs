@@ -1,0 +1,1 @@
+(defalias 'mf 'maximize-frame)
