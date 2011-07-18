@@ -92,7 +92,10 @@
 
 (defun ensime-ignore-unimportant (msg)
   (if (or (string-match "error.*scala.Option" msg)
-          (string-match "error.*sbt" msg))
+          (string-match "error.*sbt" msg)
+          (string-match "error.*org.specs.specification" msg)
+          (string-match "error.*org.specs.runner" msg)
+          (string-match "error.*org.specs.execute" msg))
       "" msg))
 
 (defun ensime-sbt ()

@@ -282,8 +282,9 @@
     (erc-track-switch-buffer 1) ;; yes: switch to last active
     (when (y-or-n-p "Start ERC? ") ;; no: maybe start ERC
       (erc :server "localhost" :port 6667 :nick "jz" :full-name "Justin"))))
+
 ;; switch to ERC with Ctrl+c e
-(global-set-key (kbd "C-c e") 'start-irc)
+(global-set-key (kbd "C-c ;") 'start-irc)
 
 
 ;; timestamps

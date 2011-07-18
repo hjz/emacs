@@ -36,6 +36,8 @@
 (add-to-list 'load-path (concat user-dir "/org-mode"))
 (add-to-list 'load-path (concat user-dir "/cc-mode-5.31.3"))
 (add-to-list 'load-path (concat user-dir "/switch-window"))
+(add-to-list 'load-path (concat user-dir "/org-jekyll"))
+
 (require 'minimap)
 
 (require 'switch-window)
@@ -103,6 +105,7 @@ advice like this:
 (load-config "twittering")
 (load-config "filecache")
 (load-config "aliases")
+(load-config "org")
 
 (defadvice save-buffers-kill-emacs (around no-query-kill-emacs activate)
   "Prevent annoying \"Active processes exist\" query when you quit Emacs."
@@ -1160,31 +1163,3 @@ cursor to the new line."
 
 (autoload 'formfeed-hline-mode "formfeed-hline" nil t)
 (formfeed-hline-mode 1)
-
-;; ORG MODE
-(require 'org-install)
-(add-to-list 'auto-mode-alist '("\\.org\\'" . org-mode))
-(global-set-key "\C-cl" 'org-store-link)
-(global-set-key "\C-cc" 'org-capture)
-(global-set-key "\C-ca" 'org-agenda)
-(global-set-key "\C-cb" 'org-iswitchb)
-(setq org-directory "~/Dropbox/org")
-(setq org-agenda-files '("~/Dropbox/org"))
-
-(require 'remember)
-(require 'org-remember)
-(setq remember-annotation-functions '(org-remember-annotation))
-
-(setq remember-handler-functions '(org-remember-handler))
-(add-hook 'remember-mode-hook 'org-remember-apply-template)
-(setq org-default-notes-file (concat org-directory "/gtd.org"))
-(define-key global-map "\C-cr" 'org-remember)
-
-(setq org-remember-templates
-      '(("Todo" ?t "* TODO %^{Brief Description} %^g\n%?\n  Added: %U" "~/Dropbox/org/gtd.org" "Tasks")
-        ("Journal" ?j "* %U %?\n\n  %i\n  %a" "~/Dropbox/org/journal.org")
-        ("Idea" ?i "* %^{Title}\n  %i\n  %a" "~/Dropbox/org/maybe.org" "Ideas")))
-
-(setq org-refile-targets (quote (("gtd.org" :maxlevel . 1)
-                              ("someday.org" :level . 2))))
-
