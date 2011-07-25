@@ -73,7 +73,7 @@
  '(kill-do-not-save-duplicates t)
  '(magit-commit-all-when-nothing-staged t)
  '(magit-completing-read-function (quote magit-iswitchb-completing-read))
- '(magit-process-popup-time 30)
+ '(magit-process-popup-time 15)
  '(magit-repo-dirs (quote ("~/ps/" "~/workspace/")))
  '(moccur-edit-highlight-edited-text t)
  '(moccur-query-when-buffer-read-only t)
@@ -96,7 +96,7 @@
  '(tab-always-indent (quote complete))
  '(tls-program (quote ("openssl s_client -connect %h:%p -no_ssl2 -ign_eof")))
  '(tool-bar-mode nil)
- '(transient-mark-mode t)
+ '(transient-mark-mode nil)
  '(vimpulse-fold-level 5)
  '(vimpulse-operator-comment-key "-")
  '(vimpulse-relative-linum-delay 0.1)
@@ -120,7 +120,7 @@
   ;; If you edit it by hand, you could mess it up, so be careful.
   ;; Your init file should contain only one such instance.
   ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :background "#1f1f1f" :foreground "#dcdccc" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 134 :width normal :foundry "apple" :family "Consolas"))))
+ '(default ((t (:inherit nil :stipple nil :background "#1f1f1f" :foreground "#dcdccc" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 110 :width normal :foundry "apple" :family "Monaco"))))
  '(ack-file ((((background dark)) (:background "#282828" :foreground "#7cb8bb"))))
  '(ack-line ((((background dark)) (:background "#282828" :foreground "#b6b6b6"))))
  '(ack-match ((default nil) (((background dark)) (:background "#385f38" :foreground "#dcdccc"))))

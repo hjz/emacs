@@ -38,8 +38,6 @@
 (add-to-list 'load-path (concat user-dir "/switch-window"))
 (add-to-list 'load-path (concat user-dir "/org-jekyll"))
 
-(require 'minimap)
-
 (require 'switch-window)
 
 (setq locate-command "mdfind")
@@ -219,31 +217,29 @@ advice like this:
 ;(edit-server-start)
 ;(add-hook 'after-change-major-mode-hook 'edit-server-edit-mode)
 
-;--------------------------------------------------------------------------
-;; popwin.el
-;;--------------------------------------------------------------------------
-;; (require 'popwin)
-;; (setq display-buffer-function 'popwin:display-buffer)
+;; popwin
+(require 'popwin)
+(setq display-buffer-function 'popwin:display-buffer)
 
-;; (push '("*Shell Command Output*" :height 20) popwin:special-display-config)
-;; (setq anything-samewindow nil)
-;; (push '("*anything*" :height 20) popwin:special-display-config)
-;; (push '("*anything for files*" :height 20) popwin:special-display-config)
-;; ;(push '("*ensime-sbt*" :height 25 :position bottom :stick t) popwin:special-display-config)
-;; (push '("*pianobar*" :width 60 :position right) popwin:special-display-config)
-;; (push '("*ENSIME-Compilation-Result*" :height 50 :position bottom :stick t) popwin:special-display-config)
-;; (push '("*ensime-inferior-scala*" :width 60 :position right :stick t) popwin:special-display-config)
-;; (push '("*scratch*") popwin:special-display-config)
-;; (push '("*viper-info*") popwin:special-display-config)
-;; (push '("*Messages*") popwin:special-display-config)
-;; (push '("*grep*" :height 50) popwin:special-display-config)
-;; (push '("*Kill Ring*" :height 30) popwin:special-display-config)
-;; (push '("*Inspector*" :width 60 :position right) popwin:special-display-config)
-;; (push '(dired-mode :position right :width 70) popwin:special-display-config) ; dired-jump-other-window (C-x 4 C-j)
-;; (push '("*Warnings*") popwin:special-display-config)
-;; (push '("*Help*" :height 30 :position bottom) popwin:special-display-config)
-;; (push '("*Completions*" :height 30 :position bottom) popwin:special-display-config)
-;; (push '("*One-Key*") popwin:special-display-config)
+(push '("*Shell Command Output*" :height 20) popwin:special-display-config)
+(setq anything-samewindow nil)
+(push '("*anything*" :height 20) popwin:special-display-config)
+(push '("*anything for files*" :height 20) popwin:special-display-config)
+;(push '("*ensime-sbt*" :height 25 :position bottom :stick t) popwin:special-display-config)
+(push '("*pianobar*" :width 60 :position right) popwin:special-display-config)
+(push '("*ENSIME-Compilation-Result*" :height 50 :position bottom :stick t) popwin:special-display-config)
+(push '("*ensime-inferior-scala*" :width 60 :position right :stick t) popwin:special-display-config)
+(push '("*scratch*") popwin:special-display-config)
+(push '("*viper-info*") popwin:special-display-config)
+(push '("*Messages*") popwin:special-display-config)
+(push '("*grep*" :height 50) popwin:special-display-config)
+(push '("*Kill Ring*" :height 30) popwin:special-display-config)
+(push '("*Inspector*" :width 60 :position right) popwin:special-display-config)
+(push '(dired-mode :position right :width 70) popwin:special-display-config) ; dired-jump-other-window (C-x 4 C-j)
+(push '("*Warnings*") popwin:special-display-config)
+(push '("*Help*" :height 30 :position bottom) popwin:special-display-config)
+(push '("*Completions*" :height 30 :position bottom) popwin:special-display-config)
+(push '("*One-Key*") popwin:special-display-config)
 
 ;(require 'sunrise-commander)
 
@@ -969,6 +965,10 @@ cursor to the new line."
 (require 'yasnippet)
 (yas/initialize)
 (yas/load-directory (concat user-dir "/yasnippet-read-only/snippets"))
+
+;; Speed up birdcage
+(setenv "SBT_INTRANSITIVE" "1")
+(setenv "NO_PROJECT_DEPS" "1")
 
 (add-hook 'scala-mode-hook 'yas/minor-mode-on)
 (yas/global-mode 1)

@@ -90,4 +90,20 @@
 (add-hook 'scala-mode-hook
   (lambda () (local-set-key (kbd "C-c SPC") 'switch-between-test-and-source)))
 
+(setq cgit-workdir "/Users/jz/ps/")
+(setq cgit-httpdir "http://cgit.local.twitter.com/")
+
+(defun get-cgit-path (&optional plain-view)
+  (interactive)
+  (setq bfn (buffer-file-name))
+  (setq proj-regex (concat cgit-workdir "\\([^/]+\\)/"))
+  (string-match proj-regex bfn)
+  (setq proj-name (match-string 1 bfn))
+  (replace-regexp-in-string proj-regex (concat cgit-httpdir proj-name (if plain-view "/plain/" "/tree/")) bfn)
+  )
+
+(defun cgit-browse (&optional plain-view)
+  (interactive)
+  (browse-url (get-cgit-path plain-view)))
+
 (provide 'switchy)

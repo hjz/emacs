@@ -4,11 +4,15 @@
 
 (require 'cl)
 
+(add-to-list 'package-archives
+             '("marmalade" . "http://marmalade-repo.org/packages/"))
+
 (defvar starter-kit-packages (list 'idle-highlight
                                    'ruby-mode
                                    'inf-ruby
                                    'css-mode
                                    'yaml-mode
+                                   'clojure-mode
                                    'find-file-in-project
                                    'gist)
   "Libraries that should be installed by default.")
