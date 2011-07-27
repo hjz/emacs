@@ -225,7 +225,7 @@ advice like this:
 (setq anything-samewindow nil)
 (push '("*anything*" :height 20) popwin:special-display-config)
 (push '("*anything for files*" :height 20) popwin:special-display-config)
-;(push '("*ensime-sbt*" :height 25 :position bottom :stick t) popwin:special-display-config)
+;; (push '("*ensime-sbt*" :height 25 :position bottom :stick t) popwin:special-display-config)
 (push '("*pianobar*" :width 60 :position right) popwin:special-display-config)
 (push '("*ENSIME-Compilation-Result*" :height 50 :position bottom :stick t) popwin:special-display-config)
 (push '("*ensime-inferior-scala*" :width 60 :position right :stick t) popwin:special-display-config)
@@ -879,7 +879,15 @@ cursor to the new line."
 (vimpulse-map (kbd "A") 'viper-append)
 (vimpulse-map (kbd "a") 'viper-Append)
 
-; use v to go eol in visual mode
+; aligh by equal sign
+(fset 'equal-align
+   (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ([118 105 112 61 61 return] 0 "%d")) arg)))
+
+(fset 'sort-parag
+   (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ("vip]" 0 "%d")) arg)))
+
+(vimpulse-map (kbd "M-a") 'equal-align) ;; bound to backward-sentence
+(vimpulse-map (kbd "s-s") 'sort-parag) to save buffer
 (vimpulse-vmap (kbd "=") 'align-regexp)
 (vimpulse-imap (kbd "C-y") 'yank)
 
@@ -968,7 +976,7 @@ cursor to the new line."
 
 ;; Speed up birdcage
 (setenv "SBT_INTRANSITIVE" "1")
-(setenv "NO_PROJECT_DEPS" "1")
+;; (setenv "NO_PROJECT_DEPS" "1")
 
 (add-hook 'scala-mode-hook 'yas/minor-mode-on)
 (yas/global-mode 1)
@@ -1023,8 +1031,11 @@ cursor to the new line."
 (vimpulse-map "b" 'backward-word)
 
 ;; Scala stuff
+
 (vimpulse-map (kbd ",,") 'switch-between-test-and-source 'scala-mode)
 ;(vimpulse-map (kbd "C-m") 'call-last-kbd-macro) ;; This seems to intercept Enter
+
+; SBT
 (vimpulse-map (kbd ",p") '(lambda () (interactive) (save-sbt-action "project gluebird"))  'scala-mode)
 (vimpulse-map (kbd ",.") '(lambda () (interactive) (save-sbt-action "compile"))  'scala-mode)
 (vimpulse-map (kbd ",m") '(lambda () (interactive) (save-sbt-action (concat "test-only " (get-spec-class)))) 'scala-mode)
@@ -1036,6 +1047,12 @@ cursor to the new line."
 (vimpulse-map (kbd ",t") '(lambda () (interactive) (save-sbt-action "console")) 'scala-mode)
 (vimpulse-map (kbd ",u") '(lambda () (interactive) (save-sbt-action "update")) 'scala-mode)
 (vimpulse-map (kbd ",n") '(lambda () (interactive) (save-sbt-action "; clean ; update ; compile-thrift-java ; compile")) 'scala-mode)
+
+; Browsing cgit
+(vimpulse-map (kbd ",y") '(lambda () (interactive) (cgit-yank t)) 'scala-mode)
+(vimpulse-map (kbd ",Y") '(lambda () (interactive) (cgit-yank)) 'scala-mode)
+(vimpulse-map (kbd ",v") '(lambda () (interactive) (cgit-browse t)) 'scala-mode)
+(vimpulse-map (kbd ",V") '(lambda () (interactive) (cgit-browse)) 'scala-mode)
 
 (vimpulse-map (kbd ",g") 'magit-status)
 (vimpulse-map (kbd ",/") 'minimap-toggle)
@@ -1113,6 +1130,10 @@ cursor to the new line."
                              (define-key ido-completion-map (kbd "C-c c") 'ido-toggle-case)
                              (define-key ido-completion-map (kbd "C-c t") 'ido-toggle-regexp)
                              (define-key ido-completion-map (kbd "C-c e") 'ido-edit-input)
+                             (define-key ido-completion-map (kbd "C-c e") 'ido-edit-input)
+                             (define-key ido-completion-map (kbd "C-j") 'ido-prev-match)
+                             (define-key ido-completion-map (kbd "C-k") 'ido-next-match)
+                             (define-key ido-completion-map (kbd "C-d") 'ido-kill-buffer-at-head)
                              (define-key ido-completion-map (kbd "C-c o") 'ido-copy-current-file-name)
                              (define-key ido-completion-map [remap viper-intercept-ESC-key] 'abort-recursive-edit)))
 

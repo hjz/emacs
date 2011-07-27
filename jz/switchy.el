@@ -106,4 +106,10 @@
   (interactive)
   (browse-url (get-cgit-path plain-view)))
 
+(defun cgit-yank (&optional plain-view)
+  (interactive)
+  (setq cgit-url (get-cgit-path plain-view))
+  (kill-new cgit-url)
+  (message cgit-url))
+
 (provide 'switchy)

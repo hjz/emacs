@@ -786,7 +786,6 @@ in visualizer."
   (define-key undo-tree-map [remap undo] 'undo-tree-undo)
   (define-key undo-tree-map [remap undo-only] 'undo-tree-undo)
   ;; bind standard undo bindings (since these match redo counterparts)
-  (define-key undo-tree-map (kbd "C-/") 'undo-tree-undo)
   (define-key undo-tree-map "\C-_" 'undo-tree-undo)
   ;; redo doesn't exist normally, so define our own keybindings
   (define-key undo-tree-map (kbd "C-?") 'undo-tree-redo)
