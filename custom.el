@@ -4,6 +4,7 @@
   ;; Your init file should contain only one such instance.
   ;; If there is more than one, they won't work right.
  '(ansi-color-names-vector ["#1f1f1f" "#dca3a3" "#7f9f7f" "#f0dfaf" "#7cb8bb" "#7f3194" "#93e0e3" "#dcdccc"])
+ '(blink-cursor-mode t)
  '(browse-kill-ring-display-duplicates nil)
  '(browse-kill-ring-highlight-current-entry t)
  '(browse-kill-ring-highlight-inserted-item t)
@@ -87,7 +88,6 @@
  '(savehist-mode t nil (savehist))
  '(scala-mode-feature:electric-on-per-default nil)
  '(show-paren-delay 0)
- '(show-paren-mode t)
  '(show-paren-style (quote parenthesis))
  '(smart-tab-using-hippie-expand t)
  '(ssl-certificate-directory "~/.w3/certs/")

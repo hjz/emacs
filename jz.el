@@ -765,11 +765,22 @@ cursor to the new line."
 (define-key my-keys-minor-mode-map (kbd "M-;") 'repeat-complex-command)
 
 ;; Movement
-(define-key my-keys-minor-mode-map (kbd "s-h") 'windmove-left)
+;; TODO write utility to remove duplication
+(define-key my-keys-minor-mode-map (kbd "C-w C-h") 'windmove-left)
+(define-key my-keys-minor-mode-map (kbd "C-w C-l") 'windmove-right)
+(define-key my-keys-minor-mode-map (kbd "C-w C-k") 'windmove-up)
+(define-key my-keys-minor-mode-map (kbd "C-w C-j") 'windmove-down)
+
+(define-key my-keys-minor-mode-map (kbd "C-w h") 'windmove-left)
+(define-key my-keys-minor-mode-map (kbd "C-w l") 'windmove-right)
+(define-key my-keys-minor-mode-map (kbd "C-w k") 'windmove-up)
+(define-key my-keys-minor-mode-map (kbd "C-w j") 'windmove-down)
+
 (define-key my-keys-minor-mode-map (kbd "s-l") 'windmove-right)
 (define-key my-keys-minor-mode-map (kbd "s-k") 'windmove-up)
 (define-key my-keys-minor-mode-map (kbd "s-j") 'windmove-down)
 (define-key my-keys-minor-mode-map (kbd "s-SPC") 'delete-window)
+
 (define-key my-keys-minor-mode-map (kbd "C-w ,") '(lambda () (interactive) (split-window-vertically) (other-window 1)))
 (define-key my-keys-minor-mode-map (kbd "C-w .") '(lambda () (interactive) (split-window-horizontally) (other-window 1)))
 (define-key my-keys-minor-mode-map (kbd "s-,") '(lambda () (interactive) (split-window-vertically) (other-window 1)))
@@ -887,7 +898,7 @@ cursor to the new line."
    (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ("vip]" 0 "%d")) arg)))
 
 (vimpulse-map (kbd "M-a") 'equal-align) ;; bound to backward-sentence
-(vimpulse-map (kbd "s-s") 'sort-parag) to save buffer
+(vimpulse-map (kbd "s-s") 'sort-parag) ;; bound to save buffer
 (vimpulse-vmap (kbd "=") 'align-regexp)
 (vimpulse-imap (kbd "C-y") 'yank)
 
@@ -1121,9 +1132,7 @@ cursor to the new line."
 (setenv "ENSIME_JVM_ARGS" ensime-jvm-args)
 
 ; Fullscreen
-;(global-set-key (kbd "<s-return>") 'maximize-frame)
-
-(maximize-frame)
+(global-set-key (kbd "<s-return>") 'ns-toggle-fullscreen)
 
 (add-hook 'ido-setup-hook '(lambda ()
                              (define-key ido-completion-map (kbd "C-c p") 'ido-toggle-prefix)
@@ -1184,3 +1193,6 @@ cursor to the new line."
 
 (autoload 'formfeed-hline-mode "formfeed-hline" nil t)
 (formfeed-hline-mode 1)
+
+(ns-toggle-fullscreen)
+
