@@ -9,7 +9,7 @@
 (add-to-list 'load-path (concat user-dir "/elisp"))
 (add-to-list 'load-path (concat user-dir "/apel-10.8"))
 (add-to-list 'load-path (concat user-dir "/yasnippet-read-only"))
-(add-to-list 'load-path (concat user-dir "/ensime_2.8.1-0.5.0/elisp"))
+(add-to-list 'load-path (concat user-dir "/ensime_2.8.2-SNAPSHOT-0.5.1/elisp"))
 (add-to-list 'load-path (concat user-dir "/vimpulse"))
 (add-to-list 'load-path (concat user-dir "/vimpulse-surround"))
 (add-to-list 'load-path (concat user-dir "/vimpulse-plugins"))
@@ -987,7 +987,7 @@ cursor to the new line."
 
 ;; Speed up birdcage
 (setenv "SBT_INTRANSITIVE" "1")
-;; (setenv "NO_PROJECT_DEPS" "1")
+(setenv "NO_PROJECT_DEPS" "1")
 
 (add-hook 'scala-mode-hook 'yas/minor-mode-on)
 (yas/global-mode 1)
@@ -1024,7 +1024,8 @@ cursor to the new line."
 (vimpulse-map (kbd "C-k") 'viper-backward-paragraph)
 (vimpulse-map (kbd "C-j") 'viper-forward-paragraph)
 (vimpulse-map (kbd "C-i") 'vimpulse-jump-forward)
-(vimpulse-map (kbd "K") 'vimpulse-search-forward-for-symbol-at-point)
+
+(vimpulse-map (kbd "K") 'viper-paren-match)
 (vimpulse-vmap (kbd "]") 'sort-lines)
 
 (vimpulse-vmap (kbd "m") 'apply-macro-to-region-lines)
@@ -1195,4 +1196,4 @@ cursor to the new line."
 (formfeed-hline-mode 1)
 
 (ns-toggle-fullscreen)
-
+(growl "Emacs" "Lock and Loaded")

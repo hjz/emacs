@@ -88,6 +88,7 @@
  '(savehist-mode t nil (savehist))
  '(scala-mode-feature:electric-on-per-default nil)
  '(show-paren-delay 0)
+ '(show-paren-mode t)
  '(show-paren-style (quote parenthesis))
  '(smart-tab-using-hippie-expand t)
  '(ssl-certificate-directory "~/.w3/certs/")
@@ -96,7 +97,7 @@
  '(tab-always-indent (quote complete))
  '(tls-program (quote ("openssl s_client -connect %h:%p -no_ssl2 -ign_eof")))
  '(tool-bar-mode nil)
- '(transient-mark-mode nil)
+ '(transient-mark-mode (quote (only)))
  '(vimpulse-fold-level 5)
  '(vimpulse-operator-comment-key "-")
  '(vimpulse-relative-linum-delay 0.1)
@@ -120,7 +121,7 @@
   ;; If you edit it by hand, you could mess it up, so be careful.
   ;; Your init file should contain only one such instance.
   ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :background "#1f1f1f" :foreground "#dcdccc" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 110 :width normal :foundry "apple" :family "Monaco"))))
+ '(default ((t (:inherit nil :stipple nil :background "#1f1f1f" :foreground "#dcdccc" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 120 :width normal :foundry "apple" :family "Monaco"))))
  '(ack-file ((((background dark)) (:background "#282828" :foreground "#7cb8bb"))))
  '(ack-line ((((background dark)) (:background "#282828" :foreground "#b6b6b6"))))
  '(ack-match ((default nil) (((background dark)) (:background "#385f38" :foreground "#dcdccc"))))
@@ -138,6 +139,7 @@
  '(ensime-errline-highlight ((t (:underline "firebrick2"))))
  '(erc-default-face ((t (:foreground "#dcdccc"))))
  '(erc-header-line ((t (:inherit elscreen-tab-other-screen-face))))
+ '(erc-prompt-face ((t (:background "#1f1f1f" :foreground "#daa17c" :weight bold))))
  '(fg:erc-color-face5 ((t nil)))
  '(flyspell-incorrect ((t (:underline "#cc9393" :weight bold))))
  '(font-lock-variable-name-face ((t (:foreground "#dcdccc"))))

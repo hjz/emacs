@@ -83,17 +83,17 @@ minibuffer"
        (and (boundp var)
             (keymapp (symbol-value var))))
 
-(let ((minimaps (apropos-internal "mini" 'keymap-test))
-      map op)
-       (while minimaps
-           (setq map (symbol-value (car minimaps)))
-           (setq minimaps (cdr minimaps))
-           (setq op (lookup-key map [9]))               ;tab char (^I)
-           (if op
-               (define-key map '[tab] op))
-           (define-key map "\C-b" 'insert-buffer-name)
-           (define-key map "\C-d" 'insert-buffer-dir-name)
-           (define-key map "\C-f" 'insert-buffer-file-name)
-           (define-key map "\C-w" 'insert-word-or-file-name)
-           (define-key map "\C-t" 'insert-current-date-time-minibuf)
-           (define-key map "\eh"  'complete-from-minibuffer-history)))
+;; (let ((minimaps (apropos-internal "mini" 'keymap-test))
+;;       map op)
+;;        (while minimaps
+;;            (setq map (symbol-value (car minimaps)))
+;;            (setq minimaps (cdr minimaps))
+;;            (setq op (lookup-key map [9]))               ;tab char (^I)
+;;            (if op
+;;                (define-key map '[tab] op))
+;;            (define-key map "\C-b" 'insert-buffer-name)
+;;            (define-key map "\C-d" 'insert-buffer-dir-name)
+;;            (define-key map "\C-f" 'insert-buffer-file-name)
+;;            (define-key map "\C-w" 'insert-word-or-file-name)
+;;            (define-key map "\C-t" 'insert-current-date-time-minibuf)
+;;            (define-key map "\eh"  'complete-from-minibuffer-history)))
