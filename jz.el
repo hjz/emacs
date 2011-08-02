@@ -39,6 +39,8 @@
 (add-to-list 'load-path (concat user-dir "/org-jekyll"))
 
 (require 'switch-window)
+(require 'jz-file-utils)
+(require 'growl)
 
 (setq locate-command "mdfind")
 
@@ -986,7 +988,7 @@ cursor to the new line."
 (yas/load-directory (concat user-dir "/yasnippet-read-only/snippets"))
 
 ;; Speed up birdcage
-(setenv "SBT_INTRANSITIVE" "1")
+;; (setenv "SBT_INTRANSITIVE" "1")
 (setenv "NO_PROJECT_DEPS" "1")
 
 (add-hook 'scala-mode-hook 'yas/minor-mode-on)
@@ -1140,8 +1142,6 @@ cursor to the new line."
                              (define-key ido-completion-map (kbd "C-c c") 'ido-toggle-case)
                              (define-key ido-completion-map (kbd "C-c t") 'ido-toggle-regexp)
                              (define-key ido-completion-map (kbd "C-c e") 'ido-edit-input)
-                             (define-key ido-completion-map (kbd "C-c e") 'ido-edit-input)
-                             (define-key ido-completion-map (kbd "C-j") 'ido-prev-match)
                              (define-key ido-completion-map (kbd "C-k") 'ido-next-match)
                              (define-key ido-completion-map (kbd "C-d") 'ido-kill-buffer-at-head)
                              (define-key ido-completion-map (kbd "C-c o") 'ido-copy-current-file-name)

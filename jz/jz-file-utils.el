@@ -39,3 +39,5 @@
  (if (not filename)
         (message "Buffer '%s' is not visiting a file!" name)
  (progn         (copy-file filename newname 1)  (delete-file filename)  (set-visited-file-name newname)         (set-buffer-modified-p nil)))))
+
+(provide 'jz-file-utils)
