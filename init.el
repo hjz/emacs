@@ -110,6 +110,7 @@ If suffixes is omitted, `exec-suffix-list' is used."
 (if (file-exists-p user-specific-dir)
   (mapc #'load (directory-files user-specific-dir nil ".*el$")))
 
+(ns-toggle-fullscreen)
+
 ;;; init.el ends here
 (put 'dired-find-alternate-file 'disabled nil)
-(put 'narrow-to-region 'disabled nil)
