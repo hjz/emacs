@@ -116,6 +116,7 @@
  '(viper-shift-width 2)
  '(viper-syntax-preference (quote extended))
  '(viper-want-ctl-h-help t)
+ '(warning-minimum-level :error)
  '(yas/indent-line (quote fixed))
  '(yas/prompt-functions (quote (yas/dropdown-prompt)))
  '(yas/triggers-in-field t)
