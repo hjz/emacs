@@ -41,18 +41,14 @@
 (add-to-list 'desktop-modes-not-to-save 'info-lookup-mode)
 (add-to-list 'desktop-modes-not-to-save 'fundamental-mode)
 
-;; (defun emacs-process-p (pid)
-;;   "If pid is the process ID of an emacs process, return t, else nil.
-;; Also returns nil if pid is nil."
-;;   (when pid
-;;     (let ((attributes (process-attributes pid)) (cmd))
-;;       (dolist (attr attributes)
-;;         (if (string= "comm" (car attr))
-;;             (setq cmd (cdr attr))))
-;;       (if (and cmd (or (string= "emacs" cmd) (string= "Emacs.app" cmd))) t))))
+;;; desktop-override-stale-locks.el begins here
+(defun emacs-process-p (pid)
+  "If pid is the process ID of an emacs process, return t, else nil."
+  (when pid
+     (= 0 (call-process "kill" nil nil nil "-0" "68740"))))
 
-;; (defadvice desktop-owner (after pry-from-cold-dead-hands activate)
-;;   "Don't allow dead emacsen to own the desktop file."
-;;   (when (not (emacs-process-p ad-return-value))
-;;     (setq ad-return-value nil)))
+(defadvice desktop-owner (after pry-from-cold-dead-hands activate)
+  "Don't allow dead emacsen to own the desktop file."
+  (when (not (emacs-process-p ad-return-value))
+    (setq ad-return-value nil)))
 

@@ -1194,5 +1194,3 @@ cursor to the new line."
 
 (autoload 'formfeed-hline-mode "formfeed-hline" nil t)
 (formfeed-hline-mode 1)
-
-(growl "Emacs" "Lock and Loaded")
