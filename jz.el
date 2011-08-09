@@ -9,7 +9,7 @@
 (add-to-list 'load-path (concat user-dir "/elisp"))
 (add-to-list 'load-path (concat user-dir "/apel-10.8"))
 (add-to-list 'load-path (concat user-dir "/yasnippet-read-only"))
-(add-to-list 'load-path (concat user-dir "/ensime_2.8.2-SNAPSHOT-0.5.1/elisp"))
+(add-to-list 'load-path (concat user-dir "/ensime_2.9.0-1-0.6.1/elisp"))
 (add-to-list 'load-path (concat user-dir "/vimpulse"))
 (add-to-list 'load-path (concat user-dir "/vimpulse-surround"))
 (add-to-list 'load-path (concat user-dir "/vimpulse-plugins"))
@@ -37,7 +37,13 @@
 (add-to-list 'load-path (concat user-dir "/cc-mode-5.31.3"))
 (add-to-list 'load-path (concat user-dir "/switch-window"))
 (add-to-list 'load-path (concat user-dir "/org-jekyll"))
+(add-to-list 'load-path (concat user-dir "/ace-jump-mode"))
 
+(require 'ace-jump-mode)
+
+;; TODO this is provided in nxhtml - get it then remove file
+(require 'sml-modeline)
+(sml-modeline-mode 1)
 (require 'switch-window)
 (require 'jz-file-utils)
 (require 'growl)
@@ -101,6 +107,7 @@ advice like this:
   (load (concat dotfiles-dir "config/" module ".el")))
 
 (load-config "desktop")
+(load-config "scheme")
 (load-config "erc")
 (load-config "twittering")
 (load-config "filecache")
@@ -220,14 +227,14 @@ advice like this:
 ;(add-hook 'after-change-major-mode-hook 'edit-server-edit-mode)
 
 ;; popwin
-(require 'popwin)
-(setq display-buffer-function 'popwin:display-buffer)
+;; (require 'popwin)
+;; (setq display-buffer-function 'popwin:display-buffer)
 
 ;; (push '("*Shell Command Output*" :height 20) popwin:special-display-config)
 ;; (setq anything-samewindow nil)
 ;; (push '("*anything*" :height 20) popwin:special-display-config)
 ;; (push '("*anything for files*" :height 20) popwin:special-display-config)
-(push '("*ensime-sbt*" :height 25 :position bottom :stick t) popwin:special-display-config)
+;; (push '("*ensime-sbt*" :height 25 :position bottom :stick t) popwin:special-display-config)
 ;; (push '("*pianobar*" :width 60 :position right) popwin:special-display-config)
 ;; (push '("*ENSIME-Compilation-Result*" :height 50 :position bottom :stick t) popwin:special-display-config)
 ;; (push '("*ensime-inferior-scala*" :width 60 :position right :stick t) popwin:special-display-config)
@@ -243,23 +250,6 @@ advice like this:
 ;; (push '("*Completions*" :height 30 :position bottom) popwin:special-display-config)
 ;; (push '("*One-Key*") popwin:special-display-config)
 
-;; (push '"*anything*" special-display-buffer-names)
-;; (push '"*anything for files*" special-display-buffer-names)
-;; (push '".*ensime-sbt.*" special-display-regexps)
-;; (push '"*pianobar*" special-display-buffer-names)
-;; (push '"*ENSIME-Compilation-Result*" special-display-buffer-names)
-;; (push '"*ensime-inferior-scala*" special-display-buffer-names)
-;; (push '"*scratch*" special-display-buffer-names)
-;; (push '"*viper-info*" special-display-buffer-names)
-;; (push '"*Messages*" special-display-buffer-names)
-;; (push '"*grep*" special-display-buffer-names)
-;; (push '"*Kill Ring*" special-display-buffer-names)
-;; (push '"*Inspector*" special-display-buffer-names)
-;; (push '"*Warnings*" special-display-buffer-names)
-;; (push '"*Help*" special-display-buffer-names)
-;; (push '"*Completions*" special-display-buffer-names)
-;; (push '"*One-Key*" special-display-buffer-names)
-;; ;; (
 ;; ;(require 'sunrise-commander)
 
 ;;
@@ -497,8 +487,6 @@ cursor to the new line."
     (newline arg)
     (indent-according-to-mode)))
 
-(add-hook 'el-mode-hook 'highlight-fixmes-mode)
-
 (add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
 (add-hook 'scala-mode-hook 'highlight-80+-mode)
 (add-hook 'scala-mode-hook 'idle-highlight)
@@ -511,7 +499,7 @@ cursor to the new line."
 
 ; highlighting for TODO
 (require 'highlight-fixmes-mode)
-(add-hook 'scala-mode-hook 'highlight-fixmes-mode)
+(highlight-fixmes-mode 1)
 
 (add-hook 'scala-mode-hook 'hl-line-mode)
 (add-hook 'scala-mode-hook
@@ -1005,7 +993,7 @@ cursor to the new line."
 (yas/load-directory (concat user-dir "/yasnippet-read-only/snippets"))
 
 ;; Speed up birdcage
-;; (setenv "SBT_INTRANSITIVE" "1")
+(setenv "SBT_INTRANSITIVE" "1")
 (setenv "NO_PROJECT_DEPS" "1")
 
 (add-hook 'scala-mode-hook 'yas/minor-mode-on)
@@ -1051,13 +1039,16 @@ cursor to the new line."
 
 (vimpulse-map ";" 'viper-ex)
 (vimpulse-vmap ";" 'vimpulse-visual-ex)
-(vimpulse-map (kbd "SPC") 'hs-toggle-hiding)
-(vimpulse-vmap (kbd "SPC") 'vimpulse-indent)
 ;(vimpulse-map (kbd "SPC") 'vimpulse-indent)
 
 (defun save-sbt-action (string)
-  (save-buffer)
+  (when (string= "scala-mode" (buffer-mode (buffer-name)))
+    (save-buffer))
   (ensime-sbt-action string))
+
+(defun buffer-mode (buffer-or-string)
+  "Returns the major mode associated with a buffer."
+  (with-current-buffer buffer-or-string major-mode))
 
 (vimpulse-map "b" 'backward-word)
 
@@ -1067,17 +1058,16 @@ cursor to the new line."
 ;(vimpulse-map (kbd "C-m") 'call-last-kbd-macro) ;; This seems to intercept Enter
 
 ; SBT
-(vimpulse-map (kbd ",p") '(lambda () (interactive) (save-sbt-action "project gluebird"))  'scala-mode)
-(vimpulse-map (kbd ",.") '(lambda () (interactive) (save-sbt-action "compile"))  'scala-mode)
-(vimpulse-map (kbd ",m") '(lambda () (interactive) (save-sbt-action (concat "test-only " (get-spec-class)))) 'scala-mode)
-(vimpulse-map (kbd ",a") '(lambda () (interactive) (save-sbt-action "test")) 'scala-mode)
-(vimpulse-map (kbd ",j") '(lambda () (interactive) (save-sbt-action "test-quick")) 'scala-mode)
-(vimpulse-map (kbd ",f") '(lambda () (interactive) (save-sbt-action "test-failed")) 'scala-mode)
-(vimpulse-map (kbd ",k") '(lambda () (interactive) (save-sbt-action "test")) 'scala-mode)
-(vimpulse-map (kbd ",l") '(lambda () (interactive) (save-sbt-action "!!")) 'scala-mode)
-(vimpulse-map (kbd ",t") '(lambda () (interactive) (save-sbt-action "console")) 'scala-mode)
-(vimpulse-map (kbd ",u") '(lambda () (interactive) (save-sbt-action "update")) 'scala-mode)
-(vimpulse-map (kbd ",n") '(lambda () (interactive) (save-sbt-action "; clean ; update ; compile-thrift-java ; compile")) 'scala-mode)
+(vimpulse-map (kbd ",p") '(lambda () (interactive) (save-sbt-action "project gluebird"))  'scala-mode 'comint-mode)
+(vimpulse-map (kbd ",.") '(lambda () (interactive) (save-sbt-action "compile"))  'scala-mode 'comint-mode)
+(vimpulse-map (kbd ",m") '(lambda () (interactive) (save-sbt-action (concat "test-only " (get-spec-class)))) 'scala-mode 'comint-mode)
+(vimpulse-map (kbd ",a") '(lambda () (interactive) (save-sbt-action "test")) 'scala-mode 'comint-mode)
+(vimpulse-map (kbd ",j") '(lambda () (interactive) (save-sbt-action "test-quick")) 'scala-mode 'comint-mode)
+(vimpulse-map (kbd ",k") '(lambda () (interactive) (save-sbt-action "test")) 'scala-mode 'comint-mode)
+(vimpulse-map (kbd ",l") '(lambda () (interactive) (save-sbt-action "!!")) 'scala-mode 'comint-mode)
+(vimpulse-map (kbd ",t") '(lambda () (interactive) (save-sbt-action "console")) 'scala-mode 'comint-mode)
+(vimpulse-map (kbd ",u") '(lambda () (interactive) (save-sbt-action "update")) 'scala-mode 'comint-mode)
+(vimpulse-map (kbd ",n") '(lambda () (interactive) (save-sbt-action "; clean ; update ; compile-thrift-java ; compile")) 'scala-mode 'comint-mode)
 
 ; Browsing cgit
 (vimpulse-map (kbd ",y") '(lambda () (interactive) (cgit-yank t)) 'scala-mode)
@@ -1088,6 +1078,11 @@ cursor to the new line."
 (vimpulse-map (kbd ",g") 'magit-status)
 (vimpulse-map (kbd ",/") 'minimap-toggle)
 (vimpulse-map (kbd ",r") 'jao-toggle-selective-display)
+
+;; ace jump
+(vimpulse-map (kbd ",f") 'ace-jump-line-mode)
+(vimpulse-map (kbd "SPC") 'ace-jump-mode)
+(vimpulse-map (kbd ",w") 'ace-jump-mode)
 
 ;; search functions
 (vimpulse-map (kbd "C-f d") 'moccur-grep)
@@ -1207,7 +1202,6 @@ cursor to the new line."
 ; Use up m-W
 ;(global-set-key (kbd "C-c ;") 'ensime-ecb)
 ;
-
 
 (autoload 'formfeed-hline-mode "formfeed-hline" nil t)
 (formfeed-hline-mode 1)
