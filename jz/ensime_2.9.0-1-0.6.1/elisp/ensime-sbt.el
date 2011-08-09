@@ -91,12 +91,13 @@
   "Hook to run after installing scala mode")
 
 (defun ensime-ignore-unimportant (msg)
-  (if (or (string-match "error.*scala.Option" msg)
-          (string-match "error.*sbt" msg)
-          (string-match "error.*org.specs.specification" msg)
-          (string-match "error.*org.specs.runner" msg)
-          (string-match "error.*org.specs.execute" msg))
-      "" msg))
+  (setq msg (replace-regexp-in-string "\\[0m.+?error.*scala.Option.+?\n" "" msg))
+  (setq msg (replace-regexp-in-string "\\[0m.+?error.*sbt.+?\n" "" msg))
+  (setq msg (replace-regexp-in-string "\\[0m.+?error.*org.specs.specification.+?\n" "" msg))
+  (setq msg (replace-regexp-in-string "\\[0m.+?error.*org.specs.runner.+?\n" "" msg))
+  (setq msg (replace-regexp-in-string "\\[0m.+?error.*org.specs.execute.+?\n" "" msg))
+  (setq msg (replace-regexp-in-string "\\[0m.+?error.*org.specs.util.+?\n" "" msg))
+  msg)
 
 (defun ensime-sbt ()
   "Setup and launch sbt."

@@ -1058,10 +1058,11 @@ cursor to the new line."
 ;(vimpulse-map (kbd "C-m") 'call-last-kbd-macro) ;; This seems to intercept Enter
 
 ; SBT
-(vimpulse-map (kbd ",p") '(lambda () (interactive) (save-sbt-action "project gluebird"))  'scala-mode 'comint-mode)
+(vimpulse-map (kbd ",p") '(lambda () (interactive) (save-sbt-action "project macaw-dm"))  'scala-mode 'comint-mode)
 (vimpulse-map (kbd ",.") '(lambda () (interactive) (save-sbt-action "compile"))  'scala-mode 'comint-mode)
 (vimpulse-map (kbd ",m") '(lambda () (interactive) (save-sbt-action (concat "test-only " (get-spec-class)))) 'scala-mode 'comint-mode)
 (vimpulse-map (kbd ",a") '(lambda () (interactive) (save-sbt-action "test")) 'scala-mode 'comint-mode)
+(vimpulse-map (kbd ",;") '(lambda () (interactive) (save-sbt-action "integration-test")) 'scala-mode 'comint-mode)
 (vimpulse-map (kbd ",j") '(lambda () (interactive) (save-sbt-action "test-quick")) 'scala-mode 'comint-mode)
 (vimpulse-map (kbd ",k") '(lambda () (interactive) (save-sbt-action "test")) 'scala-mode 'comint-mode)
 (vimpulse-map (kbd ",l") '(lambda () (interactive) (save-sbt-action "!!")) 'scala-mode 'comint-mode)
@@ -1205,3 +1206,7 @@ cursor to the new line."
 
 (autoload 'formfeed-hline-mode "formfeed-hline" nil t)
 (formfeed-hline-mode 1)
+
+(require 'edit-server)
+(edit-server-start)
+
