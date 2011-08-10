@@ -499,8 +499,9 @@ cursor to the new line."
 
 ; highlighting for TODO
 (require 'highlight-fixmes-mode)
-(highlight-fixmes-mode 1)
 
+(add-hook 'coding-hook 'highlight-fixmes-mode)
+(add-hook 'scala-mode-hook 'highlight-fixmes-mode)
 (add-hook 'scala-mode-hook 'hl-line-mode)
 (add-hook 'scala-mode-hook
  (lambda ()

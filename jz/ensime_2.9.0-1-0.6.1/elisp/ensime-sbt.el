@@ -90,14 +90,24 @@
 (defvar ensime-sbt-mode-hook nil
   "Hook to run after installing scala mode")
 
+(defun replace-ugly (msg)
+(replace-regexp-in-string
+"\033
+?\\[
+?0
+?m
+?\\[
+?\033
+?\\[
+?3
+?1\\(.\\|
+\\)\\{1,30\\}\\(org.specs\\|sbt\\|scala.Option\\).\\(.\\|
+\\)*?0m
+"
+                                     "" msg))
+
 (defun ensime-ignore-unimportant (msg)
-  (setq msg (replace-regexp-in-string "\\[0m.+?error.*scala.Option.+?\n" "" msg))
-  (setq msg (replace-regexp-in-string "\\[0m.+?error.*sbt.+?\n" "" msg))
-  (setq msg (replace-regexp-in-string "\\[0m.+?error.*org.specs.specification.+?\n" "" msg))
-  (setq msg (replace-regexp-in-string "\\[0m.+?error.*org.specs.runner.+?\n" "" msg))
-  (setq msg (replace-regexp-in-string "\\[0m.+?error.*org.specs.execute.+?\n" "" msg))
-  (setq msg (replace-regexp-in-string "\\[0m.+?error.*org.specs.util.+?\n" "" msg))
-  msg)
+  (replace-ugly msg))
 
 (defun ensime-sbt ()
   "Setup and launch sbt."
@@ -135,7 +145,7 @@
     (set (make-local-variable 'comint-scroll-to-bottom-on-output) t)
     (set (make-local-variable 'comint-prompt-read-only) t)
     (set (make-local-variable 'comint-output-filter-functions)
-	 '(ensime-sbt-notify-build ansi-color-process-output comint-postoutput-scroll-to-bottom))
+	 '(ensime-sbt-stack-cleanup ensime-sbt-notify-build ansi-color-process-output comint-postoutput-scroll-to-bottom))
 
     (add-hook 'comint-preoutput-filter-functions 'ensime-ignore-unimportant)
 
@@ -180,6 +190,19 @@
     (let ((inhibit-read-only t))
       (erase-buffer)
       (comint-send-input t))))
+
+(defun ensime-sbt-stack-cleanup (string)
+  (interactive)
+  (let ((pmark (process-mark (get-buffer-process (current-buffer)))))
+    (save-excursion
+      ;; XXX Hacky
+      (goto-char (max (point-min) (- pmark 1000)))
+      (while (re-search-forward "^.*\\(org.specs\\|sbt\\.\\).*?
+" pmark t)
+	(replace-match "")))
+      ))
+
+;; USE REGEXP
 
 (defun ensime-sbt-maybe-auto-compile ()
   "Compile the code."

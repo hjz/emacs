@@ -84,6 +84,7 @@
  '(magit-completing-read-function (quote magit-iswitchb-completing-read))
  '(magit-process-popup-time 15)
  '(magit-repo-dirs (quote ("~/ps/" "~/workspace/")))
+ '(message-log-max 1000)
  '(moccur-edit-highlight-edited-text t)
  '(moccur-query-when-buffer-read-only t)
  '(one-key-auto-load-menus t)
