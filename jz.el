@@ -1117,6 +1117,8 @@ cursor to the new line."
 (vimpulse-imap (kbd "C-f o") 'dired-do-moccur)
 (vimpulse-imap (kbd "C-f i") 'ibuffer-do-occur)
 
+(vimpulse-imap (kbd "C-e") 'viper-goto-eol)
+
 (define-key vimpulse-visual-basic-map "v" 'end-of-line)
 
 (vimpulse-define-text-object vimpulse-sexp (arg)

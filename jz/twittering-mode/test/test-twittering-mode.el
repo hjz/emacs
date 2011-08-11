@@ -16,12 +16,65 @@
   (test-assert-eq 'bar (assocref 'foo '((baz . qux) (foo . bar))))
   (test-assert-eq nil (assocref 'quxx '((baz . qux) (foo . bar)))))
 
-(defcase test-toggle-proxy nil nil
-  (setq twittering-proxy-use nil)
-  (twittering-toggle-proxy)
-  (test-assert-ok twittering-proxy-use)
-  (twittering-toggle-proxy)
-  (test-assert-ok (not twittering-proxy-use)))
+(defmacro test-setup-proxy(bindings)
+  `(let ,(append '((process-environment nil)
+		   (twittering-proxy-use t)
+		   (twittering-proxy-server nil)
+		   (twittering-proxy-port nil)
+		   (twittering-http-proxy-server nil)
+		   (twittering-http-proxy-port nil)
+		   (twittering-https-proxy-server nil)
+		   (twittering-https-proxy-port nil))
+		 bindings)
+     (twittering-setup-proxy)))
+
+(defcase test-proxy nil nil
+  (test-assert-ok
+   (test-setup-proxy
+    ((twittering-proxy-server "proxy.example.com")
+     (twittering-proxy-port 8080))))
+  (test-assert-ok
+   (test-setup-proxy
+    ((twittering-proxy-server "proxy.example.com")
+     (twittering-proxy-port "8080"))))
+
+  (test-assert-ok
+   (test-setup-proxy
+    ((twittering-http-proxy-server "proxy.example.com")
+     (twittering-http-proxy-port 8080))))
+  (test-assert-ok
+   (test-setup-proxy
+    ((twittering-http-proxy-server "proxy.example.com")
+     (twittering-http-proxy-port "8080"))))
+
+  (test-assert-ok
+   (test-setup-proxy
+    ((twittering-https-proxy-server "proxy.example.com")
+     (twittering-https-proxy-port 8080))))
+  (test-assert-ok
+   (test-setup-proxy
+    ((twittering-https-proxy-server "proxy.example.com")
+     (twittering-https-proxy-port "8080"))))
+
+  (test-assert-equal
+   (let ((twittering-proxy-use nil)
+	 (process-environment nil)
+	 (twittering-https-proxy-server "proxy.example.com")
+	 (twittering-https-proxy-port 8080))
+     (twittering-toggle-proxy)
+     (list twittering-proxy-use
+	   (progn
+	     (twittering-toggle-proxy)
+	     twittering-proxy-use)))
+   '(t nil))
+
+  ;; The test of configuration via an environment variable should be
+  ;; performed last because it changes global variables of the url library
+  ;; in an irreversible manner.
+  (test-assert-ok
+   (test-setup-proxy
+    ((process-environment
+      '("http_proxy=http://proxy1.example.com:8080/"))))))
 
 (defcase test-sign-string nil nil
   (setq twittering-sign-simple-string nil)
@@ -238,6 +291,11 @@
   (test-assert-equal
    (test-restore-timeline-spec
     ":favorites/USER" '(favorites "USER") '(favorites "USER"))
+   '(t t))
+
+  (test-assert-equal
+   (test-restore-timeline-spec
+    "#tag" '(search "#tag") '(search "#tag"))
    '(t t))
   )
 
@@ -463,6 +521,97 @@
 		(twittering-hmac-sha1 key data)
 		""))
    "125d7342b9ac11cd91a39af48aa17b4f63f175d3")
+  )
+
+(defun verify-hmac-of-long-data(coding-system)
+  (or (not (coding-system-p coding-system))
+      (let ((coding-system-for-read coding-system)
+	    (coding-system-for-write coding-system))
+	(let* ((key "key")
+	       (data (make-string 64 ?a))
+	       (result
+		(mapcar
+		 (lambda (pair)
+		   (let ((n (car pair))
+			 (expected (cdr pair)))
+		     (string=
+		      (mapconcat (lambda (c) (format "%02x" c))
+				 (twittering-hmac-sha1 key (make-string n ?a))
+				 "")
+		      expected)))
+		 '((64 . "804f18b0143cc2677eeda7b5f60f6984fc32d094")
+		   (128 . "2ff5eea1596f3a41fbb5e1ff02b17a50a229c177")
+		   (256 . "ce7f0d472740f975b137052e05955b4ca7ec9a58")
+		   (512 . "9dce54d150cbf817a8d979bd6a371eaf4643ac40")
+		   (1024 . "53e18d494844a645cd8ac0757873460696b0c9df")
+		   (2048 . "0fabada271421b303434131195e67c006d3fc3d7")
+		   (4095 . "ef35e91ef97d811cfecfe83071045c31de4e4e61")
+		   (8193 . "cefba76fb9ad5a665887a875ed7bc42ec9f00919")
+		   (16383 . "c6ba93118262ab9426760909fa4981558bdc10e5")
+		   (32767 . "442813d73d237fb45fca6c05360c43db877744f6")))))
+	  (if (equal result '(t t t t t t t t t t))
+	      t
+	    result)))))
+
+(defcase test-hmac-sha1-long nil nil
+  (test-assert-eq (verify-hmac-of-long-data 'iso-safe) t)
+  (test-assert-eq (verify-hmac-of-long-data 'iso-safe-unix) t)
+  (test-assert-eq (verify-hmac-of-long-data 'iso-safe-dos) t)
+  (test-assert-eq (verify-hmac-of-long-data 'iso-safe-mac) t)
+  (test-assert-eq (verify-hmac-of-long-data 'utf-8) t)
+  (test-assert-eq (verify-hmac-of-long-data 'utf-8-unix) t)
+  (test-assert-eq (verify-hmac-of-long-data 'utf-8-dos) t)
+  (test-assert-eq (verify-hmac-of-long-data 'utf-8-mac) t)
+  (test-assert-eq (verify-hmac-of-long-data 'utf-16) t)
+  (test-assert-eq (verify-hmac-of-long-data 'utf-16-unix) t)
+  (test-assert-eq (verify-hmac-of-long-data 'utf-16-dos) t)
+  (test-assert-eq (verify-hmac-of-long-data 'utf-16-mac) t)
+  (test-assert-eq (verify-hmac-of-long-data 'iso-latin-1) t)
+  (test-assert-eq (verify-hmac-of-long-data 'iso-latin-1-unix) t)
+  (test-assert-eq (verify-hmac-of-long-data 'iso-latin-1-dos) t)
+  (test-assert-eq (verify-hmac-of-long-data 'iso-latin-1-mac) t)
+  )
+
+(defun verify-hmac-with-short-internal-length (coding-system)
+  (or (not (coding-system-p coding-system))
+      (not (boundp 'sha1-maximum-internal-length))
+      (let* ((coding-system-for-read coding-system)
+	     (coding-system-for-write coding-system)
+	     (max-internal-length-list '(1 10 50 100 500 1000))
+	     (result
+	      (mapcar
+	       (lambda (n)
+		 (let ((sha1-maximum-internal-length n)
+		       (key "Jefe")
+		       (data "what do ya want for nothing?")
+		       (expected "effcdf6ae5eb2fa2d27416d5f184df9c259a7c79"))
+		   (string= (mapconcat (lambda (c) (format "%02x" c))
+				       (twittering-hmac-sha1 key data)
+				       "")
+			    expected)))
+	       max-internal-length-list)))
+	(if (equal result (make-list (length max-internal-length-list) t))
+	    t
+	  result))))
+
+(defcase test-hmac-sha1-with-short-internal-length nil nil
+  (test-assert-eq (verify-hmac-with-short-internal-length 'iso-safe) t)
+  (test-assert-eq (verify-hmac-with-short-internal-length 'iso-safe) t)
+  (test-assert-eq (verify-hmac-with-short-internal-length 'iso-safe-unix) t)
+  (test-assert-eq (verify-hmac-with-short-internal-length 'iso-safe-dos) t)
+  (test-assert-eq (verify-hmac-with-short-internal-length 'iso-safe-mac) t)
+  (test-assert-eq (verify-hmac-with-short-internal-length 'utf-8) t)
+  (test-assert-eq (verify-hmac-with-short-internal-length 'utf-8-unix) t)
+  (test-assert-eq (verify-hmac-with-short-internal-length 'utf-8-dos) t)
+  (test-assert-eq (verify-hmac-with-short-internal-length 'utf-8-mac) t)
+  (test-assert-eq (verify-hmac-with-short-internal-length 'utf-16) t)
+  (test-assert-eq (verify-hmac-with-short-internal-length 'utf-16-unix) t)
+  (test-assert-eq (verify-hmac-with-short-internal-length 'utf-16-dos) t)
+  (test-assert-eq (verify-hmac-with-short-internal-length 'utf-16-mac) t)
+  (test-assert-eq (verify-hmac-with-short-internal-length 'iso-latin-1) t)
+  (test-assert-eq (verify-hmac-with-short-internal-length 'iso-latin-1-unix) t)
+  (test-assert-eq (verify-hmac-with-short-internal-length 'iso-latin-1-dos) t)
+  (test-assert-eq (verify-hmac-with-short-internal-length 'iso-latin-1-mac) t)
   )
 
 (defcase test-oauth nil nil

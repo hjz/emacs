@@ -90,24 +90,21 @@
 (defvar ensime-sbt-mode-hook nil
   "Hook to run after installing scala mode")
 
-(defun replace-ugly (msg)
-(replace-regexp-in-string
-"\033
-?\\[
-?0
-?m
-?\\[
-?\033
-?\\[
-?3
-?1\\(.\\|
-\\)\\{1,30\\}\\(org.specs\\|sbt\\|scala.Option\\).\\(.\\|
-\\)*?0m
+(defconst sbt-stack-regexp ".+?\\(org.specs\\|sbt\\|scala.Option\\|scala.collection\\).+?
 "
-                                     "" msg))
+  "Regexp that matches useless sbt stack traces.")
 
 (defun ensime-ignore-unimportant (msg)
-  (replace-ugly msg))
+  (replace-regexp-in-string (concat "\033\\[0m\\[\033\\[31merror" sbt-stack-regexp) "" msg))
+
+(defun ensime-sbt-stack-cleanup (string)
+  (interactive)
+  (let ((pmark (process-mark (get-buffer-process (current-buffer)))))
+    (save-excursion
+      ;; XXX Hacky
+      (goto-char (point-min))
+      (while (re-search-forward (concat "^" sbt-stack-regexp) pmark t)
+	(replace-match "")))))
 
 (defun ensime-sbt ()
   "Setup and launch sbt."
@@ -190,17 +187,6 @@
     (let ((inhibit-read-only t))
       (erase-buffer)
       (comint-send-input t))))
-
-(defun ensime-sbt-stack-cleanup (string)
-  (interactive)
-  (let ((pmark (process-mark (get-buffer-process (current-buffer)))))
-    (save-excursion
-      ;; XXX Hacky
-      (goto-char (max (point-min) (- pmark 1000)))
-      (while (re-search-forward "^.*\\(org.specs\\|sbt\\.\\).*?
-" pmark t)
-	(replace-match "")))
-      ))
 
 ;; USE REGEXP
 
