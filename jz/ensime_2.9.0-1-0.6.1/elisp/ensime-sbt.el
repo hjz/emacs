@@ -90,20 +90,17 @@
 (defvar ensime-sbt-mode-hook nil
   "Hook to run after installing scala mode")
 
-(defconst sbt-stack-regexp ".+?\\(org.specs\\|sbt\\|scala.Option\\|scala.collection\\).+?
+(defconst sbt-stack-regexp "^.+?\\(org.specs\\|sbt\\|scala.Option\\|scala.collection\\).+?
 "
   "Regexp that matches useless sbt stack traces.")
-
-(defun ensime-ignore-unimportant (msg)
-  (replace-regexp-in-string (concat "\033\\[0m\\[\033\\[31merror" sbt-stack-regexp) "" msg))
 
 (defun ensime-sbt-stack-cleanup (string)
   (interactive)
   (let ((pmark (process-mark (get-buffer-process (current-buffer)))))
     (save-excursion
       ;; XXX Hacky
-      (goto-char (point-min))
-      (while (re-search-forward (concat "^" sbt-stack-regexp) pmark t)
+      (goto-char (max (point-min) (- pmark 2000)))
+      (while (re-search-forward sbt-stack-regexp pmark t)
 	(replace-match "")))))
 
 (defun ensime-sbt ()
@@ -143,8 +140,6 @@
     (set (make-local-variable 'comint-prompt-read-only) t)
     (set (make-local-variable 'comint-output-filter-functions)
 	 '(ensime-sbt-stack-cleanup ensime-sbt-notify-build ansi-color-process-output comint-postoutput-scroll-to-bottom))
-
-    (add-hook 'comint-preoutput-filter-functions 'ensime-ignore-unimportant)
 
     (if ensime-sbt-comint-ansi-support
 	(set (make-local-variable 'ansi-color-for-comint-mode) t)
