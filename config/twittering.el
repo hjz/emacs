@@ -2,10 +2,7 @@
 (require 'twittering-mode)
 (setq twittering-use-master-password t)
 (setq twittering-initial-timeline-spec-string
-      '(":home"
-        ":replies"
-        ":favorites"
-        ":direct_messages"))
+      '(":replies" ":home"))
 
 (add-hook 'twittering-mode-hook
    (lambda ()
@@ -21,7 +18,7 @@
              ("W" . twittering-update-status-interactive)))))
 
 (setq twittering-icon-mode t)                ; Show icons
-(setq twittering-timer-interval 300)         ; Update your timeline each 300 seconds (5 minutes)
+(setq twittering-timer-interval 120)         ; Update your timeline each 120 seconds (5 minutes)
 (setq twittering-url-show-status nil)        ; Keeps the echo area from showing all the http processes
 
 (add-hook 'twittering-new-tweets-hook (lambda ()
@@ -36,4 +33,4 @@
 
 (autoload 'twittering-numbering "twittering-numbering" nil t)
 (add-hook 'twittering-mode-hook 'twittering-numbering)
-
+(add-hook 'twittering-mode-hook 'hl-line-mode)

@@ -1,4 +1,6 @@
-((("EmptyStore" .
+((("hl-line-mode" .
+   [0 0 0 0 0 0 0 0 1 0 0 0])
+  ("EmptyStore" .
    [0 0 0 0 0 1 0 0 0 0])
   ("setCacheOnMiss" .
    [0 0 0 0 0 0 0 0 1 0 0 0 0 0])

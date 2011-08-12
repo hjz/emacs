@@ -40,6 +40,7 @@
 (add-to-list 'load-path (concat user-dir "/ace-jump-mode"))
 
 (require 'ace-jump-mode)
+(require 'quack)
 
 ;; TODO this is provided in nxhtml - get it then remove file
 (require 'sml-modeline)
@@ -488,8 +489,6 @@ cursor to the new line."
     (indent-according-to-mode)))
 
 (add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
-(add-hook 'scala-mode-hook 'highlight-80+-mode)
-(add-hook 'scala-mode-hook 'idle-highlight)
 (defun me-turn-off-indent-tabs-mode ()
   (setq indent-tabs-mode nil))
 (add-hook 'scala-mode-hook 'me-turn-off-indent-tabs-mode)
@@ -501,8 +500,8 @@ cursor to the new line."
 (require 'highlight-fixmes-mode)
 
 (add-hook 'coding-hook 'highlight-fixmes-mode)
-(add-hook 'scala-mode-hook 'highlight-fixmes-mode)
-(add-hook 'scala-mode-hook 'hl-line-mode)
+(add-hook 'coding-hook 'highlight-80+-mode)
+(add-hook 'scala-mode-hook 'run-coding-hook)
 (add-hook 'scala-mode-hook
  (lambda ()
    (define-key scala-mode-map (kbd "C-n") 'ensime-forward-note)
