@@ -13,6 +13,7 @@
                                    'css-mode
                                    'yaml-mode
                                    'clojure-mode
+                                   'rinari
                                    'find-file-in-project
                                    'gist)
   "Libraries that should be installed by default.")
