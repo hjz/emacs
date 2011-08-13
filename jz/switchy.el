@@ -87,9 +87,6 @@
   (interactive)
   (substring (filepath-to-package-name (get-spec-path)) 0 -7))
 
-(add-hook 'scala-mode-hook
-  (lambda () (local-set-key (kbd "C-c SPC") 'switch-between-test-and-source)))
-
 (setq cgit-workdir "/Users/jz/ps/")
 (setq cgit-httpdir "http://cgit.local.twitter.com/")
 

@@ -1,3 +1,6 @@
+;; unused:
+;;   C-c SPC
+;;   C-S-SPC
 (setq dotfiles-dir (file-name-directory
                     (or (buffer-file-name) load-file-name)))
 
@@ -38,6 +41,8 @@
 (add-to-list 'load-path (concat user-dir "/switch-window"))
 (add-to-list 'load-path (concat user-dir "/org-jekyll"))
 (add-to-list 'load-path (concat user-dir "/ace-jump-mode"))
+
+(eval-after-load "icomplete" '(progn (require 'icomplete+)))
 
 (require 'ace-jump-mode)
 (require 'quack)
@@ -427,7 +432,7 @@ advice like this:
   ido-max-work-directory-list 30   ; should be enough
   ido-max-work-file-list      50   ; remember many
   ido-use-filename-at-point 'guess ; don't use filename at point (annoying)
-  ido-use-url-at-point nil         ; don't use url at point (annoying)
+  ido-use-url-at-point t           ; don't use url at point (annoying)
   ido-create-new-buffer 'always    ; create buf for no match
   ido-enable-flex-matching t
   ido-max-prospects 10              ; don't spam my minibuffer
@@ -793,6 +798,7 @@ cursor to the new line."
 (define-key my-keys-minor-mode-map (kbd "s-,") '(lambda () (interactive) (split-window-vertically) (other-window 1)))
 (define-key my-keys-minor-mode-map (kbd "s-.") '(lambda () (interactive) (split-window-horizontally) (other-window 1)))
 (define-key my-keys-minor-mode-map (kbd "C-SPC") 'delete-window)
+(define-key my-keys-minor-mode-map (kbd "C-c SPC") 'delete-other-windows)
 (define-key my-keys-minor-mode-map (kbd "<C-tab>") 'other-frame)
 (define-key my-keys-minor-mode-map (kbd "C-w ;") 'rotate-windows)
 (define-key my-keys-minor-mode-map (kbd "C-w C-;") 'rotate-windows)
@@ -845,6 +851,8 @@ cursor to the new line."
 (define-key my-keys-minor-mode-map (kbd "C-f c") 'file-cache-refresh)
 (define-key my-keys-minor-mode-map (kbd "C-f j") 'file-cache-ido-find-file)
 (define-key my-keys-minor-mode-map (kbd "C-f k") 'recentf-ido-find-file)
+
+(define-key my-keys-minor-mode-map (kbd "C-c RET") '(lambda () (interactive) (switch-to-buffer "*Messages*")))
 
 ;; searching
 (define-key my-keys-minor-mode-map (kbd "C-c d") 'ediff-revision)
@@ -1211,4 +1219,3 @@ cursor to the new line."
 
 (require 'edit-server)
 (edit-server-start)
-
