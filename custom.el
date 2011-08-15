@@ -101,8 +101,6 @@
  '(show-paren-mode t)
  '(show-paren-style (quote parenthesis))
  '(smart-tab-using-hippie-expand t)
- '(smooth-scroll/hscroll-step-size 8)
- '(smooth-scroll/vscroll-step-size 8)
  '(ssl-certificate-directory "~/.w3/certs/")
  '(ssl-program-arguments (quote ("s_client" "-quiet" "-host" host "-port" service "-verify" (int-to-string ssl-certificate-verification-policy) "-CApath" ssl-certificate-directory)))
  '(standard-indent 2)
