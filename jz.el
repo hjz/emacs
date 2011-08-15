@@ -1166,7 +1166,7 @@ cursor to the new line."
                              (define-key ido-completion-map (kbd "C-c t") 'ido-toggle-regexp)
                              (define-key ido-completion-map (kbd "C-c e") 'ido-edit-input)
                              (define-key ido-completion-map (kbd "C-k") 'ido-next-match)
-                             (define-key ido-completion-map (kbd "C-d") 'ido-kill-buffer-at-head)
+                             (define-key ido-completion-map (kbd "C-;") 'ido-kill-buffer-at-head)
                              (define-key ido-completion-map (kbd "C-c o") 'ido-copy-current-file-name)
                              (define-key ido-completion-map [remap viper-intercept-ESC-key] 'abort-recursive-edit)))
 
@@ -1219,3 +1219,6 @@ cursor to the new line."
 
 (require 'edit-server)
 (edit-server-start)
+
+(setq scroll-preserve-screen-position 1)
+(require 'smooth-scrolling)
