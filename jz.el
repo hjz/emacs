@@ -46,6 +46,7 @@
 
 (require 'ace-jump-mode)
 (require 'quack)
+(require 'cc-mode)
 
 ;; TODO this is provided in nxhtml - get it then remove file
 (require 'sml-modeline)
@@ -482,6 +483,11 @@ cursor to the new line."
 
 (require 'scala-mode-auto)
 
+(defun my-scala-newline ()
+  (interactive)
+  (setq last-command nil) (newline-and-indent)
+)
+
 (defun electrify-return-if-match-scala (arg)
   "If the text after the cursor matches `electrify-return-match' then
 open and indent an empty line between the cursor and the text.  Move the
@@ -489,8 +495,8 @@ cursor to the new line."
   (interactive "P")
   (let ((case-fold-search nil))
     (if (looking-at electrify-return-match)
-        (save-excursion (setq last-command nil) (newline-and-indent)))
-    (newline arg)
+        (save-excursion (my-scala-newline)))
+    (my-scala-newline)
     (indent-according-to-mode)))
 
 (add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
@@ -1001,7 +1007,7 @@ cursor to the new line."
 (yas/load-directory (concat user-dir "/yasnippet-read-only/snippets"))
 
 ;; Speed up birdcage
-(setenv "SBT_INTRANSITIVE" "1")
+;; (setenv "SBT_INTRANSITIVE" "0")
 (setenv "NO_PROJECT_DEPS" "1")
 
 (add-hook 'scala-mode-hook 'yas/minor-mode-on)
@@ -1165,7 +1171,7 @@ cursor to the new line."
                              (define-key ido-completion-map (kbd "C-c c") 'ido-toggle-case)
                              (define-key ido-completion-map (kbd "C-c t") 'ido-toggle-regexp)
                              (define-key ido-completion-map (kbd "C-c e") 'ido-edit-input)
-                             (define-key ido-completion-map (kbd "C-k") 'ido-next-match)
+                             (define-key ido-completion-map (kbd "C-k") 'ido-prev-match)
                              (define-key ido-completion-map (kbd "C-;") 'ido-kill-buffer-at-head)
                              (define-key ido-completion-map (kbd "C-c o") 'ido-copy-current-file-name)
                              (define-key ido-completion-map [remap viper-intercept-ESC-key] 'abort-recursive-edit)))
@@ -1221,4 +1227,6 @@ cursor to the new line."
 (edit-server-start)
 
 (setq scroll-preserve-screen-position 1)
+(setq mouse-wheel-scroll-amount '(1 ((shift) . 1))) ;; one line at a time
+(setq mouse-wheel-progressive-speed t) ;; don't accelerate scrolling
 (require 'smooth-scrolling)

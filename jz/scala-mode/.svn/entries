@@ -1,7 +1,7 @@
 10
 
 dir
-25084
+25519
 http://lampsvn.epfl.ch/svn-repos/scala/scala-tool-support/trunk/src/emacs
 http://lampsvn.epfl.ch/svn-repos/scala
 
@@ -162,40 +162,6 @@ has-props
 
 8248
 
-scala-mode-feature-electric.el
-file
-
-
-
-
-2011-06-13T20:55:17.000000Z
-5300fff405c30249133d68a368e67776
-2011-01-20T15:32:51.628144Z
-24032
-cunei
-has-props
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-7169
-
 AUTHORS
 file
 
@@ -229,6 +195,40 @@ has-props
 
 
 522
+
+scala-mode-feature-electric.el
+file
+
+
+
+
+2011-06-13T20:55:17.000000Z
+5300fff405c30249133d68a368e67776
+2011-01-20T15:32:51.628144Z
+24032
+cunei
+has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+7169
 
 scala-mode-feature-tags.el
 file
@@ -264,40 +264,6 @@ has-props
 
 6148
 
-scala-mode-feature.el
-file
-
-
-
-
-2011-06-13T20:55:17.000000Z
-39c49752acfe668b78e90fb91832fa53
-2011-01-20T15:32:51.628144Z
-24032
-cunei
-has-props
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-2655
-
 README
 file
 
@@ -331,6 +297,40 @@ has-props
 
 
 2770
+
+scala-mode-feature.el
+file
+
+
+
+
+2011-06-13T20:55:17.000000Z
+39c49752acfe668b78e90fb91832fa53
+2011-01-20T15:32:51.628144Z
+24032
+cunei
+has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2655
 
 contrib
 dir
@@ -437,40 +437,6 @@ has-props
 
 4045
 
-FUTURE
-file
-
-
-
-
-2011-06-13T20:55:17.000000Z
-956dddbe969913e11d8ab2aeccdd62ae
-2010-05-12T15:38:51.172729Z
-21921
-dubochet
-has-props
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-3445
-
 scala-mode-variables.el
 file
 
@@ -504,6 +470,40 @@ has-props
 
 
 2292
+
+FUTURE
+file
+
+
+
+
+2011-06-13T20:55:17.000000Z
+956dddbe969913e11d8ab2aeccdd62ae
+2010-05-12T15:38:51.172729Z
+21921
+dubochet
+has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+3445
 
 scala-mode-auto.el
 file
