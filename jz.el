@@ -485,8 +485,13 @@ cursor to the new line."
 
 (defun my-scala-newline ()
   (interactive)
-  (setq last-command nil) (newline-and-indent)
-)
+  (setq last-command nil)
+  (if (scala-in-multi-line-comment-p)
+      (progn
+	(newline-and-indent)
+	(insert "* "))
+    (progn
+      (newline-and-indent))))
 
 (defun electrify-return-if-match-scala (arg)
   "If the text after the cursor matches `electrify-return-match' then
@@ -496,8 +501,7 @@ cursor to the new line."
   (let ((case-fold-search nil))
     (if (looking-at electrify-return-match)
         (save-excursion (my-scala-newline)))
-    (my-scala-newline)
-    (indent-according-to-mode)))
+    (my-scala-newline)))
 
 (add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
 (defun me-turn-off-indent-tabs-mode ()
