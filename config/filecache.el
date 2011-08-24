@@ -57,7 +57,7 @@ directory, select directory. Lastly the file is opened."
   (file-cache-add-directory-using-find "~/ps/macaw")
   (file-cache-add-directory-using-find "~/ps/querulous")
   (file-cache-add-directory-using-find "~/ps/twitter")
-  (file-cache-add-directory-using-find dotfiles-dir)
+  (file-cache-add-directory-using-find "~/.emacs.d")
   ;; (file-cache-add-directory-using-find "~/ps/science")
   ;; (file-cache-add-directory "~/")
   ;; (file-cache-add-file-list (list "~/foo/bar" "~/baz/bar"))

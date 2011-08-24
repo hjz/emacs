@@ -332,7 +332,7 @@ also be changed during running ECB."
                    (set sym val)
                    (ecb-activate-ecb-autocontrol-function
                     val 'ecb-stealthy-updates))))
-                    
+
 
 
 (defcustom ecb-minor-mode-text " ECB"
@@ -1216,295 +1216,294 @@ value of VAR is as before storing a NEW-VALUE for variable-symbol VAR."
         (ecb-select-ecb-frame)
         (ecb-update-directories-buffer))
 
-    (let ((stack-trace-on-error stack-trace-on-error))
-      ;; we activate only if all before-hooks return non nil
-      (when (run-hook-with-args-until-failure 'ecb-before-activate-hook)
+    ;; we activate only if all before-hooks return non nil
+    (when (run-hook-with-args-until-failure 'ecb-before-activate-hook)
 
-        ;; temporary changing some emacs-vars
-        (when (< max-specpdl-size 3000)
-          (ecb-modify-emacs-variable 'max-specpdl-size 'store 3000))
-        (when (< max-lisp-eval-depth 1000)
-          (ecb-modify-emacs-variable 'max-lisp-eval-depth 'store 1000))
-        (when (and ecb-running-xemacs
-                   (boundp 'progress-feedback-use-echo-area))
-          (ecb-modify-emacs-variable 'progress-feedback-use-echo-area 'store t))
+      ;; temporary changing some emacs-vars
+      (when (< max-specpdl-size 3000)
+	(ecb-modify-emacs-variable 'max-specpdl-size 'store 3000))
+      (when (< max-lisp-eval-depth 1000)
+	(ecb-modify-emacs-variable 'max-lisp-eval-depth 'store 1000))
+      (when (and ecb-running-xemacs
+		 (boundp 'progress-feedback-use-echo-area))
+	(ecb-modify-emacs-variable 'progress-feedback-use-echo-area 'store t))
       
-        ;; checking if there are cedet or semantic-load problems
-        (ecb-check-cedet-load)
-        (ecb-check-semantic-load)
-              
-        ;; checking the requirements
-        (ecb-check-requirements)
-
-        (condition-case err-obj
-            (progn
-              
-              ;; initialize the navigate-library
-              (ecb-nav-initialize)
-
-              ;; enable basic advices (we need the custom-save-all advice
-              ;; already here! Maybe it would be better to remove this advice
-              ;; from the basic-advices and add it to upgrade-advices.....)
-              ;;(ecb-enable-advices 'ecb-layout-basic-adviced-functions)
-
-              ;; we need the custom-all advice here!
-              (ecb-enable-advices 'ecb-methods-browser-advices)
-              
-              ;; maybe we must upgrade some not anymore compatible or even renamed
-              ;; options
-              (when (and ecb-auto-compatibility-check
-                         (not ecb-upgrade-check-done))
-                (ecb-check-not-compatible-options)
-                (ecb-upgrade-not-compatible-options)
-                (ecb-upgrade-renamed-options)
-                (setq ecb-upgrade-check-done t))
-
-              ;; first initialize the whole layout-engine
-              (ecb-initialize-layout)
-
-              ;; initialize internals
-              (ecb-initialize-all-internals (not ecb-clear-caches-before-activate))
-
-              ;; enable permanent advices - these advices will never being
-              ;; deactivated after first activation of ECB unless
-              ;; `ecb-split-edit-window-after-start' is not 'before-activation
-              ;; (see `ecb-deactivate-internal')
-              (ecb-enable-advices 'ecb-permanent-adviced-layout-functions)
-
-              ;; enable advices for not supported window-managers
-              (ecb-enable-advices 'ecb-winman-not-supported-function-advices)
-
-              ;; enable advices for the compatibility with other packages
-              (ecb-enable-advices 'ecb-compatibility-advices)
-            
-              ;; set the ecb-frame
-              (let ((old-ecb-frame ecb-frame))
-                (if ecb-new-ecb-frame
-                    (progn
-                      (run-hooks 'ecb-activate-before-new-frame-created-hook)
-                      (setq ecb-frame (make-frame))
-                      (put 'ecb-frame 'ecb-new-frame-created t))
-                  (setq ecb-frame (selected-frame))
-                  (put 'ecb-frame 'ecb-new-frame-created nil))
-                ;; If ECB is acivated in a frame unequal to that frame which was
-                ;; the ecb-frame at last deactivation then we initialize the
-                ;; `ecb-edit-area-creators'.
-                (if (not (equal ecb-frame old-ecb-frame))
-                    (ecb-edit-area-creators-init)))
-              (raise-frame ecb-frame)
-              (select-frame ecb-frame)
-
-              (ecb-enable-own-temp-buffer-show-function t)
+      ;; checking if there are cedet or semantic-load problems
+      (ecb-check-cedet-load)
+      (ecb-check-semantic-load)
       
-              ;; now we can activate ECB
+      ;; checking the requirements
+      (ecb-check-requirements)
 
-              ;; first we run all tree-buffer-creators
-              (ecb-tree-buffer-creators-run)
-    
-              ;; activate the eshell-integration - does not load eshell but
-              ;; prepares ECB to run eshell right - if loaded and activated
-              (ecb-eshell-activate-integration)
+      (condition-case err-obj
+	  (progn
+	    
+	    ;; initialize the navigate-library
+	    (ecb-nav-initialize)
 
-              ;; we need some hooks
-              (add-hook (ecb--semantic-after-partial-cache-change-hook)
-                        'ecb-update-after-partial-reparse t)
-              (add-hook (ecb--semantic-after-toplevel-cache-change-hook)
-                        'ecb-rebuild-methods-buffer-with-tagcache t)
-;;               (add-hook (ecb--semantic--before-fetch-tags-hook)
-;;                         'ecb-prevent-from-parsing-if-exceeding-threshold)              
-              (ecb-activate-ecb-autocontrol-function ecb-highlight-tag-with-point-delay
-                                                     'ecb-tag-sync)
-              (ecb-activate-ecb-autocontrol-function ecb-basic-buffer-sync-delay
-                                                     'ecb-basic-buffer-sync)
-              (ecb-activate-ecb-autocontrol-function ecb-compilation-update-idle-time
-                                                     'ecb-compilation-buffer-list-changed-p)
-              (ecb-activate-ecb-autocontrol-function 'post
-                                                     'ecb-layout-post-command-hook)
-              (ecb-activate-ecb-autocontrol-function 'pre
-                                                     'ecb-layout-pre-command-hook)
-              (ecb-activate-ecb-autocontrol-function 0.5
-                                                     'ecb-repair-only-ecb-window-layout)
-              (ecb-activate-ecb-autocontrol-function 'post
-                                                     'ecb-handle-major-mode-visibilty)
-              (add-hook 'after-save-hook 'ecb-update-methods-after-saving)
-              (add-hook 'kill-buffer-hook 'ecb-kill-buffer-hook)
+	    ;; enable basic advices (we need the custom-save-all advice
+	    ;; already here! Maybe it would be better to remove this advice
+	    ;; from the basic-advices and add it to upgrade-advices.....)
+	    ;;(ecb-enable-advices 'ecb-layout-basic-adviced-functions)
 
-              (add-hook 'find-file-hooks 'ecb-find-file-hook)
+	    ;; we need the custom-all advice here!
+	    (ecb-enable-advices 'ecb-methods-browser-advices)
+	    
+	    ;; maybe we must upgrade some not anymore compatible or even renamed
+	    ;; options
+	    (when (and ecb-auto-compatibility-check
+		       (not ecb-upgrade-check-done))
+	      (ecb-check-not-compatible-options)
+	      (ecb-upgrade-not-compatible-options)
+	      (ecb-upgrade-renamed-options)
+	      (setq ecb-upgrade-check-done t))
 
-              ;; after adding all idle-timers and post- and pre-command-hooks we
-              ;; activate the monitoring
-              (ecb-activate-ecb-autocontrol-function 1 'ecb-monitor-autocontrol-functions)
+	    ;; first initialize the whole layout-engine
+	    (ecb-initialize-layout)
 
-              ;; We activate the stealthy update mechanism
-              (ecb-stealthy-function-state-init)
-              (ecb-activate-ecb-autocontrol-function ecb-stealthy-tasks-delay
-                                                      'ecb-stealthy-updates)
+	    ;; initialize internals
+	    (ecb-initialize-all-internals (not ecb-clear-caches-before-activate))
+
+	    ;; enable permanent advices - these advices will never being
+	    ;; deactivated after first activation of ECB unless
+	    ;; `ecb-split-edit-window-after-start' is not 'before-activation
+	    ;; (see `ecb-deactivate-internal')
+	    (ecb-enable-advices 'ecb-permanent-adviced-layout-functions)
+
+	    ;; enable advices for not supported window-managers
+	    (ecb-enable-advices 'ecb-winman-not-supported-function-advices)
+
+	    ;; enable advices for the compatibility with other packages
+	    (ecb-enable-advices 'ecb-compatibility-advices)
             
-              ;; running the compilation-buffer update first time
-              (ecb-compilation-buffer-list-init)
-                            
-              ;; ediff-stuff; we operate here only with symbols to avoid bytecompiler
-              ;; warnings
-              (ecb-activate-ediff-compatibility)
+	    ;; set the ecb-frame
+	    (let ((old-ecb-frame ecb-frame))
+	      (if ecb-new-ecb-frame
+		  (progn
+		    (run-hooks 'ecb-activate-before-new-frame-created-hook)
+		    (setq ecb-frame (make-frame))
+		    (put 'ecb-frame 'ecb-new-frame-created t))
+		(setq ecb-frame (selected-frame))
+		(put 'ecb-frame 'ecb-new-frame-created nil))
+	      ;; If ECB is acivated in a frame unequal to that frame which was
+	      ;; the ecb-frame at last deactivation then we initialize the
+	      ;; `ecb-edit-area-creators'.
+	      (if (not (equal ecb-frame old-ecb-frame))
+		  (ecb-edit-area-creators-init)))
+	    (raise-frame ecb-frame)
+	    (select-frame ecb-frame)
 
-              ;; enabling the VC-support
-              (ecb-vc-enable-internals 1)
-              
-              ;; menus - dealing with the menu for XEmacs is really a pain...
-              (when ecb-running-xemacs
-                (let ((dummy-buf-name " *dummytogetglobalmap*"))
-                  (with-current-buffer (get-buffer-create dummy-buf-name)
-                    (add-submenu nil ecb-minor-menu)
-                    (kill-buffer dummy-buf-name)))
-                (save-excursion
-                  (dolist (buf (buffer-list))
-                    (set-buffer buf)
-                    (if (null (car (find-menu-item current-menubar
-                                                   (list ecb-menu-name))))
-                        (add-submenu nil ecb-minor-menu)))))
+	    (ecb-enable-own-temp-buffer-show-function t)
+	    
+	    ;; now we can activate ECB
 
-              (add-hook (if ecb-running-xemacs
-                            'activate-menubar-hook
-                          'menu-bar-update-hook)
-                        'ecb-compilation-update-menu)
-              )
-          (error
-           ;;          (backtrace)
-           (ecb-clean-up-after-activation-failure
-            "Errors during the basic setup of ECB." err-obj)))
+	    ;; first we run all tree-buffer-creators
+	    (ecb-tree-buffer-creators-run)
+	    
+	    ;; activate the eshell-integration - does not load eshell but
+	    ;; prepares ECB to run eshell right - if loaded and activated
+	    (ecb-eshell-activate-integration)
 
-        (condition-case err-obj
-            ;; run personal hooks before drawing the layout
-            (run-hooks 'ecb-activate-before-layout-draw-hook)
-          (error
-           (ecb-clean-up-after-activation-failure
-            "Errors during the hooks of ecb-activate-before-layout-draw-hook."
-            err-obj)))
-         
-        (setq ecb-minor-mode t)
+	    ;; we need some hooks
+	    (add-hook (ecb--semantic-after-partial-cache-change-hook)
+		      'ecb-update-after-partial-reparse t)
+	    (add-hook (ecb--semantic-after-toplevel-cache-change-hook)
+		      'ecb-rebuild-methods-buffer-with-tagcache t)
+	    ;;               (add-hook (ecb--semantic--before-fetch-tags-hook)
+	    ;;                         'ecb-prevent-from-parsing-if-exceeding-threshold)              
+	    (ecb-activate-ecb-autocontrol-function ecb-highlight-tag-with-point-delay
+						   'ecb-tag-sync)
+	    (ecb-activate-ecb-autocontrol-function ecb-basic-buffer-sync-delay
+						   'ecb-basic-buffer-sync)
+	    (ecb-activate-ecb-autocontrol-function ecb-compilation-update-idle-time
+						   'ecb-compilation-buffer-list-changed-p)
+	    (ecb-activate-ecb-autocontrol-function 'post
+						   'ecb-layout-post-command-hook)
+	    (ecb-activate-ecb-autocontrol-function 'pre
+						   'ecb-layout-pre-command-hook)
+	    (ecb-activate-ecb-autocontrol-function 0.5
+						   'ecb-repair-only-ecb-window-layout)
+	    (ecb-activate-ecb-autocontrol-function 'post
+						   'ecb-handle-major-mode-visibilty)
+	    (add-hook 'after-save-hook 'ecb-update-methods-after-saving)
+	    (add-hook 'kill-buffer-hook 'ecb-kill-buffer-hook)
 
-        ;; now we draw the screen-layout of ECB.
-        (condition-case err-obj
-            ;; now we draw the layout chosen in `ecb-layout'. This function
-            ;; activates at its end also the adviced functions if necessary!
-            ;; Here the directories- and history-buffer will be updated.
-            (let ((ecb-redraw-layout-quickly nil)
-                  (use-last-win-conf (and ecb-last-window-config-before-deactivation
-                                          (equal ecb-split-edit-window-after-start
-                                                 'before-deactivation)
-                                          (not (ecb-window-configuration-invalidp
-                                                ecb-last-window-config-before-deactivation)))))
-              (ecb-enable-temp-buffer-shrink-to-fit ecb-compile-window-height)
-              (if use-last-win-conf                     
-                  (setq ecb-edit-area-creators
-                        (nth 4 ecb-last-window-config-before-deactivation)))
+	    (add-hook 'find-file-hooks 'ecb-find-file-hook)
 
-              (ecb-redraw-layout-full 'no-buffer-sync
-                                      nil
-                                      (and use-last-win-conf
-                                           (nth 6 ecb-last-window-config-before-deactivation))
-                                      (and use-last-win-conf
-                                           (nth 5 ecb-last-window-config-before-deactivation)))
+	    ;; after adding all idle-timers and post- and pre-command-hooks we
+	    ;; activate the monitoring
+	    (ecb-activate-ecb-autocontrol-function 1 'ecb-monitor-autocontrol-functions)
 
-              ;; if there was no compile-window before deactivation then we have
-              ;; to hide the compile-window after activation
-              (if (and use-last-win-conf
-                       (null (nth 2 ecb-last-window-config-before-deactivation)))
-                  (ecb-toggle-compile-window -1))
-
-              (when (member ecb-split-edit-window-after-start
-                            '(vertical horizontal nil))
-                (delete-other-windows)
-                (case ecb-split-edit-window-after-start
-                  (horizontal (split-window-horizontally))
-                  (vertical (split-window-vertically))))
+	    ;; We activate the stealthy update mechanism
+	    (ecb-stealthy-function-state-init)
+	    (ecb-activate-ecb-autocontrol-function ecb-stealthy-tasks-delay
+						   'ecb-stealthy-updates)
             
-              ;; now we synchronize all ECB-windows
-              (ecb-window-sync)
+	    ;; running the compilation-buffer update first time
+	    (ecb-compilation-buffer-list-init)
+	    
+	    ;; ediff-stuff; we operate here only with symbols to avoid bytecompiler
+	    ;; warnings
+	    (ecb-activate-ediff-compatibility)
+
+	    ;; enabling the VC-support
+	    (ecb-vc-enable-internals 1)
+	    
+	    ;; menus - dealing with the menu for XEmacs is really a pain...
+	    (when ecb-running-xemacs
+	      (let ((dummy-buf-name " *dummytogetglobalmap*"))
+		(with-current-buffer (get-buffer-create dummy-buf-name)
+		  (add-submenu nil ecb-minor-menu)
+		  (kill-buffer dummy-buf-name)))
+	      (save-excursion
+		(dolist (buf (buffer-list))
+		  (set-buffer buf)
+		  (if (null (car (find-menu-item current-menubar
+						 (list ecb-menu-name))))
+		      (add-submenu nil ecb-minor-menu)))))
+
+	    (add-hook (if ecb-running-xemacs
+			  'activate-menubar-hook
+			'menu-bar-update-hook)
+		      'ecb-compilation-update-menu)
+	    )
+	(error
+	 ;;          (backtrace)
+	 (ecb-clean-up-after-activation-failure
+	  "Errors during the basic setup of ECB." err-obj)))
+
+      (condition-case err-obj
+	  ;; run personal hooks before drawing the layout
+	  (run-hooks 'ecb-activate-before-layout-draw-hook)
+	(error
+	 (ecb-clean-up-after-activation-failure
+	  "Errors during the hooks of ecb-activate-before-layout-draw-hook."
+	  err-obj)))
+      
+      (setq ecb-minor-mode t)
+
+      ;; now we draw the screen-layout of ECB.
+      (condition-case err-obj
+	  ;; now we draw the layout chosen in `ecb-layout'. This function
+	  ;; activates at its end also the adviced functions if necessary!
+	  ;; Here the directories- and history-buffer will be updated.
+	  (let ((ecb-redraw-layout-quickly nil)
+		(use-last-win-conf (and ecb-last-window-config-before-deactivation
+					(equal ecb-split-edit-window-after-start
+					       'before-deactivation)
+					(not (ecb-window-configuration-invalidp
+					      ecb-last-window-config-before-deactivation)))))
+	    (ecb-enable-temp-buffer-shrink-to-fit ecb-compile-window-height)
+	    (if use-last-win-conf                     
+		(setq ecb-edit-area-creators
+		      (nth 4 ecb-last-window-config-before-deactivation)))
+
+	    (ecb-redraw-layout-full 'no-buffer-sync
+				    nil
+				    (and use-last-win-conf
+					 (nth 6 ecb-last-window-config-before-deactivation))
+				    (and use-last-win-conf
+					 (nth 5 ecb-last-window-config-before-deactivation)))
+
+	    ;; if there was no compile-window before deactivation then we have
+	    ;; to hide the compile-window after activation
+	    (if (and use-last-win-conf
+		     (null (nth 2 ecb-last-window-config-before-deactivation)))
+		(ecb-toggle-compile-window -1))
+
+	    (when (member ecb-split-edit-window-after-start
+			  '(vertical horizontal nil))
+	      (delete-other-windows)
+	      (case ecb-split-edit-window-after-start
+		(horizontal (split-window-horizontally))
+		(vertical (split-window-vertically))))
             
-              ;; now update all the ECB-buffer-modelines
-              (ecb-mode-line-format)
-              )
-          (error
-           (ecb-clean-up-after-activation-failure
-            "Errors during the layout setup of ECB." err-obj))
-          )
-       
-        (condition-case err-obj
-            (let ((edit-window (car (ecb-canonical-edit-windows-list))))
-              (when (and ecb-display-default-dir-after-start
-                         (null (ecb-buffer-file-name
-                                (window-buffer edit-window))))
-                (ecb-set-selected-directory
-                 (ecb-fix-filename (with-current-buffer (window-buffer edit-window)
-                                     default-directory)))))
-          (error
-           (ecb-clean-up-after-activation-failure
-            "Errors during setting the default directory." err-obj)))
-        
-        (condition-case err-obj
-            ;; we run any personal hooks
-            (run-hooks 'ecb-activate-hook)
-          (error
-           (ecb-clean-up-after-activation-failure
-            "Errors during the hooks of ecb-activate-hook." err-obj)))
-        
-        (condition-case err-obj
-            ;; enable mouse-tracking for the ecb-tree-buffers; we do this after
-            ;; running the personal hooks because if a user put´s activation of
-            ;; follow-mouse.el (`turn-on-follow-mouse') in the
-            ;; `ecb-activate-hook' then our own ECB mouse-tracking must be
-            ;; activated later. If `turn-on-follow-mouse' would be activated
-            ;; after our own follow-mouse stuff, it would overwrite our
-            ;; mechanism and the show-node-name stuff would not work!
-            (if (ecb-show-any-node-info-by-mouse-moving-p)
-                (tree-buffer-activate-follow-mouse))
-          (error
-           (ecb-clean-up-after-activation-failure
-            "Errors during the mouse-tracking activation." err-obj)))
+	    ;; now we synchronize all ECB-windows
+	    (ecb-window-sync)
+            
+	    ;; now update all the ECB-buffer-modelines
+	    (ecb-mode-line-format)
+	    )
+	(error
+	 (ecb-clean-up-after-activation-failure
+	  "Errors during the layout setup of ECB." err-obj))
+	)
+      
+      (condition-case err-obj
+	  (let ((edit-window (car (ecb-canonical-edit-windows-list))))
+	    (when (and ecb-display-default-dir-after-start
+		       (null (ecb-buffer-file-name
+			      (window-buffer edit-window))))
+	      (ecb-set-selected-directory
+	       (ecb-fix-filename (with-current-buffer (window-buffer edit-window)
+				   default-directory)))))
+	(error
+	 (ecb-clean-up-after-activation-failure
+	  "Errors during setting the default directory." err-obj)))
+      
+      (condition-case err-obj
+	  ;; we run any personal hooks
+	  (run-hooks 'ecb-activate-hook)
+	(error
+	 (ecb-clean-up-after-activation-failure
+	  "Errors during the hooks of ecb-activate-hook." err-obj)))
+      
+      (condition-case err-obj
+	  ;; enable mouse-tracking for the ecb-tree-buffers; we do this after
+	  ;; running the personal hooks because if a user put´s activation of
+	  ;; follow-mouse.el (`turn-on-follow-mouse') in the
+	  ;; `ecb-activate-hook' then our own ECB mouse-tracking must be
+	  ;; activated later. If `turn-on-follow-mouse' would be activated
+	  ;; after our own follow-mouse stuff, it would overwrite our
+	  ;; mechanism and the show-node-name stuff would not work!
+	  (if (ecb-show-any-node-info-by-mouse-moving-p)
+	      (tree-buffer-activate-follow-mouse))
+	(error
+	 (ecb-clean-up-after-activation-failure
+	  "Errors during the mouse-tracking activation." err-obj)))
 
-        (setq ecb-minor-mode t)
-        (message "The ECB is now activated.")
+      (setq ecb-minor-mode t)
+      (message "The ECB is now activated.")
 
-        (condition-case err-obj
-            ;; now we display all `ecb-not-compatible-options' and
-            ;; `ecb-renamed-options'
-            (if (and ecb-auto-compatibility-check
-                     (or (ecb-not-compatible-or-renamed-options-detected)
-                         (not (ecb-options-version=ecb-version-p))))
-                ;; we must run this with an idle-times because otherwise these
-                ;; options are never displayed when Emacs is started with a
-                ;; file-argument and ECB is automatically activated. I this
-                ;; case the buffer of the file-argument would be displayed
-                ;; after the option-display and would so hide this buffer.
-                (ecb-run-with-idle-timer 0.25 nil 'ecb-display-upgraded-options)
-              (ecb-display-news-for-upgrade))
-          (error
-           (ecb-clean-up-after-activation-failure
-            "Error during the compatibility-check of ECB." err-obj)))
+      (condition-case err-obj
+	  ;; now we display all `ecb-not-compatible-options' and
+	  ;; `ecb-renamed-options'
+	  (if (and ecb-auto-compatibility-check
+		   (or (ecb-not-compatible-or-renamed-options-detected)
+		       (not (ecb-options-version=ecb-version-p))))
+	      ;; we must run this with an idle-times because otherwise these
+	      ;; options are never displayed when Emacs is started with a
+	      ;; file-argument and ECB is automatically activated. I this
+	      ;; case the buffer of the file-argument would be displayed
+	      ;; after the option-display and would so hide this buffer.
+	      (ecb-run-with-idle-timer 0.25 nil 'ecb-display-upgraded-options)
+	    (ecb-display-news-for-upgrade))
+	(error
+	 (ecb-clean-up-after-activation-failure
+	  "Error during the compatibility-check of ECB." err-obj)))
 
-        ;; if we activate ECB first time then we display the node "First steps" of
-        ;; the online-manual
-        (ignore-errors
-          (when (null ecb-source-path)
-            (let ((ecb-show-help-format 'info))
-              (ecb-show-help)
-              (Info-goto-node "First steps"))))
+      ;; if we activate ECB first time then we display the node "First steps" of
+      ;; the online-manual
+      (ignore-errors
+	(when (null ecb-source-path)
+	  (let ((ecb-show-help-format 'info))
+	    (ecb-show-help)
+	    (Info-goto-node "First steps"))))
 
-        ;; display tip of the day if `ecb-tip-of-the-day' is not nil
-        (ignore-errors
-          (ecb-show-tip-of-the-day))
+      ;; display tip of the day if `ecb-tip-of-the-day' is not nil
+      (ignore-errors
+	(ecb-show-tip-of-the-day))
 
-        (ecb-enable-advices 'ecb-layout-basic-adviced-functions)
-        
-        (condition-case err-obj
-            ;;now take a snapshot of the current window configuration
-            (setq ecb-activated-window-configuration
-                  (ecb-current-window-configuration))
-          (error
-           (ecb-clean-up-after-activation-failure
-            "Errors during the snapshot of the windows-configuration." err-obj)))
-        ))))
+      (ecb-enable-advices 'ecb-layout-basic-adviced-functions)
+      
+      (condition-case err-obj
+	  ;;now take a snapshot of the current window configuration
+	  (setq ecb-activated-window-configuration
+		(ecb-current-window-configuration))
+	(error
+	 (ecb-clean-up-after-activation-failure
+	  "Errors during the snapshot of the windows-configuration." err-obj)))
+      )))
 
 
 (defun ecb-deactivate ()
@@ -1547,8 +1546,8 @@ value of VAR is as before storing a NEW-VALUE for variable-symbol VAR."
                    'ecb-update-after-partial-reparse)
       (remove-hook (ecb--semantic-after-toplevel-cache-change-hook)
                    'ecb-rebuild-methods-buffer-with-tagcache)
-;;       (remove-hook (ecb--semantic--before-fetch-tags-hook)
-;;                 'ecb-prevent-from-parsing-if-exceeding-threshold)
+      ;;       (remove-hook (ecb--semantic--before-fetch-tags-hook)
+      ;;                 'ecb-prevent-from-parsing-if-exceeding-threshold)
       (ecb-stop-all-autocontrol/sync-functions)
       (remove-hook 'after-save-hook 'ecb-update-methods-after-saving)
       (remove-hook 'kill-buffer-hook 'ecb-kill-buffer-hook)
@@ -1579,7 +1578,7 @@ value of VAR is as before storing a NEW-VALUE for variable-symbol VAR."
       ;; run any personal hooks
       (unless run-no-hooks
         (run-hooks 'ecb-deactivate-hook))
-    
+      
       ;; clear the ecb-frame. Here we try to preserve the split-state after
       ;; deleting the ECB-screen-layout.
       (when (frame-live-p ecb-frame)
@@ -1647,7 +1646,7 @@ value of VAR is as before storing a NEW-VALUE for variable-symbol VAR."
         
         (if (get 'ecb-frame 'ecb-new-frame-created)
             (ignore-errors (delete-frame ecb-frame t))))
-        
+      
       (ecb-initialize-layout)
 
       ;; we do NOT disable the permanent-advices of
@@ -1675,7 +1674,7 @@ value of VAR is as before storing a NEW-VALUE for variable-symbol VAR."
       (when (and ecb-running-xemacs
                  (boundp 'progress-feedback-use-echo-area))
         (ecb-modify-emacs-variable 'progress-feedback-use-echo-area 'restore))))
-      
+  
   
   (if (null ecb-minor-mode)
       (message "The ECB is now deactivated."))
@@ -1769,69 +1768,69 @@ exist."
         (semantic-elisp-reuse-form-parser defvar defecb-advice-set)        
         ;; defecb-stealthy and tree-buffer-defpopup-command
         (semantic-elisp-setup-form-parser
-            (lambda (read-lobject start end)
-              (semantic-tag-new-function
-               (symbol-name (nth 1 read-lobject)) nil nil
-               :user-visible-flag nil
-               :documentation (semantic-elisp-do-doc (nth 2 read-lobject))))
-          defecb-stealthy
-          tree-buffer-defpopup-command)
+	 (lambda (read-lobject start end)
+	   (semantic-tag-new-function
+	    (symbol-name (nth 1 read-lobject)) nil nil
+	    :user-visible-flag nil
+	    :documentation (semantic-elisp-do-doc (nth 2 read-lobject))))
+	 defecb-stealthy
+	 tree-buffer-defpopup-command)
         ;; defecb-tree-buffer-creator
         (semantic-elisp-setup-form-parser
-            (lambda (read-lobject start end)
-              (semantic-tag-new-function
-               (symbol-name (nth 1 read-lobject)) nil nil
-               :user-visible-flag nil
-               :documentation (semantic-elisp-do-doc (nth 3 read-lobject))))
-          defecb-tree-buffer-creator)
+	 (lambda (read-lobject start end)
+	   (semantic-tag-new-function
+	    (symbol-name (nth 1 read-lobject)) nil nil
+	    :user-visible-flag nil
+	    :documentation (semantic-elisp-do-doc (nth 3 read-lobject))))
+	 defecb-tree-buffer-creator)
         ;; defecb-window-dedicator-to-ecb-buffer
         (semantic-elisp-setup-form-parser
-            (lambda (read-lobject start end)
-              (semantic-tag-new-function
-               (symbol-name (nth 1 read-lobject)) nil nil
-               :user-visible-flag nil
-               :documentation (semantic-elisp-do-doc (nth 4 read-lobject))))
-          defecb-window-dedicator-to-ecb-buffer)
+	 (lambda (read-lobject start end)
+	   (semantic-tag-new-function
+	    (symbol-name (nth 1 read-lobject)) nil nil
+	    :user-visible-flag nil
+	    :documentation (semantic-elisp-do-doc (nth 4 read-lobject))))
+	 defecb-window-dedicator-to-ecb-buffer)
         ;; defecb-advice
         (semantic-elisp-setup-form-parser
-            (lambda (read-lobject start end)
-              (semantic-tag-new-function
-               (symbol-name (nth 1 read-lobject)) nil
-               (semantic-elisp-desymbolify
-                (list '**ecb-advice: (nth 2 read-lobject) (nth 3 read-lobject)))
-               :user-visible-flag nil
-               :documentation (semantic-elisp-do-doc (nth 4 read-lobject))))
-          defecb-advice)
+	 (lambda (read-lobject start end)
+	   (semantic-tag-new-function
+	    (symbol-name (nth 1 read-lobject)) nil
+	    (semantic-elisp-desymbolify
+	     (list '**ecb-advice: (nth 2 read-lobject) (nth 3 read-lobject)))
+	    :user-visible-flag nil
+	    :documentation (semantic-elisp-do-doc (nth 4 read-lobject))))
+	 defecb-advice)
         ;; defecb-tree-buffer-callback
         (semantic-elisp-setup-form-parser
-            (lambda (read-lobject start end)
-              (semantic-tag-new-function
-               (symbol-name (nth 1 read-lobject)) nil
-               (semantic-elisp-desymbolify
-                (append '(node ecb-button edit-window-nr shift-mode meta-mode)
-                        (nth 4 read-lobject)))
-               :user-visible-flag nil
-               :documentation (semantic-elisp-do-doc (nth 5 read-lobject))))
-          defecb-tree-buffer-callback)
+	 (lambda (read-lobject start end)
+	   (semantic-tag-new-function
+	    (symbol-name (nth 1 read-lobject)) nil
+	    (semantic-elisp-desymbolify
+	     (append '(node ecb-button edit-window-nr shift-mode meta-mode)
+		     (nth 4 read-lobject)))
+	    :user-visible-flag nil
+	    :documentation (semantic-elisp-do-doc (nth 5 read-lobject))))
+	 defecb-tree-buffer-callback)
         ;; defecb-autocontrol/sync-function
         (semantic-elisp-setup-form-parser
-            (lambda (read-lobject start end)
-              (semantic-tag-new-function
-               (symbol-name (nth 1 read-lobject)) nil
-               (semantic-elisp-desymbolify
-                (list '**autocontrol/sync_for_buffer: (nth 2 read-lobject)))
-               :user-visible-flag nil
-               :documentation (semantic-elisp-do-doc (nth 5 read-lobject))))
-          defecb-autocontrol/sync-function)
+	 (lambda (read-lobject start end)
+	   (semantic-tag-new-function
+	    (symbol-name (nth 1 read-lobject)) nil
+	    (semantic-elisp-desymbolify
+	     (list '**autocontrol/sync_for_buffer: (nth 2 read-lobject)))
+	    :user-visible-flag nil
+	    :documentation (semantic-elisp-do-doc (nth 5 read-lobject))))
+	 defecb-autocontrol/sync-function)
         ;; ecb-layout-define
         (semantic-elisp-setup-form-parser
-            (lambda (read-lobject start end)
-              (semantic-tag-new-function
-               (nth 1 read-lobject) nil
-               (semantic-elisp-desymbolify (list (nth 2 read-lobject)))
-               :user-visible-flag nil
-               :documentation (semantic-elisp-do-doc (nth 3 read-lobject))))
-          ecb-layout-define)
+	 (lambda (read-lobject start end)
+	   (semantic-tag-new-function
+	    (nth 1 read-lobject) nil
+	    (semantic-elisp-desymbolify (list (nth 2 read-lobject)))
+	    :user-visible-flag nil
+	    :documentation (semantic-elisp-do-doc (nth 3 read-lobject))))
+	 ecb-layout-define)
         ;; when-ecb-running-... macros
         (semantic-elisp-reuse-form-parser eval-and-compile
                                           when-ecb-running-xemacs
@@ -1935,7 +1934,7 @@ exist."
   (error
    (ecb-warning "Not critical error during supporting fontifying the ecb-macros: (error-type: %S, error-data: %S)"
                 (car oops) (cdr oops))))
-  
+
 
 ;; Klaus Berndl <klaus.berndl@sdm.de>: Cause of the magic autostart stuff of
 ;; the advice-package we must disable at load-time all these advices!!

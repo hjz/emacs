@@ -41,6 +41,7 @@
 (add-to-list 'load-path (concat user-dir "/switch-window"))
 (add-to-list 'load-path (concat user-dir "/org-jekyll"))
 (add-to-list 'load-path (concat user-dir "/ace-jump-mode"))
+(add-to-list 'load-path (concat user-dir "/xgtags"))
 
 (eval-after-load "icomplete" '(progn (require 'icomplete+)))
 
@@ -120,6 +121,7 @@ advice like this:
 (load-config "filecache")
 (load-config "aliases")
 (load-config "org")
+(load-config "gtags")
 
 (defadvice save-buffers-kill-emacs (around no-query-kill-emacs activate)
   "Prevent annoying \"Active processes exist\" query when you quit Emacs."
@@ -299,6 +301,7 @@ advice like this:
 (load-theme 'zenburn)
 (set-face-foreground 'vertical-border "#282828")
 
+(cua-mode 1)
 ;;;;;;;;;;;;;;;;; CEDET ;;;;;;;;;;;;;;;;;;;;;;
 ;(defcustom semantic-ectag-program "/opt/local/bin/ctags"
   ;"The Exuberent CTags program to use."
