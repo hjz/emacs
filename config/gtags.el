@@ -5,8 +5,6 @@
 ;;      (hl-line-mode 1)
 ;; ))
 ;;
-(require 'xgtags)
-(require 'xgtags-extension)
 (require 'vimpulse)
 
 (defun gtags-root-dir ()
@@ -41,6 +39,6 @@
 (global-set-key [(control meta .)] 'gtags-find-rtag)   ;; C-M-. find all references of tag
 (global-set-key [(control meta ,)] 'gtags-find-symbol) ;; C-M-, find all usages of symbol.
 
-(vimpulse-map (kbd "M-.") 'gtags-find-tag 'scala-mode)
+(vimpulse-map (kbd "M-.") 'gtags-find-tag-from-here 'scala-mode)
 (vimpulse-map (kbd "s-.") 'ww-next-gtag 'scala-mode)   ;; M-; cycles to next result, after doing M-. C-M-. or C-M-,
 (vimpulse-map (kbd "M-,") 'gtags-pop-stack 'scala-mode)

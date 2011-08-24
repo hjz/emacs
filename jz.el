@@ -301,7 +301,7 @@ advice like this:
 (load-theme 'zenburn)
 (set-face-foreground 'vertical-border "#282828")
 
-(cua-mode 1)
+;(cua-mode 1) ;; Conflicts with org C-Enter
 ;;;;;;;;;;;;;;;;; CEDET ;;;;;;;;;;;;;;;;;;;;;;
 ;(defcustom semantic-ectag-program "/opt/local/bin/ctags"
   ;"The Exuberent CTags program to use."
