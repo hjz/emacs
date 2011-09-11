@@ -12,7 +12,7 @@
 (add-to-list 'load-path (concat user-dir "/elisp"))
 (add-to-list 'load-path (concat user-dir "/apel-10.8"))
 (add-to-list 'load-path (concat user-dir "/yasnippet-read-only"))
-(add-to-list 'load-path (concat user-dir "/ensime_2.9.0-1-0.6.1/elisp"))
+(add-to-list 'load-path (concat user-dir "/ensime_2.9.1-0.7.6/elisp"))
 (add-to-list 'load-path (concat user-dir "/vimpulse"))
 (add-to-list 'load-path (concat user-dir "/vimpulse-surround"))
 (add-to-list 'load-path (concat user-dir "/vimpulse-plugins"))
@@ -536,6 +536,17 @@ cursor to the new line."
    (define-key comint-mode-map (kbd "<down>") 'comint-next-input)))
 
 (add-hook 'ensime-sbt-mode-hook (lambda () (setq left-fringe-width 5)))
+
+;; Override default ensime ac for better completion
+(defun ensime-ac-enable ()
+  (setq ac-sources (append '(
+                             ac-source-yasnippet
+                             ac-source-ensime-package-decl-members
+                             ac-source-ensime-scope-names
+                             ac-source-ensime-members) ac-sources))
+  (auto-complete-mode 1)
+  )
+
 ;; ECB support
 ;(require 'ensime-ecb)
 ;;;;;;;;;;;;;;; END Scala ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1083,13 +1094,13 @@ cursor to the new line."
 (vimpulse-map (kbd ",.") '(lambda () (interactive) (save-sbt-action "compile"))  'scala-mode 'comint-mode)
 (vimpulse-map (kbd ",m") '(lambda () (interactive) (save-sbt-action (concat "test-only " (get-spec-class)))) 'scala-mode 'comint-mode)
 (vimpulse-map (kbd ",a") '(lambda () (interactive) (save-sbt-action "test")) 'scala-mode 'comint-mode)
-(vimpulse-map (kbd ",;") '(lambda () (interactive) (save-sbt-action "integration-test")) 'scala-mode 'comint-mode)
+(vimpulse-map (kbd ",i") '(lambda () (interactive) (save-sbt-action "integration-test")) 'scala-mode 'comint-mode)
 (vimpulse-map (kbd ",j") '(lambda () (interactive) (save-sbt-action "test-quick")) 'scala-mode 'comint-mode)
-(vimpulse-map (kbd ",k") '(lambda () (interactive) (save-sbt-action "test")) 'scala-mode 'comint-mode)
+(vimpulse-map (kbd ",;") '(lambda () (interactive) (save-sbt-action "test")) 'scala-mode 'comint-mode)
 (vimpulse-map (kbd ",l") '(lambda () (interactive) (save-sbt-action "!!")) 'scala-mode 'comint-mode)
-(vimpulse-map (kbd ",t") '(lambda () (interactive) (save-sbt-action "console")) 'scala-mode 'comint-mode)
-(vimpulse-map (kbd ",u") '(lambda () (interactive) (save-sbt-action "update")) 'scala-mode 'comint-mode)
-(vimpulse-map (kbd ",n") '(lambda () (interactive) (save-sbt-action "; clean ; update ; compile-thrift-java ; compile")) 'scala-mode 'comint-mode)
+(vimpulse-map (kbd ",k") '(lambda () (interactive) (save-sbt-action "console")) 'scala-mode 'comint-mode)
+(vimpulse-map (kbd ",U") '(lambda () (interactive) (save-sbt-action "update")) 'scala-mode 'comint-mode)
+(vimpulse-map (kbd ",n") '(lambda () (interactive) (save-sbt-action "; clean ; update ; compile")) 'scala-mode 'comint-mode)
 
 ; Browsing cgit
 (vimpulse-map (kbd ",y") '(lambda () (interactive) (cgit-yank t)) 'scala-mode)

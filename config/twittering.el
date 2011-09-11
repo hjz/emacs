@@ -18,8 +18,9 @@
              ("W" . twittering-update-status-interactive)))))
 
 (setq twittering-icon-mode t)                ; Show icons
-(setq twittering-timer-interval 120)         ; Update your timeline each 120 seconds (5 minutes)
+(setq twittering-timer-interval 120)         ; Update your timeline each 120 seconds
 (setq twittering-url-show-status nil)        ; Keeps the echo area from showing all the http processes
+(setq twittering-number-of-tweets-on-retrieval 30)
 
 (add-hook 'twittering-new-tweets-hook (lambda ()
 (let ((n twittering-new-tweets-count))

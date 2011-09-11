@@ -54,8 +54,6 @@ directory, select directory. Lastly the file is opened."
   (message "Loading file cache...")
   (file-cache-clear-cache)
   (file-cache-add-directory-using-find "~/ps/birdcage")
-  (file-cache-add-directory-using-find "~/ps/macaw")
-  (file-cache-add-directory-using-find "~/ps/querulous")
   (file-cache-add-directory-using-find "~/ps/twitter")
   (file-cache-add-directory-using-find "~/.emacs.d")
   ;; (file-cache-add-directory-using-find "~/ps/science")
@@ -69,7 +67,8 @@ directory, select directory. Lastly the file is opened."
 For later retrieval using `file-cache-read-cache-from-file'"
   (interactive)
   (with-temp-file (expand-file-name file-cache-file)
-    (prin1 file-cache-alist (current-buffer))))
+    (prin1 file-cache-alist (current-buffer)))
+  (kill-buffer (substring file-cache-file 2)))
 
 (defun file-cache-read-cache-from-file ()
   "Clear `file-cache-alist' and read cache from FILE.
