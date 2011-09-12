@@ -1,0 +1,4 @@
+#name : import scala.collection.JavaConversions._
+..
+# --
+import com.twitter.conversions.string._

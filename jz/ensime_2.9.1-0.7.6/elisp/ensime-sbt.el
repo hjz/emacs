@@ -77,7 +77,7 @@
   (if (functionp 'growl) (growl "SBT Build" string)))
 
 (defun ensime-sbt-notify-build (string)
-  "Watch output and growl on sucess or failure"
+  "Watch output and growl on success or failure"
   (cond ((string-match "success.*Successful" string)
          (ensime-sbt-message-growl "Success!"))
         ((string-match "error.*Error running test-compile" string)
@@ -90,13 +90,17 @@
 (defvar ensime-sbt-mode-hook nil
   "Hook to run after installing scala mode")
 
-(defun ensime-ignore-unimportant (msg)
-  (if (or (string-match "error.*scala.Option" msg)
-          (string-match "error.*sbt" msg)
-          (string-match "error.*org.specs.specification" msg)
-          (string-match "error.*org.specs.runner" msg)
-          (string-match "error.*org.specs.execute" msg))
-      "" msg))
+(defconst sbt-stack-regexp "^.+?\\(org.specs\\|sbt\\|scala.Option\\|scala.collection\\).+?
+"
+  "Regexp that matches useless sbt stack traces")
+
+(defun ensime-sbt-stack-cleanup (string)
+  (interactive)
+  (let ((pmark (process-mark (get-buffer-process (current-buffer)))))
+    (save-excursion
+      (goto-char (max (point-min) (- pmark 2000)))
+      (while (re-search-forward sbt-stack-regexp pmark t)
+	(replace-match "")))))
 
 (defun ensime-sbt ()
   "Setup and launch sbt."
@@ -134,9 +138,7 @@
     (set (make-local-variable 'comint-scroll-to-bottom-on-output) t)
     (set (make-local-variable 'comint-prompt-read-only) t)
     (set (make-local-variable 'comint-output-filter-functions)
-	 '(ensime-sbt-notify-build ansi-color-process-output comint-postoutput-scroll-to-bottom))
-
-    (add-hook 'comint-preoutput-filter-functions 'ensime-ignore-unimportant)
+	 '(ensime-sbt-stack-cleanup ensime-sbt-notify-build ansi-color-process-output comint-postoutput-scroll-to-bottom))
 
     (if ensime-sbt-comint-ansi-support
 	(set (make-local-variable 'ansi-color-for-comint-mode) t)
@@ -232,6 +234,7 @@
       (if (not (ensime-sbt-project-dir-p parent-path))
 	  path
 	parent-path))))
+
 
 
 (provide 'ensime-sbt)
