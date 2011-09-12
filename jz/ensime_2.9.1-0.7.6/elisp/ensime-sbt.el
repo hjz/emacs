@@ -76,16 +76,21 @@
   (message (concat "SBT Build: " string))
   (if (functionp 'notify) (notify "SBT Build" string)))
 
+(defun ensime-sbt-notify-fail (string)
+  "Notify failure message and jump to next error"
+  (ensime-sbt-notify (concat string " Failed!"))
+  (next-error))
+
 (defun ensime-sbt-notify-build (string)
   "Watch output and growl on success or failure"
   (cond ((string-match "success.*Successful" string)
          (ensime-sbt-notify "Success!"))
         ((string-match "error.*Error running test-compile" string)
-         (ensime-sbt-notify "Test Compile Failed"))
+         (ensime-sbt-notify-fail "Test Compile"))
         ((string-match "error.*Error running test.*" string)
-         (ensime-sbt-notify "Test Failed"))
+         (ensime-sbt-notify-fail "Test"))
         ((string-match "error.*Error running compile" string)
-         (ensime-sbt-notify "Compile Failed"))))
+         (ensime-sbt-notify-fail "Compile"))))
 
 (defvar ensime-sbt-mode-hook nil
   "Hook to run after installing scala mode")

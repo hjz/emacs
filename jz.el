@@ -1102,6 +1102,7 @@ cursor to the new line."
 (vimpulse-map (kbd ",k") '(lambda () (interactive) (save-sbt-action "console")) 'scala-mode 'comint-mode)
 (vimpulse-map (kbd ",U") '(lambda () (interactive) (save-sbt-action "update")) 'scala-mode 'comint-mode)
 (vimpulse-map (kbd ",n") '(lambda () (interactive) (save-sbt-action "; clean ; update ; compile")) 'scala-mode 'comint-mode)
+(vimpulse-map (kbd ", SPC") '(lambda () (interactive) (ensime-sbt-switch)) 'scala-mode 'comint-mode)
 
 ; Browsing cgit
 (vimpulse-map (kbd ",y") '(lambda () (interactive) (cgit-yank t)) 'scala-mode)
@@ -1117,6 +1118,10 @@ cursor to the new line."
 (vimpulse-map (kbd ",f") 'ace-jump-line-mode)
 (vimpulse-map (kbd "SPC") 'ace-jump-mode)
 (vimpulse-map (kbd ",w") 'ace-jump-mode)
+
+;; elscreen
+(vimpulse-map (kbd "gt") 'elscreen-next)
+(vimpulse-map (kbd "gT") 'elscreen-prev)
 
 ;; search functions
 (vimpulse-map (kbd "C-f d") 'moccur-grep)
