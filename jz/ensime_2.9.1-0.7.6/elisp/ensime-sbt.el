@@ -71,21 +71,21 @@
   :group 'ensime-sbt
   :type 'boolean)
 
-(defun ensime-sbt-message-growl (string)
-  "Message minibuffer and growl if available given message"
+(defun ensime-sbt-notify (string)
+  "Message minibuffer and notify if available given message"
   (message (concat "SBT Build: " string))
-  (if (functionp 'growl) (growl "SBT Build" string)))
+  (if (functionp 'notify) (notify "SBT Build" string)))
 
 (defun ensime-sbt-notify-build (string)
   "Watch output and growl on success or failure"
   (cond ((string-match "success.*Successful" string)
-         (ensime-sbt-message-growl "Success!"))
+         (ensime-sbt-notify "Success!"))
         ((string-match "error.*Error running test-compile" string)
-         (ensime-sbt-message-growl "Test Compile Failed"))
+         (ensime-sbt-notify "Test Compile Failed"))
         ((string-match "error.*Error running test.*" string)
-         (ensime-sbt-message-growl "Test Failed"))
+         (ensime-sbt-notify "Test Failed"))
         ((string-match "error.*Error running compile" string)
-         (ensime-sbt-message-growl "Compile Failed"))))
+         (ensime-sbt-notify "Compile Failed"))))
 
 (defvar ensime-sbt-mode-hook nil
   "Hook to run after installing scala mode")

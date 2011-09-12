@@ -55,6 +55,7 @@
 (require 'switch-window)
 (require 'jz-file-utils)
 (require 'growl)
+(require 'notify)
 
 (setq locate-command "mdfind")
 
