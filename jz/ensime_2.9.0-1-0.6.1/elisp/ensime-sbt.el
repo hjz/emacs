@@ -71,34 +71,38 @@
   :group 'ensime-sbt
   :type 'boolean)
 
-(defun ensime-sbt-message-growl (string)
-  "Message minibuffer and growl if available given message"
+(defun ensime-sbt-notify (string)
+  "Message minibuffer and notify if available given message"
   (message (concat "SBT Build: " string))
-  (if (functionp 'growl) (growl "SBT Build" string)))
+  (if (functionp 'notify) (notify "SBT Build" string)))
+
+(defun ensime-sbt-notify-fail (string)
+  "Notify failure message and jump to next error"
+  (ensime-sbt-notify (concat string " Failed!"))
+  (next-error))
 
 (defun ensime-sbt-notify-build (string)
-  "Watch output and growl on sucess or failure"
+  "Watch output and growl on success or failure"
   (cond ((string-match "success.*Successful" string)
-         (ensime-sbt-message-growl "Success!"))
+         (ensime-sbt-notify "Success!"))
         ((string-match "error.*Error running test-compile" string)
-         (ensime-sbt-message-growl "Test Compile Failed"))
+         (ensime-sbt-notify-fail "Test Compile"))
         ((string-match "error.*Error running test.*" string)
-         (ensime-sbt-message-growl "Test Failed"))
+         (ensime-sbt-notify-fail "Test"))
         ((string-match "error.*Error running compile" string)
-         (ensime-sbt-message-growl "Compile Failed"))))
+         (ensime-sbt-notify-fail "Compile"))))
 
 (defvar ensime-sbt-mode-hook nil
   "Hook to run after installing scala mode")
 
 (defconst sbt-stack-regexp "^.+?\\(org.specs\\|sbt\\|scala.Option\\|scala.collection\\).+?
 "
-  "Regexp that matches useless sbt stack traces.")
+  "Regexp that matches useless sbt stack traces")
 
 (defun ensime-sbt-stack-cleanup (string)
   (interactive)
   (let ((pmark (process-mark (get-buffer-process (current-buffer)))))
     (save-excursion
-      ;; XXX Hacky
       (goto-char (max (point-min) (- pmark 2000)))
       (while (re-search-forward sbt-stack-regexp pmark t)
 	(replace-match "")))))
@@ -183,8 +187,6 @@
       (erase-buffer)
       (comint-send-input t))))
 
-;; USE REGEXP
-
 (defun ensime-sbt-maybe-auto-compile ()
   "Compile the code."
   (interactive)
@@ -237,6 +239,7 @@
       (if (not (ensime-sbt-project-dir-p parent-path))
 	  path
 	parent-path))))
+
 
 
 (provide 'ensime-sbt)

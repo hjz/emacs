@@ -12,7 +12,7 @@
 (add-to-list 'load-path (concat user-dir "/elisp"))
 (add-to-list 'load-path (concat user-dir "/apel-10.8"))
 (add-to-list 'load-path (concat user-dir "/yasnippet-read-only"))
-(add-to-list 'load-path (concat user-dir "/ensime_2.9.1-0.7.6/elisp"))
+(add-to-list 'load-path (concat user-dir "/ensime_2.9.0-1-0.6.1/elisp"))
 (add-to-list 'load-path (concat user-dir "/vimpulse"))
 (add-to-list 'load-path (concat user-dir "/vimpulse-surround"))
 (add-to-list 'load-path (concat user-dir "/vimpulse-plugins"))
@@ -578,8 +578,6 @@ cursor to the new line."
   (interactive)
   (enlarge-window (/ (window-height (next-window)) 2)))
 
-(global-set-key (kbd "C-c v") 'halve-other-window-height)
-
 ;; TODO try these?
 ; open file
 ;(global-set-key [(super o)] 'find-file)
@@ -807,6 +805,7 @@ cursor to the new line."
 (define-key my-keys-minor-mode-map (kbd "C-w C-l") 'windmove-right)
 (define-key my-keys-minor-mode-map (kbd "C-w C-k") 'windmove-up)
 (define-key my-keys-minor-mode-map (kbd "C-w C-j") 'windmove-down)
+(define-key my-keys-minor-mode-map (kbd "C-w SPC") 'halve-other-window-height)
 
 (define-key my-keys-minor-mode-map (kbd "C-w h") 'windmove-left)
 (define-key my-keys-minor-mode-map (kbd "C-w l") 'windmove-right)
@@ -1102,7 +1101,7 @@ cursor to the new line."
 (vimpulse-map (kbd ",k") '(lambda () (interactive) (save-sbt-action "console")) 'scala-mode 'comint-mode)
 (vimpulse-map (kbd ",U") '(lambda () (interactive) (save-sbt-action "update")) 'scala-mode 'comint-mode)
 (vimpulse-map (kbd ",n") '(lambda () (interactive) (save-sbt-action "; clean ; update ; compile")) 'scala-mode 'comint-mode)
-(vimpulse-map (kbd ", SPC") '(lambda () (interactive) (ensime-sbt-switch)) 'scala-mode 'comint-mode)
+(vimpulse-map (kbd ", ") '(lambda () (interactive) (ensime-sbt-switch)) 'scala-mode 'comint-mode)
 
 ; Browsing cgit
 (vimpulse-map (kbd ",y") '(lambda () (interactive) (cgit-yank t)) 'scala-mode)
@@ -1193,6 +1192,7 @@ cursor to the new line."
 (add-hook 'ido-setup-hook '(lambda ()
                              (define-key ido-completion-map (kbd "C-c p") 'ido-toggle-prefix)
                              (define-key ido-completion-map (kbd "C-c c") 'ido-toggle-case)
+                             (define-key ido-completion-map (kbd "C-c m") 'ido-restrict-to-matches)
                              (define-key ido-completion-map (kbd "C-c t") 'ido-toggle-regexp)
                              (define-key ido-completion-map (kbd "C-c e") 'ido-edit-input)
                              (define-key ido-completion-map (kbd "C-k") 'ido-prev-match)
@@ -1254,3 +1254,5 @@ cursor to the new line."
 (setq mouse-wheel-scroll-amount '(1 ((shift) . 1))) ;; one line at a time
 (setq mouse-wheel-progressive-speed t) ;; don't accelerate scrolling
 (require 'smooth-scrolling)
+
+;; use setq-default to set it for /all/ modes

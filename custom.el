@@ -88,7 +88,7 @@
  '(message-log-max 1000)
  '(moccur-edit-highlight-edited-text t)
  '(moccur-query-when-buffer-read-only t)
- '(next-error-highlight 0.75)
+ '(next-error-highlight 1)
  '(next-error-recenter (quote (4)))
  '(one-key-auto-load-menus t)
  '(one-key-menus-location "~/.emacs.d/jz/one-key-menus")
