@@ -1101,7 +1101,7 @@ cursor to the new line."
 (vimpulse-map (kbd ",k") '(lambda () (interactive) (save-sbt-action "console")) 'scala-mode 'comint-mode)
 (vimpulse-map (kbd ",U") '(lambda () (interactive) (save-sbt-action "update")) 'scala-mode 'comint-mode)
 (vimpulse-map (kbd ",n") '(lambda () (interactive) (save-sbt-action "; clean ; update ; compile")) 'scala-mode 'comint-mode)
-(vimpulse-map (kbd ", ") '(lambda () (interactive) (ensime-sbt-switch)) 'scala-mode 'comint-mode)
+(vimpulse-map (kbd ",SPC") '(lambda () (interactive) (ensime-sbt-switch)) 'scala-mode 'comint-mode)
 
 ; Browsing cgit
 (vimpulse-map (kbd ",y") '(lambda () (interactive) (cgit-yank t)) 'scala-mode)
