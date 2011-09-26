@@ -90,6 +90,10 @@ ido is used for the completing read if available."
     (completing-read prompt names nil t)))
 
 ;;;###autoload
+
+(defun last-component (str sep)
+  (car (last (split-string str sep t))))
+
 (defun git-find-file ()
   "Prompt with a completing list of all files in the project to find one.
 
