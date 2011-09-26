@@ -35,7 +35,7 @@
 (add-to-list 'load-path (concat user-dir "/confluence-mode"))
 (add-to-list 'load-path (concat user-dir "/minimap"))
 (add-to-list 'load-path (concat user-dir "/google-weather"))
-(add-to-list 'load-path (concat user-dir "/find-file-in-project"))
+(add-to-list 'load-path (concat user-dir "/ffip-old"))
 (add-to-list 'load-path (concat user-dir "/org-mode"))
 (add-to-list 'load-path (concat user-dir "/cc-mode-5.31.3"))
 (add-to-list 'load-path (concat user-dir "/switch-window"))
@@ -45,6 +45,8 @@
 
 (eval-after-load "icomplete" '(progn (require 'icomplete+)))
 
+(require 'find-file-in-project)
+(require 'git-find-file)
 (require 'ace-jump-mode)
 (require 'quack)
 (require 'cc-mode)
@@ -508,12 +510,19 @@ cursor to the new line."
     (my-scala-newline)))
 
 (add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
+
+;; Limit file type when doing ffip in scala
+(add-hook 'scala-mode-hook
+          (lambda () (set (make-local-variable 'ffip-patterns)
+                       '("*.scala" "*.yml" "*.java" "*.thrift"))))
+
 (defun me-turn-off-indent-tabs-mode ()
   (setq indent-tabs-mode nil))
 (add-hook 'scala-mode-hook 'me-turn-off-indent-tabs-mode)
 (add-hook 'scala-mode-hook 'hs-minor-mode)
 (add-hook 'scala-mode-hook 'subword-mode)
 (add-hook 'scala-mode-hook 'autopair-mode)
+(add-hook 'js-mode-hook (lambda () (local-set-key (kbd "RET") 'newline-and-indent)))
 
 ; highlighting for TODO
 (require 'highlight-fixmes-mode)
@@ -865,7 +874,7 @@ cursor to the new line."
 (define-key my-keys-minor-mode-map (kbd "C-f g") 'dmoccur)
 (define-key my-keys-minor-mode-map (kbd "C-f s") 'ack-same)
 (define-key my-keys-minor-mode-map (kbd "C-f a") 'ack)
-(define-key my-keys-minor-mode-map (kbd "C-f f") 'find-file-in-project)
+(define-key my-keys-minor-mode-map (kbd "C-f f") 'git-find-file)
 (define-key my-keys-minor-mode-map (kbd "C-f r") 'replace-regexp)
 (define-key my-keys-minor-mode-map (kbd "C-f l") 'lazy-search-menu)
 (define-key my-keys-minor-mode-map (kbd "C-f p") 'find-grep-dired)
@@ -917,10 +926,12 @@ cursor to the new line."
 (vimpulse-imap (kbd "RET") 'reindent-then-newline-and-indent)
 
 (vimpulse-imap (kbd "RET") 'electrify-return-if-match-scala 'scala-mode)
+(vimpulse-imap (kbd "RET") 'newline-and-indent 'js-mode)
 (vimpulse-imap (kbd "C-SPC") 'auto-complete 'scala-mode)
 
 (vimpulse-map (kbd "&") 'lazy-search-menu)
 (vimpulse-vmap (kbd "&") 'lazy-search-menu)
+(vimpulse-vmap (kbd "[") 'vimpulse-indent)
 (vimpulse-vmap (kbd "Q") 'query-replace-regexp)
 (vimpulse-map (kbd "Q") 'query-replace-regexp)
 
@@ -1108,6 +1119,7 @@ cursor to the new line."
 (vimpulse-map (kbd ",Y") '(lambda () (interactive) (cgit-yank)) 'scala-mode)
 (vimpulse-map (kbd ",v") '(lambda () (interactive) (cgit-browse t)) 'scala-mode)
 (vimpulse-map (kbd ",V") '(lambda () (interactive) (cgit-browse)) 'scala-mode)
+(vimpulse-map (kbd ",u") 'browse-url-at-point)
 
 (vimpulse-map (kbd ",g") 'magit-status)
 (vimpulse-map (kbd ",/") 'minimap-toggle)
@@ -1128,7 +1140,7 @@ cursor to the new line."
 (vimpulse-map (kbd "C-f g") 'dmoccur)
 (vimpulse-map (kbd "C-f s") 'ack-same)
 (vimpulse-map (kbd "C-f a") 'ack)
-(vimpulse-map (kbd "C-f f") 'find-file-in-project)
+(vimpulse-map (kbd "C-f f") 'git-find-file)
 (vimpulse-map (kbd "C-f r") 'replace-regexp)
 (vimpulse-map (kbd "C-f l") 'lazy-search-menu)
 (vimpulse-map (kbd "C-f p") 'find-grep-dired)
@@ -1145,7 +1157,8 @@ cursor to the new line."
 (vimpulse-imap (kbd "C-f g") 'dmoccur)
 (vimpulse-imap (kbd "C-f s") 'ack-same)
 (vimpulse-imap (kbd "C-f a") 'ack)
-(vimpulse-imap (kbd "C-f f") 'find-file-in-project)
+;(vimpulse-imap (kbd "C-f f") 'find-file-in-project)
+(vimpulse-imap (kbd "C-f f") 'git-find-file)
 (vimpulse-imap (kbd "C-f r") 'replace-regexp)
 (vimpulse-imap (kbd "C-f l") 'lazy-search-menu)
 (vimpulse-imap (kbd "C-f p") 'find-grep-dired)

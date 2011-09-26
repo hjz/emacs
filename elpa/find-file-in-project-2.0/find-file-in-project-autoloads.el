@@ -4,7 +4,7 @@
 
 
 ;;;### (autoloads (ffip-project-root find-file-in-project) "find-file-in-project"
-;;;;;;  "find-file-in-project.el" (19783 9048))
+;;;;;;  "find-file-in-project.el" (20083 38595))
 ;;; Generated autoloads from find-file-in-project.el
 
 (autoload 'find-file-in-project "find-file-in-project" "\
@@ -23,8 +23,8 @@ Find the root of the project defined by presence of `.emacs-project'.
 
 ;;;***
 
-;;;### (autoloads nil nil ("find-file-in-project-pkg.el") (19783
-;;;;;;  9048 30695))
+;;;### (autoloads nil nil ("find-file-in-project-pkg.el") (20083
+;;;;;;  38595 337489))
 
 ;;;***
 

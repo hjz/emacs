@@ -379,39 +379,48 @@ be used later to give contextual help when entering arguments."
     (cache . t)
     ))
 
+;; (defun ensime-ac-enable ()
+;;   (make-local-variable 'ac-sources)
+
+;;   ;; Note, we try to complete names before members.
+;;   ;; This simplifies the regexes.
+;;   (setq ac-sources '(ac-source-ensime-package-decl-members
+;; 		     ac-source-ensime-scope-names
+;; 		     ac-source-ensime-members ))
+
+;;   (make-local-variable 'ac-use-comphist)
+;;   (setq ac-use-comphist t)
+
+;;   (make-local-variable 'ac-auto-start)
+;;   (setq ac-auto-start nil)
+
+;;   (make-local-variable 'ac-expand-on-auto-complete)
+;;   (setq ac-expand-on-auto-complete nil)
+
+;;   (make-local-variable 'ac-use-fuzzy)
+;;   (setq ac-use-fuzzy nil)
+
+;;   (make-local-variable 'ac-use-quick-help)
+;;   (setq ac-use-quick-help t)
+
+;;   (make-local-variable 'ac-delete-dups)
+;;   (setq ac-delete-dups nil)
+
+;;   (make-local-variable 'ac-ignore-case)
+;;   (setq ac-ignore-case t)
+
+;;   (make-local-variable 'ac-trigger-key)
+;;   (ac-set-trigger-key "TAB")
+
+;;   (auto-complete-mode 1)
+;;   )
+
 (defun ensime-ac-enable ()
-  (make-local-variable 'ac-sources)
-
-  ;; Note, we try to complete names before members.
-  ;; This simplifies the regexes.
-  (setq ac-sources '(ac-source-ensime-package-decl-members
-		     ac-source-ensime-scope-names
-		     ac-source-ensime-members ))
-
-  (make-local-variable 'ac-use-comphist)
-  (setq ac-use-comphist t)
-
-  (make-local-variable 'ac-auto-start)
-  (setq ac-auto-start nil)
-
-  (make-local-variable 'ac-expand-on-auto-complete)
-  (setq ac-expand-on-auto-complete nil)
-
-  (make-local-variable 'ac-use-fuzzy)
-  (setq ac-use-fuzzy nil)
-
-  (make-local-variable 'ac-use-quick-help)
-  (setq ac-use-quick-help t)
-
-  (make-local-variable 'ac-delete-dups)
-  (setq ac-delete-dups nil)
-
-  (make-local-variable 'ac-ignore-case)
-  (setq ac-ignore-case t)
-
-  (make-local-variable 'ac-trigger-key)
-  (ac-set-trigger-key "TAB")
-
+  (setq ac-sources (append '(
+                             ac-source-yasnippet
+                             ac-source-ensime-package-decl-members
+                             ac-source-ensime-scope-names
+                             ac-source-ensime-members) ac-sources))
   (auto-complete-mode 1)
   )
 
