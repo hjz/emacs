@@ -1,4 +1,6 @@
-((("switch-to-buffer" .
+((("searchResults" .
+   [1 0 0 0 0 0 0 0 0 0 0 0 0])
+  ("switch-to-buffer" .
    [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1])
   ("TalonUrlRegex" .
    [0 0 0 0 0 1 0 0 0 0 0 0 0])

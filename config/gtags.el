@@ -42,5 +42,4 @@
 (vimpulse-map (kbd "M-.") 'gtags-find-tag-from-here 'scala-mode)
 ; (vimpulse-map (kbd "s-.") 'ww-next-gtag 'scala-mode)   ;; M-; cycles to next result, after doing M-. C-M-. or C-M-,
 (vimpulse-map (kbd "M-,") 'gtags-pop-stack 'scala-mode)
-(vimpulse-map (kbd ",d") 'gtags-update)
 (vimpulse-map (kbd ",t") 'gtags-find-tag)

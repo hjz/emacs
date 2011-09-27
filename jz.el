@@ -42,6 +42,11 @@
 (add-to-list 'load-path (concat user-dir "/org-jekyll"))
 (add-to-list 'load-path (concat user-dir "/ace-jump-mode"))
 (add-to-list 'load-path (concat user-dir "/xgtags"))
+(add-to-list 'load-path (concat user-dir "/git-emacs"))
+
+;(load (concat user-dir "/nxhtml/autostart.el"))
+
+(require 'git-emacs)
 
 (eval-after-load "icomplete" '(progn (require 'icomplete+)))
 
@@ -888,7 +893,7 @@ cursor to the new line."
 (define-key my-keys-minor-mode-map (kbd "C-c RET") '(lambda () (interactive) (switch-to-buffer "*Messages*")))
 
 ;; searching
-(define-key my-keys-minor-mode-map (kbd "C-c d") 'ediff-revision)
+(define-key my-keys-minor-mode-map (kbd "C-c d") 'git-diff-other)
 (define-key my-keys-minor-mode-map (kbd "M-i") 'google-search-selection)
 (define-key my-keys-minor-mode-map (kbd "s-i") 'google-it)
 
@@ -1098,6 +1103,7 @@ cursor to the new line."
 ;; Scala stuff
 
 (vimpulse-map (kbd ",,") 'switch-between-test-and-source 'scala-mode)
+(vimpulse-map (kbd ",u") 'git-diff-other)
 ;(vimpulse-map (kbd "C-m") 'call-last-kbd-macro) ;; This seems to intercept Enter
 
 ; SBT
