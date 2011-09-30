@@ -916,6 +916,9 @@ cursor to the new line."
 (fset 'scala-break-line
    (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ([119 108 105 10 escape 59 115 47 44 32 47 44 17 10 47 103 32 backspace return 37 61 37] 0 "%d")) arg)))
 
+(fset 'indent-brace
+   (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ("=%" 0 "%d")) arg)))
+
 (defun minimap-toggle ()
   "Show minimap if hidden, hide if present."
   (interactive)
@@ -930,6 +933,7 @@ cursor to the new line."
 (vimpulse-map (kbd ",b") 'surround-paren)
 (vimpulse-map (kbd ",s") 'surround-square)
 (vimpulse-map (kbd ",z") 'scala-break-line)
+(vimpulse-map (kbd "K") 'indent-brace)
 (vimpulse-map (kbd "S-C-y") 'viper-scroll-down-one)
 (vimpulse-map (kbd "<up>") 'comint-previous-input 'comint-mode)
 (vimpulse-map (kbd "<down>") 'comint-next-input 'comint-mode)
@@ -1086,7 +1090,6 @@ cursor to the new line."
 (vimpulse-map (kbd "C-j") 'viper-forward-paragraph)
 (vimpulse-map (kbd "C-i") 'vimpulse-jump-forward)
 
-(vimpulse-map (kbd "K") 'viper-paren-match)
 (vimpulse-vmap (kbd "]") 'sort-lines)
 
 (vimpulse-vmap (kbd "m") 'apply-macro-to-region-lines)
