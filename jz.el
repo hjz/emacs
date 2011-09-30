@@ -176,9 +176,10 @@ advice like this:
 ;(add-to-list 'load-path (concat user-dir "/scamacs/scamacs"))
 ;(add-to-list 'load-path (concat user-dir "/scamacs/ecb"))
 
-(add-to-list 'load-path (concat user-dir "/mo-git-blame"))
-(autoload 'mo-git-blame-file "mo-git-blame" nil t)
-(autoload 'mo-git-blame-current "mo-git-blame" nil t)
+;; mo-git-blame
+;; (add-to-list 'load-path (concat user-dir "/mo-git-blame"))
+;; (autoload 'mo-git-blame-file "mo-git-blame" nil t)
+;; (autoload 'mo-git-blame-current "mo-git-blame" nil t)
 
 (setq exec-path (append exec-path '("/usr/local/bin")))
 
@@ -670,24 +671,24 @@ cursor to the new line."
 (global-set-key (kbd "<C-prior>") 'elscreen-previous)
 (global-set-key (kbd "<C-next>")  'elscreen-next)
 
-(defun elscreen-frame-title-update ()
-   (when (elscreen-screen-modified-p 'elscreen-frame-title-update)
-     (let* ((screen-list (sort (elscreen-get-screen-list) '<))
-           (screen-to-name-alist (elscreen-get-screen-to-name-alist))
-           (title (mapconcat
-                   (lambda (screen)
-                     (format "%d%s %s"
-                             screen (elscreen-status-label screen)
-                               (replace-regexp-in-string "\*.*\*" ""
-                                (get-alist screen screen-to-name-alist))))
-                   screen-list " ")))
+;; (defun elscreen-frame-title-update ()
+;;    (when (elscreen-screen-modified-p 'elscreen-frame-title-update)
+;;      (let* ((screen-list (sort (elscreen-get-screen-list) '<))
+;;            (screen-to-name-alist (elscreen-get-screen-to-name-alist))
+;;            (title (mapconcat
+;;                    (lambda (screen)
+;;                      (format "%d%s %s"
+;;                              screen (elscreen-status-label screen)
+;;                                (replace-regexp-in-string "\*.*\*" ""
+;;                                 (get-alist screen screen-to-name-alist))))
+;;                    screen-list " ")))
 
-       (if (fboundp 'set-frame-name)
-          (set-frame-name title)
-        (setq frame-title-format title)))))
+;;        (if (fboundp 'set-frame-name)
+;;           (set-frame-name title)
+;;         (setq frame-title-format title)))))
 
-; (eval-after-load "elscreen"
-;   '(add-hook 'elscreen-screen-update-hook 'elscreen-frame-title-update))
+;; (eval-after-load "elscreen"
+;;   '(add-hook 'elscreen-screen-update-hook 'elscreen-frame-title-update))
 
 (load "elscreen" "ElScreen" t)
 (require 'elscreen-buffer-list)
@@ -892,6 +893,7 @@ cursor to the new line."
 
 (define-key my-keys-minor-mode-map (kbd "C-c RET") '(lambda () (interactive) (switch-to-buffer "*Messages*")))
 
+
 ;; searching
 (define-key my-keys-minor-mode-map (kbd "C-c d") 'git-diff-other)
 (define-key my-keys-minor-mode-map (kbd "M-i") 'google-search-selection)
@@ -911,6 +913,9 @@ cursor to the new line."
 (fset 'surround-brace
    (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ([105 123 escape 108 100 105 119 84 123 105 25 escape 37 105] 0 "%d")) arg)))
 
+(fset 'scala-break-line
+   (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ([119 108 105 10 escape 59 115 47 44 32 47 44 17 10 47 103 32 backspace return 37 61 37] 0 "%d")) arg)))
+
 (defun minimap-toggle ()
   "Show minimap if hidden, hide if present."
   (interactive)
@@ -924,6 +929,7 @@ cursor to the new line."
 (vimpulse-map (kbd ",c") 'surround-brace)
 (vimpulse-map (kbd ",b") 'surround-paren)
 (vimpulse-map (kbd ",s") 'surround-square)
+(vimpulse-map (kbd ",z") 'scala-break-line)
 (vimpulse-map (kbd "S-C-y") 'viper-scroll-down-one)
 (vimpulse-map (kbd "<up>") 'comint-previous-input 'comint-mode)
 (vimpulse-map (kbd "<down>") 'comint-next-input 'comint-mode)
