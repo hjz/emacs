@@ -881,6 +881,7 @@ cursor to the new line."
 (define-key my-keys-minor-mode-map (kbd "C-f s") 'ack-same)
 (define-key my-keys-minor-mode-map (kbd "C-f a") 'ack)
 (define-key my-keys-minor-mode-map (kbd "C-f f") 'git-find-file)
+(define-key my-keys-minor-mode-map (kbd "C-'") 'git-find-file)
 (define-key my-keys-minor-mode-map (kbd "C-f r") 'replace-regexp)
 (define-key my-keys-minor-mode-map (kbd "C-f l") 'lazy-search-menu)
 (define-key my-keys-minor-mode-map (kbd "C-f p") 'find-grep-dired)
@@ -1096,7 +1097,7 @@ cursor to the new line."
 
 (vimpulse-map ";" 'viper-ex)
 (vimpulse-vmap ";" 'vimpulse-visual-ex)
-;(vimpulse-map (kbd "SPC") 'vimpulse-indent)
+(vimpulse-map (kbd "SPC") 'vimpulse-indent)
 
 (defun save-sbt-action (string)
   (when (string= "scala-mode" (buffer-mode (buffer-name)))
@@ -1116,7 +1117,7 @@ cursor to the new line."
 ;(vimpulse-map (kbd "C-m") 'call-last-kbd-macro) ;; This seems to intercept Enter
 
 ; SBT
-(vimpulse-map (kbd ",p") '(lambda () (interactive) (save-sbt-action "project macaw-dm"))  'scala-mode 'comint-mode)
+(vimpulse-map (kbd ",p") '(lambda () (interactive) (save-sbt-action "project macaw-search"))  'scala-mode 'comint-mode)
 (vimpulse-map (kbd ",.") '(lambda () (interactive) (save-sbt-action "compile"))  'scala-mode 'comint-mode)
 (vimpulse-map (kbd ",j") '(lambda () (interactive) (save-sbt-action (concat "test-only " (get-spec-class)))) 'scala-mode 'comint-mode)
 (vimpulse-map (kbd ",a") '(lambda () (interactive) (save-sbt-action "test")) 'scala-mode 'comint-mode)
@@ -1142,7 +1143,6 @@ cursor to the new line."
 
 ;; ace jump
 (vimpulse-map (kbd ",f") 'ace-jump-line-mode)
-(vimpulse-map (kbd "SPC") 'ace-jump-mode)
 (vimpulse-map (kbd ",w") 'ace-jump-mode)
 
 ;; elscreen

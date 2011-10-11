@@ -95,7 +95,7 @@
 (defvar ensime-sbt-mode-hook nil
   "Hook to run after installing scala mode")
 
-(defconst sbt-stack-regexp "^.+?\\(org.specs\\|sbt\\|scala.Option\\|scala.collection\\).+?
+(defconst sbt-stack-regexp "^\[error\]\s-+?\\(org.specs\\|sbt\\|scala.Option\\|scala.collection\\).+?
 "
   "Regexp that matches useless sbt stack traces")
 
