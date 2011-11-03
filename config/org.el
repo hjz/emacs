@@ -10,8 +10,6 @@
 (setq org-mobile-inbox-for-pull (concat org-directory "/mobileorg.org"))
 (setq org-agenda-files '("~/Dropbox/org"))
 
-
-
 (require 'remember)
 (require 'org-remember)
 (setq remember-annotation-functions '(org-remember-annotation))
@@ -22,9 +20,9 @@
 (define-key global-map "\C-cr" 'org-remember)
 
 (setq org-remember-templates
-      '(("Todo" ?t "* TODO %^{Brief Description} %^g\n%?\n  Added: %U" "~/Dropbox/org/gtd.org" "Tasks")
-        ("Journal" ?j "* %U %?\n\n  %i\n  %a" "~/Dropbox/org/journal.org")
-        ("Idea" ?i "* %^{Title}\n  %i\n  %a" "~/Dropbox/org/maybe.org" "Ideas")))
+     '(("Todo" ?t "* TODO %^{Brief Description} %^g\n%?\n  Added: %U" "~/Dropbox/org/gtd.org" "Tasks")
+       ("Journal" ?j "* %U %?\n\n  %i\n  %a" "~/Dropbox/org/journal.org")
+       ("Idea" ?i "* %^{Title}\n  %i\n  %a" "~/Dropbox/org/maybe.org" "Ideas")))
 
 (setq org-refile-targets (quote (("gtd.org" :maxlevel . 1)
                               ("someday.org" :level . 2))))
