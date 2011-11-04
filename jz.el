@@ -593,6 +593,11 @@ cursor to the new line."
   (interactive)
   (enlarge-window (/ (window-height (next-window)) 2)))
 
+(defun double-other-window-height ()
+  "Expand current window to use double of the other window's lines."
+  (interactive)
+  (enlarge-window (- (/ (window-height (next-window)) 2))))
+
 ;; TODO try these?
 ; open file
 ;(global-set-key [(super o)] 'find-file)
@@ -821,6 +826,7 @@ cursor to the new line."
 (define-key my-keys-minor-mode-map (kbd "C-w C-k") 'windmove-up)
 (define-key my-keys-minor-mode-map (kbd "C-w C-j") 'windmove-down)
 (define-key my-keys-minor-mode-map (kbd "C-w SPC") 'halve-other-window-height)
+(define-key my-keys-minor-mode-map (kbd "C-w C-SPC") 'double-other-window-height)
 
 (define-key my-keys-minor-mode-map (kbd "C-w h") 'windmove-left)
 (define-key my-keys-minor-mode-map (kbd "C-w l") 'windmove-right)
