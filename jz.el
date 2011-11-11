@@ -411,6 +411,7 @@ advice like this:
   "Like MAPCAR, but applies a different function to the first element."
      (if list
        (cons (funcall fn-head (car list)) (mapcar fn-rest (cdr list)))))
+
 (defun camelize (s)
   "Convert under_score string S to CamelCase string."
   (mapconcat 'identity (mapcar
@@ -422,6 +423,12 @@ advice like this:
                          '(lambda (word) (downcase word))
                          '(lambda (word) (capitalize (downcase word)))
                          (split-string s "_")) ""))
+(defun camelize-word ()
+  (interactive)
+  (let ((v (current-word)))
+    (delete-region (point) (+ (point) (length v)))
+    (insert (camelize v))
+    ))
 
 (require 'ecb)
 (setq ecb-tip-of-the-day nil)
@@ -1058,8 +1065,8 @@ cursor to the new line."
 (yas/load-directory (concat user-dir "/yasnippet-read-only/snippets"))
 
 ;; Speed up birdcage
-;; (setenv "SBT_INTRANSITIVE" "0")
-(setenv "NO_PROJECT_DEPS" "1")
+(setenv "SBT_INTRANSITIVE" "1")
+;(setenv "NO_PROJECT_DEPS" "0")
 
 (add-hook 'scala-mode-hook 'yas/minor-mode-on)
 (yas/global-mode 1)

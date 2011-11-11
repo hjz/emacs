@@ -79,7 +79,7 @@
 (defun ensime-sbt-notify-fail (string)
   "Notify failure message and jump to next error"
   (ensime-sbt-notify (concat string " Failed!"))
-  (next-error))
+  )
 
 (defun ensime-sbt-notify-build (string)
   "Watch output and growl on success or failure"
@@ -95,7 +95,7 @@
 (defvar ensime-sbt-mode-hook nil
   "Hook to run after installing scala mode")
 
-(defconst sbt-stack-regexp "^\[error\]\s-+?\\(org.specs\\|sbt\\|scala.Option\\|scala.collection\\).+?
+(defconst sbt-stack-regexp "^.+?\\(org.specs\\|sbt\\|scala.Option\\|scala.collection\\).+?
 "
   "Regexp that matches useless sbt stack traces")
 
