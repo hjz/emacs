@@ -79,6 +79,7 @@
 (defun ensime-sbt-notify-fail (string)
   "Notify failure message and jump to next error"
   (ensime-sbt-notify (concat string " Failed!"))
+  (next-error)
   )
 
 (defun ensime-sbt-notify-build (string)

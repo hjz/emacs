@@ -181,7 +181,7 @@ advice like this:
 ;; (autoload 'mo-git-blame-file "mo-git-blame" nil t)
 ;; (autoload 'mo-git-blame-current "mo-git-blame" nil t)
 
-(setq exec-path (append exec-path '("/usr/local/bin")))
+(setq exec-path (append exec-path '("/usr/local/bin", "/Users/jz/ps/birdcage/bin")))
 
 (require 'one-key)
 (require 'lazy-search-extension)
@@ -933,6 +933,9 @@ cursor to the new line."
 (fset 'indent-brace
    (lambda (&optional arg) "Keyboard macro." (interactive "p") (kmacro-exec-ring-item (quote ("=%" 0 "%d")) arg)))
 
+(fset 'scala-break-line-full
+   [?t ?\( ?, ?z ?% ?i return escape ?d ?d])
+
 (defun minimap-toggle ()
   "Show minimap if hidden, hide if present."
   (interactive)
@@ -947,6 +950,7 @@ cursor to the new line."
 (vimpulse-map (kbd ",b") 'surround-paren)
 (vimpulse-map (kbd ",s") 'surround-square)
 (vimpulse-map (kbd ",z") 'scala-break-line)
+(vimpulse-map (kbd ",x") 'scala-break-line-full)
 (vimpulse-map (kbd "K") 'indent-brace)
 (vimpulse-map (kbd "S-C-y") 'viper-scroll-down-one)
 (vimpulse-map (kbd "<up>") 'comint-previous-input 'comint-mode)
@@ -1065,8 +1069,8 @@ cursor to the new line."
 (yas/load-directory (concat user-dir "/yasnippet-read-only/snippets"))
 
 ;; Speed up birdcage
-(setenv "SBT_INTRANSITIVE" "1")
-;(setenv "NO_PROJECT_DEPS" "0")
+; (setenv "SBT_INTRANSITIVE" "1")
+;(setenv "NO_PROJECT_DEPS" "1")
 
 (add-hook 'scala-mode-hook 'yas/minor-mode-on)
 (yas/global-mode 1)
@@ -1133,7 +1137,8 @@ cursor to the new line."
 (vimpulse-map (kbd ",p") '(lambda () (interactive) (save-sbt-action "project macaw-search"))  'scala-mode 'comint-mode)
 (vimpulse-map (kbd ",.") '(lambda () (interactive) (save-sbt-action "compile"))  'scala-mode 'comint-mode)
 (vimpulse-map (kbd ",j") '(lambda () (interactive) (save-sbt-action (concat "test-only " (get-spec-class)))) 'scala-mode 'comint-mode)
-(vimpulse-map (kbd ",a") '(lambda () (interactive) (save-sbt-action "test")) 'scala-mode 'comint-mode)
+(vimpulse-map (kbd ",a") '(lambda () (interactive) (save-sbt-action "test-only")) 'scala-mode 'comint-mode)
+(vimpulse-map (kbd ",o") '(lambda () (interactive) (save-sbt-action "test-only")) 'scala-mode 'comint-mode)
 (vimpulse-map (kbd ",i") '(lambda () (interactive) (save-sbt-action "integration-test")) 'scala-mode 'comint-mode)
 (vimpulse-map (kbd ",l") '(lambda () (interactive) (save-sbt-action "test-quick")) 'scala-mode 'comint-mode)
 (vimpulse-map (kbd ",;") '(lambda () (interactive) (save-sbt-action "test")) 'scala-mode 'comint-mode)
@@ -1141,6 +1146,7 @@ cursor to the new line."
 (vimpulse-map (kbd ",k") '(lambda () (interactive) (save-sbt-action "console")) 'scala-mode 'comint-mode)
 (vimpulse-map (kbd ",U") '(lambda () (interactive) (save-sbt-action "update")) 'scala-mode 'comint-mode)
 (vimpulse-map (kbd ",n") '(lambda () (interactive) (save-sbt-action "; clean ; update ; compile")) 'scala-mode 'comint-mode)
+(vimpulse-map (kbd ",R") '(lambda () (interactive) (save-sbt-action "generate-run-classpath")) 'scala-mode 'comint-mode)
 (vimpulse-map (kbd ",SPC") '(lambda () (interactive) (ensime-sbt-switch)) 'scala-mode 'comint-mode)
 
 ; Browsing cgit
@@ -1152,7 +1158,12 @@ cursor to the new line."
 
 (vimpulse-map (kbd ",g") 'magit-status)
 (vimpulse-map (kbd ",/") 'minimap-toggle)
-(vimpulse-map (kbd ",r") 'jao-toggle-selective-display)
+(vimpulse-map (kbd ",t") 'jao-toggle-selective-display)
+(vimpulse-map (kbd ",r") '(lambda () (interactive)
+                            (when (get-buffer "*ensime-sbt*")
+                                     (ensime-sbt-action "exit"))
+                            (sleep-for 1)
+                            (ensime-sbt-switch) (other-window -1)) 'scala-mode 'comint-mode)
 
 ;; ace jump
 (vimpulse-map (kbd ",f") 'ace-jump-line-mode)
