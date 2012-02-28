@@ -25,7 +25,7 @@
         (save-buffer)
       ;; Clear buffer-modified flag caused by set-visited-file-name
       (set-buffer-modified-p nil))
-  (message "Renamed to %s." )))
+  (message "Renamed to %s." new-name)))
 
 (defun move-buffer-file (dir)
  "Moves both current buffer and file it's visiting to DIR." (interactive "DNew directory: ")

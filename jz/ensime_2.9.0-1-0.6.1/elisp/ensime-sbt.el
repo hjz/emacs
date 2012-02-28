@@ -144,7 +144,7 @@
     (set (make-local-variable 'comint-scroll-to-bottom-on-output) t)
     (set (make-local-variable 'comint-prompt-read-only) t)
     (set (make-local-variable 'comint-output-filter-functions)
-	 '(ensime-sbt-stack-cleanup ensime-sbt-notify-build ansi-color-process-output comint-postoutput-scroll-to-bottom))
+	 '(ensime-sbt-notify-build ansi-color-process-output comint-postoutput-scroll-to-bottom))
 
     (if ensime-sbt-comint-ansi-support
 	(set (make-local-variable 'ansi-color-for-comint-mode) t)

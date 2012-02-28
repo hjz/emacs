@@ -1069,7 +1069,7 @@ cursor to the new line."
 (yas/load-directory (concat user-dir "/yasnippet-read-only/snippets"))
 
 ;; Speed up birdcage
-; (setenv "SBT_INTRANSITIVE" "1")
+;(setenv "SBT_INTRANSITIVE" "1")
 ;(setenv "NO_PROJECT_DEPS" "1")
 
 (add-hook 'scala-mode-hook 'yas/minor-mode-on)
