@@ -12,7 +12,8 @@
 (add-to-list 'load-path (concat user-dir "/elisp"))
 (add-to-list 'load-path (concat user-dir "/apel-10.8"))
 (add-to-list 'load-path (concat user-dir "/yasnippet-read-only"))
-(add-to-list 'load-path (concat user-dir "/ensime_2.9.0-1-0.6.1/elisp"))
+;; (add-to-list 'load-path (concat user-dir "/ensime_2.9.0-1-0.6.1/elisp"))
+(add-to-list 'load-path (concat user-dir "/ensime_2.9.2-SNAPSHOT-0.9.3.RC2"))
 (add-to-list 'load-path (concat user-dir "/vimpulse"))
 (add-to-list 'load-path (concat user-dir "/vimpulse-surround"))
 (add-to-list 'load-path (concat user-dir "/vimpulse-plugins"))
@@ -1125,6 +1126,12 @@ cursor to the new line."
   "Returns the major mode associated with a buffer."
   (with-current-buffer buffer-or-string major-mode))
 
+(defun sbt-project ()
+  (setq rest (car (cdr (split-string (ex-pwd) "/Users/jz/ps/birdcage/"))))
+      (when rest
+        (setq proj (car (cdr (split-string rest "/"))))
+          (when proj (save-sbt-action (concat "project " proj))))))
+
 (vimpulse-map "b" 'backward-word)
 
 ;; Scala stuff
@@ -1134,7 +1141,7 @@ cursor to the new line."
 ;(vimpulse-map (kbd "C-m") 'call-last-kbd-macro) ;; This seems to intercept Enter
 
 ; SBT
-(vimpulse-map (kbd ",p") '(lambda () (interactive) (save-sbt-action "project macaw-search"))  'scala-mode 'comint-mode)
+(vimpulse-map (kbd ",p") '(lambda () (interactive) (sbt-project))  'scala-mode 'comint-mode)
 (vimpulse-map (kbd ",.") '(lambda () (interactive) (save-sbt-action "compile"))  'scala-mode 'comint-mode)
 (vimpulse-map (kbd ",j") '(lambda () (interactive) (save-sbt-action (concat "test-only " (get-spec-class)))) 'scala-mode 'comint-mode)
 (vimpulse-map (kbd ",a") '(lambda () (interactive) (save-sbt-action "test-only")) 'scala-mode 'comint-mode)
@@ -1150,10 +1157,10 @@ cursor to the new line."
 (vimpulse-map (kbd ",SPC") '(lambda () (interactive) (ensime-sbt-switch)) 'scala-mode 'comint-mode)
 
 ; Browsing cgit
-(vimpulse-map (kbd ",y") '(lambda () (interactive) (cgit-yank t)) 'scala-mode)
-(vimpulse-map (kbd ",Y") '(lambda () (interactive) (cgit-yank)) 'scala-mode)
-(vimpulse-map (kbd ",v") '(lambda () (interactive) (cgit-browse t)) 'scala-mode)
-(vimpulse-map (kbd ",V") '(lambda () (interactive) (cgit-browse)) 'scala-mode)
+(vimpulse-map (kbd ",y") '(lambda () (interactive) (cgit-yank t)))
+(vimpulse-map (kbd ",Y") '(lambda () (interactive) (cgit-yank)))
+(vimpulse-map (kbd ",v") '(lambda () (interactive) (cgit-browse t)))
+(vimpulse-map (kbd ",V") '(lambda () (interactive) (cgit-browse)))
 (vimpulse-map (kbd ",u") 'browse-url-at-point)
 
 (vimpulse-map (kbd ",g") 'magit-status)
