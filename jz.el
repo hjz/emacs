@@ -35,7 +35,6 @@
 (add-to-list 'load-path (concat user-dir "/confluence-mode"))
 (add-to-list 'load-path (concat user-dir "/minimap"))
 (add-to-list 'load-path (concat user-dir "/google-weather"))
-(add-to-list 'load-path (concat user-dir "/ffip-old"))
 (add-to-list 'load-path (concat user-dir "/org-mode"))
 (add-to-list 'load-path (concat user-dir "/cc-mode-5.31.3"))
 (add-to-list 'load-path (concat user-dir "/switch-window"))
