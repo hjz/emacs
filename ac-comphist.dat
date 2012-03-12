@@ -1,4 +1,16 @@
-((("isDeciderAvailable" .
+((("control" .
+   [1 0 0 0 0 0 0])
+  ("StatusNotFoundAction" .
+   [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1])
+  ("ErrorInSinceIdAction" .
+   [1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0])
+  ("UnauthorizedAction" .
+   [1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0])
+  ("UserSuspendedAction" .
+   [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1])
+  ("NotFoundAction" .
+   [1 0 0 0 0 0 0 0 0 0 0 0 0 0])
+  ("isDeciderAvailable" .
    [1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0])
   ("includeUserEntities" .
    [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1])

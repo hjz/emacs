@@ -19,7 +19,7 @@
 (add-to-list 'load-path (concat user-dir "/viper-in-more-modes"))
 (add-to-list 'load-path (concat user-dir "/ecb"))
 (add-to-list 'load-path (concat user-dir "/scala-mode"))
-(add-to-list 'load-path (concat user-dir "/anything-config"))
+;; (add-to-list 'load-path (concat user-dir "/anything-config"))
 (add-to-list 'load-path (concat user-dir "/elscreen-1.4.6"))
 (add-to-list 'load-path (concat user-dir "/yaml-mode"))
 (add-to-list 'load-path (concat user-dir "/moccur"))
@@ -839,6 +839,7 @@ cursor to the new line."
 (define-key my-keys-minor-mode-map (kbd "C-w l") 'windmove-right)
 (define-key my-keys-minor-mode-map (kbd "C-w k") 'windmove-up)
 (define-key my-keys-minor-mode-map (kbd "C-w j") 'windmove-down)
+(define-key my-keys-minor-mode-map (kbd "C-w C-w") 'other-window)
 
 (define-key my-keys-minor-mode-map (kbd "s-l") 'windmove-right)
 (define-key my-keys-minor-mode-map (kbd "s-k") 'windmove-up)
