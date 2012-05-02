@@ -1,4 +1,4 @@
-#name : import com.twitter.util.Time
+#name : import com.twitter
 ..
 # --
-import com.twitter.util.Time
+import com.twitter

@@ -12,8 +12,8 @@
 (add-to-list 'load-path (concat user-dir "/elisp"))
 (add-to-list 'load-path (concat user-dir "/apel-10.8"))
 (add-to-list 'load-path (concat user-dir "/yasnippet-read-only"))
-;; (add-to-list 'load-path (concat user-dir "/ensime_2.9.0-1-0.6.1/elisp"))
-(add-to-list 'load-path (concat user-dir "/ensime_2.9.2-SNAPSHOT-0.9.3.RC2"))
+(add-to-list 'load-path (concat user-dir "/ensime_2.9.0-1-0.6.1/elisp"))
+;(add-to-list 'load-path (concat user-dir "/ensime_2.9.2-SNAPSHOT-0.9.3.RC2"))
 (add-to-list 'load-path (concat user-dir "/vimpulse"))
 (add-to-list 'load-path (concat user-dir "/vimpulse-surround"))
 (add-to-list 'load-path (concat user-dir "/vimpulse-plugins"))
@@ -276,12 +276,11 @@ advice like this:
   (require 'dired-sort-menu+ nil t))    ; Menu/dialogue for dired sort options
 (require 'dired-details+)         ; Make file details hideable in dired
 
-(toggle-dired-find-file-reuse-dir 1)
-
 (add-hook 'dired-mode-hook 'my-dired-mode-hook)
 (defun my-dired-mode-hook ()
   (local-set-key (kbd "<mouse-1>") 'dired-mouse-find-file)
   (define-key dired-mode-map ";" 'dired-details-toggle)
+  (define-key dired-mode-map (kbd "SPC") 'dired-up-directory)
   (define-key dired-mode-map "e" 'wdired-change-to-wdired-mode)
   (define-key dired-mode-map "c" 'dired-do-copy))
 
@@ -361,7 +360,7 @@ advice like this:
 
 ;;;;;;;;;;;;;;;; CEDET END ;;;;;;;;;;;;;;;;;;
 
-(require 'anything-config)
+;(require 'anything-config)
 
 (require 'autopair)
 (autopair-global-mode t)
@@ -523,11 +522,6 @@ cursor to the new line."
     (my-scala-newline)))
 
 (add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
-
-;; Limit file type when doing ffip in scala
-(add-hook 'scala-mode-hook
-          (lambda () (set (make-local-variable 'ffip-patterns)
-                       '("*.scala" "*.yml" "*.java" "*.thrift"))))
 
 (defun me-turn-off-indent-tabs-mode ()
   (setq indent-tabs-mode nil))
@@ -841,6 +835,7 @@ cursor to the new line."
 (define-key my-keys-minor-mode-map (kbd "C-w j") 'windmove-down)
 (define-key my-keys-minor-mode-map (kbd "C-w C-w") 'other-window)
 
+(define-key my-keys-minor-mode-map (kbd "s-h") 'windmove-left)
 (define-key my-keys-minor-mode-map (kbd "s-l") 'windmove-right)
 (define-key my-keys-minor-mode-map (kbd "s-k") 'windmove-up)
 (define-key my-keys-minor-mode-map (kbd "s-j") 'windmove-down)
@@ -1122,15 +1117,24 @@ cursor to the new line."
     (save-buffer))
   (ensime-sbt-action string))
 
+(defun cur-dir ()
+  (interactive)
+  (file-name-directory (or load-file-name buffer-file-name)))
+
 (defun buffer-mode (buffer-or-string)
   "Returns the major mode associated with a buffer."
   (with-current-buffer buffer-or-string major-mode))
 
+(defun proj-name ()
+  (interactive)
+  (setq rest (car (cdr (split-string (cur-dir) "/Users/jz/ps/birdcage/"))))
+  (if rest (car (split-string rest "/")) nil))
+
 (defun sbt-project ()
-  (setq rest (car (cdr (split-string (ex-pwd) "/Users/jz/ps/birdcage/"))))
+  (setq rest (car (cdr (split-string (cur-dir) "/Users/jz/ps/birdcage/"))))
       (when rest
         (setq proj (car (cdr (split-string rest "/"))))
-          (when proj (save-sbt-action (concat "project " proj))))))
+          (when proj (save-sbt-action (concat "project " proj)))))
 
 (vimpulse-map "b" 'backward-word)
 
@@ -1141,20 +1145,22 @@ cursor to the new line."
 ;(vimpulse-map (kbd "C-m") 'call-last-kbd-macro) ;; This seems to intercept Enter
 
 ; SBT
-(vimpulse-map (kbd ",p") '(lambda () (interactive) (sbt-project))  'scala-mode 'comint-mode)
-(vimpulse-map (kbd ",.") '(lambda () (interactive) (save-sbt-action "compile"))  'scala-mode 'comint-mode)
-(vimpulse-map (kbd ",j") '(lambda () (interactive) (save-sbt-action (concat "test-only " (get-spec-class)))) 'scala-mode 'comint-mode)
-(vimpulse-map (kbd ",a") '(lambda () (interactive) (save-sbt-action "test-only")) 'scala-mode 'comint-mode)
-(vimpulse-map (kbd ",o") '(lambda () (interactive) (save-sbt-action "test-only")) 'scala-mode 'comint-mode)
-(vimpulse-map (kbd ",i") '(lambda () (interactive) (save-sbt-action "integration-test")) 'scala-mode 'comint-mode)
-(vimpulse-map (kbd ",l") '(lambda () (interactive) (save-sbt-action "test-quick")) 'scala-mode 'comint-mode)
-(vimpulse-map (kbd ",;") '(lambda () (interactive) (save-sbt-action "test")) 'scala-mode 'comint-mode)
-(vimpulse-map (kbd ",m") '(lambda () (interactive) (save-sbt-action "!!")) 'scala-mode 'comint-mode)
-(vimpulse-map (kbd ",k") '(lambda () (interactive) (save-sbt-action "console")) 'scala-mode 'comint-mode)
-(vimpulse-map (kbd ",U") '(lambda () (interactive) (save-sbt-action "update")) 'scala-mode 'comint-mode)
-(vimpulse-map (kbd ",n") '(lambda () (interactive) (save-sbt-action "; clean ; update ; compile")) 'scala-mode 'comint-mode)
-(vimpulse-map (kbd ",R") '(lambda () (interactive) (save-sbt-action "generate-run-classpath")) 'scala-mode 'comint-mode)
-(vimpulse-map (kbd ",SPC") '(lambda () (interactive) (ensime-sbt-switch)) 'scala-mode 'comint-mode)
+(vimpulse-map (kbd ",P") '(lambda () (interactive) (sbt-project))  'scala-mode 'thrift-mode 'comint-mode)
+(vimpulse-map (kbd ",p") '(lambda () (interactive) (find-file (concat "/Users/jz/ps/birdcage/" (proj-name) "/project/build/Project.scala")))  'scala-mode 'thrift-mode 'comint-mode)
+(vimpulse-map (kbd ",d") '(lambda () (interactive) (pwd)))
+(vimpulse-map (kbd ",.") '(lambda () (interactive) (save-sbt-action "compile"))  'scala-mode 'thrift-mode 'comint-mode)
+(vimpulse-map (kbd ",j") '(lambda () (interactive) (save-sbt-action (concat "test-only " (get-spec-class)))) 'scala-mode 'thrift-mode 'comint-mode)
+(vimpulse-map (kbd ",a") '(lambda () (interactive) (save-sbt-action "test-only")) 'scala-mode 'thrift-mode 'comint-mode)
+(vimpulse-map (kbd ",o") '(lambda () (interactive) (save-sbt-action "test-only")) 'scala-mode 'thrift-mode 'comint-mode)
+(vimpulse-map (kbd ",i") '(lambda () (interactive) (save-sbt-action "integration-test")) 'scala-mode 'thrift-mode 'comint-mode)
+(vimpulse-map (kbd ",l") '(lambda () (interactive) (save-sbt-action "test-quick")) 'scala-mode 'thrift-mode 'comint-mode)
+(vimpulse-map (kbd ",;") '(lambda () (interactive) (save-sbt-action "test")) 'scala-mode 'thrift-mode 'comint-mode)
+(vimpulse-map (kbd ",m") '(lambda () (interactive) (save-sbt-action "!!")) 'scala-mode 'thrift-mode 'comint-mode)
+(vimpulse-map (kbd ",k") '(lambda () (interactive) (save-sbt-action "console")) 'scala-mode 'thrift-mode 'comint-mode)
+(vimpulse-map (kbd ",U") '(lambda () (interactive) (save-sbt-action "update")) 'scala-mode 'thrift-mode 'comint-mode)
+(vimpulse-map (kbd ",n") '(lambda () (interactive) (save-sbt-action "; clean ; update ; compile")) 'scala-mode 'thrift-mode 'comint-mode)
+(vimpulse-map (kbd ",R") '(lambda () (interactive) (save-sbt-action "generate-run-classpath")) 'scala-mode 'thrift-mode 'comint-mode)
+(vimpulse-map (kbd ",SPC") '(lambda () (interactive) (ensime-sbt-switch)) 'scala-mode 'thrift-mode 'comint-mode)
 
 ; Browsing cgit
 (vimpulse-map (kbd ",y") '(lambda () (interactive) (cgit-yank t)))
@@ -1232,7 +1238,7 @@ cursor to the new line."
                                     (if (> (frame-width) 150)
                                       (split-window-horizontally arg)
                                       (split-window-vertically arg))))
-(setq debug-on-error t)
+(setq debug-on-error 'nil)
 
 ;(remove-hook 'minibuffer-setup-hook 'viper-minibuffer-setup-sentinel)
 ;(defadvice viper-set-minibuffer-overlay (around vimpulse activate) nil)
@@ -1315,3 +1321,5 @@ cursor to the new line."
 (require 'smooth-scrolling)
 
 ;; use setq-default to set it for /all/ modes
+
+(toggle-dired-find-file-reuse-dir 1)
