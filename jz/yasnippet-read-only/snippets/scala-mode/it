@@ -1,4 +1,4 @@
 #name : import com.twitter
 ..
 # --
-import com.twitter
+import com.twitter.$0

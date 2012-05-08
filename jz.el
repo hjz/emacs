@@ -55,6 +55,7 @@
 (require 'ace-jump-mode)
 (require 'quack)
 (require 'cc-mode)
+(require 'ensime)
 
 ;; TODO this is provided in nxhtml - get it then remove file
 (require 'sml-modeline)
@@ -1065,8 +1066,8 @@ cursor to the new line."
 (yas/load-directory (concat user-dir "/yasnippet-read-only/snippets"))
 
 ;; Speed up birdcage
-;(setenv "SBT_INTRANSITIVE" "1")
-;(setenv "NO_PROJECT_DEPS" "1")
+;; (setenv "SBT_INTRANSITIVE" "1")
+;; (setenv "NO_PROJECT_DEPS" "1")
 
 (add-hook 'scala-mode-hook 'yas/minor-mode-on)
 (yas/global-mode 1)
@@ -1175,8 +1176,9 @@ cursor to the new line."
 (vimpulse-map (kbd ",r") '(lambda () (interactive)
                             (when (get-buffer "*ensime-sbt*")
                                      (ensime-sbt-action "exit"))
-                            (sleep-for 1)
+                            (sleep-for 2)
                             (ensime-sbt-switch) (other-window -1)) 'scala-mode 'comint-mode)
+
 
 ;; ace jump
 (vimpulse-map (kbd ",f") 'ace-jump-line-mode)

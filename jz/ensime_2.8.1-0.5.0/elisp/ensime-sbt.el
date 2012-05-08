@@ -144,7 +144,7 @@
 
     (compilation-shell-minor-mode t)
     (cd root-path)
-    (ensime-assert-executable-on-path ensime-sbt-program-name)
+    ;; (ensime-assert-executable-on-path ensime-sbt-program-name)
     (comint-exec (current-buffer)
 		 ensime-sbt-program-name
 		 ensime-sbt-program-name

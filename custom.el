@@ -58,7 +58,7 @@
  '(elscreen-tab-display-control nil)
  '(ensime-auto-connect (quote never))
  '(ensime-graphical-tooltips t)
- '(ensime-sbt-program-name "cage")
+ '(ensime-sbt-program-name "mvnsh")
  '(ensime-tooltip-type-hints t)
  '(erc-hide-prompt nil)
  '(erc-input-line-position -1)

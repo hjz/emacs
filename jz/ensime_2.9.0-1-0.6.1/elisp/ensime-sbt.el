@@ -127,24 +127,24 @@
     (comint-mode)
 
     (set (make-local-variable 'compilation-error-regexp-alist)
-	 '(("^\\[error\\] \\([_.a-zA-Z0-9/-]+[.]scala\\):\\([0-9]+\\):"
+	 '(("^\\[ERROR\\] \\([_.a-zA-Z0-9/-]+[.]scala\\):\\([0-9]+\\):"
 	    1 2 nil 2 nil)))
     (set (make-local-variable 'compilation-mode-font-lock-keywords)
-	 '(("^\\[error\\] Error running compile:"
+	 '(("^\\[ERROR\\] Error running compile:"
 	    (0 compilation-error-face))
-	   ("^\\[warn\\][^\n]*"
+	   ("^\\[WARNING\\][^\n]*"
 	    (0 compilation-warning-face))
-	   ("^\\(\\[info\\]\\)\\([^\n]*\\)"
+	   ("^\\(\\[INFO\\]\\)\\([^\n]*\\)"
 	    (0 compilation-info-face)
 	    (1 compilation-line-face))
-	   ("^\\[success\\][^\n]*"
+	   ("^\\[SUCCESS\\][^\n]*"
 	    (0 compilation-info-face))))
     (set (make-local-variable 'comint-process-echoes) nil)
     (set (make-local-variable 'compilation-auto-jump-to-first-error) t)
     (set (make-local-variable 'comint-scroll-to-bottom-on-output) t)
     (set (make-local-variable 'comint-prompt-read-only) t)
     (set (make-local-variable 'comint-output-filter-functions)
-	 '(ensime-sbt-notify-build ansi-color-process-output comint-postoutput-scroll-to-bottom))
+	 '(ansi-color-process-output comint-postoutput-scroll-to-bottom))
 
     (if ensime-sbt-comint-ansi-support
 	(set (make-local-variable 'ansi-color-for-comint-mode) t)
@@ -152,7 +152,7 @@
 
     (compilation-shell-minor-mode t)
     (cd root-path)
-    (ensime-assert-executable-on-path ensime-sbt-program-name)
+    ;; (ensime-assert-executable-on-path ensime-sbt-program-name)
     (comint-exec (current-buffer)
 		 ensime-sbt-program-name
 		 ensime-sbt-program-name
@@ -209,7 +209,7 @@
 
 (defun ensime-sbt-project-dir-p (path)
   "Does a project/build.properties exists in the given path."
-  (file-exists-p (concat path "/project/build.properties")))
+  (file-exists-p (concat path "/pom.xml")))
 
 (defun ensime-sbt-at-root (path)
   "Determine if the given path is root."
