@@ -41,7 +41,7 @@
 (add-to-list 'load-path (concat user-dir "/switch-window"))
 (add-to-list 'load-path (concat user-dir "/org-jekyll"))
 (add-to-list 'load-path (concat user-dir "/ace-jump-mode"))
-(add-to-list 'load-path (concat user-dir "/xgtags"))
+;(add-to-list 'load-path (concat user-dir "/xgtags"))
 (add-to-list 'load-path (concat user-dir "/git-emacs"))
 
 ;(load (concat user-dir "/nxhtml/autostart.el"))
@@ -130,7 +130,7 @@ advice like this:
 (load-config "filecache")
 (load-config "aliases")
 (load-config "org")
-(load-config "gtags")
+;(load-config "gtags")
 
 (defadvice save-buffers-kill-emacs (around no-query-kill-emacs activate)
   "Prevent annoying \"Active processes exist\" query when you quit Emacs."
@@ -283,7 +283,8 @@ advice like this:
   (define-key dired-mode-map ";" 'dired-details-toggle)
   (define-key dired-mode-map (kbd "SPC") 'dired-up-directory)
   (define-key dired-mode-map "e" 'wdired-change-to-wdired-mode)
-  (define-key dired-mode-map "c" 'dired-do-copy))
+  (define-key dired-mode-map "c" 'dired-do-copy)
+  )
 
 (add-hook 'wdired-mode-hook 'viper-mode)
 
@@ -1069,6 +1070,8 @@ cursor to the new line."
 ;; (setenv "SBT_INTRANSITIVE" "1")
 ;; (setenv "NO_PROJECT_DEPS" "1")
 
+(setenv "MAVEN_OPTS" "-Xmx1024m -XX:MaxPermSize=256m")
+
 (add-hook 'scala-mode-hook 'yas/minor-mode-on)
 (yas/global-mode 1)
 
@@ -1146,14 +1149,14 @@ cursor to the new line."
 ;(vimpulse-map (kbd "C-m") 'call-last-kbd-macro) ;; This seems to intercept Enter
 
 ; SBT
-(vimpulse-map (kbd ",P") '(lambda () (interactive) (sbt-project))  'scala-mode 'thrift-mode 'comint-mode)
-(vimpulse-map (kbd ",p") '(lambda () (interactive) (find-file (concat "/Users/jz/ps/birdcage/" (proj-name) "/project/build/Project.scala")))  'scala-mode 'thrift-mode 'comint-mode)
+(vimpulse-map (kbd ",P") '(lambda () (interactive) (find-file (concat "/Users/jz/ps/birdcage/" (proj-name) "/pom.xml")))  'scala-mode 'thrift-mode 'comint-mode)
+(vimpulse-map (kbd ",p") '(lambda () (interactive) (save-sbt-action "pkg")) 'scala-mode 'thrift-mode 'comint-mode)
 (vimpulse-map (kbd ",d") '(lambda () (interactive) (pwd)))
 (vimpulse-map (kbd ",.") '(lambda () (interactive) (save-sbt-action "compile"))  'scala-mode 'thrift-mode 'comint-mode)
 (vimpulse-map (kbd ",j") '(lambda () (interactive) (save-sbt-action (concat "test-only " (get-spec-class)))) 'scala-mode 'thrift-mode 'comint-mode)
 (vimpulse-map (kbd ",a") '(lambda () (interactive) (save-sbt-action "test-only")) 'scala-mode 'thrift-mode 'comint-mode)
 (vimpulse-map (kbd ",o") '(lambda () (interactive) (save-sbt-action "test-only")) 'scala-mode 'thrift-mode 'comint-mode)
-(vimpulse-map (kbd ",i") '(lambda () (interactive) (save-sbt-action "integration-test")) 'scala-mode 'thrift-mode 'comint-mode)
+(vimpulse-map (kbd ",i") '(lambda () (interactive) (save-sbt-action "install")) 'scala-mode 'thrift-mode 'comint-mode)
 (vimpulse-map (kbd ",l") '(lambda () (interactive) (save-sbt-action "test-quick")) 'scala-mode 'thrift-mode 'comint-mode)
 (vimpulse-map (kbd ",;") '(lambda () (interactive) (save-sbt-action "test")) 'scala-mode 'thrift-mode 'comint-mode)
 (vimpulse-map (kbd ",m") '(lambda () (interactive) (save-sbt-action "!!")) 'scala-mode 'thrift-mode 'comint-mode)
@@ -1325,3 +1328,12 @@ cursor to the new line."
 ;; use setq-default to set it for /all/ modes
 
 (toggle-dired-find-file-reuse-dir 1)
+
+(vimpulse-define-text-object vimpulse-tag (arg)
+  "Select a tag"
+  :keys '("at" "it") ; The keys that will trigger this text object
+  (vimpulse-inner-object-range ; We're basically defining a range on which to act upon
+   arg
+   (lambda (arg) (search-backward ">" nil nil arg) (forward-char)) ; Look to the left for a ">" character
+   (lambda (arg) (search-forward "<" nil nil arg) (backward-char)) ; Look to the right for a "<" character
+   )) ; and return the distance between them!

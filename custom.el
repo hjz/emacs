@@ -146,6 +146,7 @@
  '(campfire-my-message-face ((t (:background "#2b2b2b" :foreground "white"))))
  '(campfire-my-user-face ((t (:foreground "white" :box (:line-width 2 :color "blue" :style released-button)))))
  '(campfire-other-user-face ((t (:background "#2f2f2f" :foreground "#9fc59f"))))
+ '(confluence-panel-face ((((class color) (background dark)) (:background "#2f2f2f"))))
  '(cursor ((t (:weight bold))))
  '(diredp-file-name ((((background dark)) nil)))
  '(ecb-default-general-face ((((class color) (background dark)) nil)))
