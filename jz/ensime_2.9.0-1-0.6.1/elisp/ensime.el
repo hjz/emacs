@@ -1,4 +1,4 @@
-;;; ensime.el --- ENhanced Scala Interaction Mode for Emacs
+;ensime-edit-definition;; ensime.el --- ENhanced Scala Interaction Mode for Emacs
 ;;
 ;;;; License
 ;;
@@ -257,8 +257,8 @@ Do not show 'Writing..' message."
       (define-key map ensime-mode-key-prefix prefix-map)
 
       ;; Prefix-less shortcuts bindings...
-      (define-key map (kbd "M-.") 'ensime-edit-definition)
-      (define-key map (kbd "M-,") 'ensime-pop-find-definition-stack)
+      ;; (define-key map (kbd "M-.") 'vimpulse-jump-to-tag-at-point)
+      ;; (define-key map (kbd "M-,") 'ensime-pop-find-definition-stack)
 
       (define-key map (kbd "M-n") 'ensime-forward-note)
       (define-key map (kbd "M-p") 'ensime-backward-note)
@@ -268,8 +268,7 @@ Do not show 'Writing..' message."
       (define-key map [C-down-mouse-3] 'ignore)
       (define-key map [C-up-mouse-3] 'ignore)
       (define-key map [C-mouse-1] 'ensime-control-mouse-1-single-click)
-      (define-key map [C-mouse-3] 'ensime-control-mouse-3-single-click)
-      )
+      (define-key map [C-mouse-3] 'ensime-control-mouse-3-single-click))
 
     map)
   "Keymap for ENSIME mode."
@@ -305,7 +304,7 @@ Do not show 'Writing..' message."
      ["Inline local val" ensime-refactor-inline-local])
 
     ("Navigation"
-     ["Lookup definition" ensime-edit-definition]
+     ;; ["Lookup definition" ensime-edit-definition]
      ["Lookup definition in other window" ensime-edit-definition-other-window]
      ["Lookup definition in other frame" ensime-edit-definition-other-frame]
      ["Pop definition stack" ensime-pop-find-definition-stack]

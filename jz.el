@@ -5,15 +5,20 @@
                     (or (buffer-file-name) load-file-name)))
 
 (setq user-dir (concat dotfiles-dir user-login-name))
+(setq user-config-file (concat dotfiles-dir user-login-name ".el"))
 
 ;; no graphic dialog
 (setq use-dialog-box nil)
+
+(setenv "PATH" "/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin:/Users/jz/play/Play20:/Users/jz/.rvm/gems/ree-1.8.7-2009.10/bin:/opt/local/lib/postgresql90/bin:/Users/jz/dotfiles/scripts:/Users/jz/ps/birdcage/bin:/opt/local/libexec/gnubin:/opt/local/bin:/opt/local/sbin:/Users/jz/bin:/Users/jz/workspace/twitter-utilities:/usr/local/mysql/bin:/Users/jz/.rvm/bin")
+
+(setq exec-path (append exec-path '("/usr/local/bin" "/Users/jz/ps/birdcage/bin" "/opt/local/libexec/gnubin")))
 
 (add-to-list 'load-path (concat user-dir "/elisp"))
 (add-to-list 'load-path (concat user-dir "/apel-10.8"))
 (add-to-list 'load-path (concat user-dir "/yasnippet-read-only"))
 (add-to-list 'load-path (concat user-dir "/ensime_2.9.0-1-0.6.1/elisp"))
-;(add-to-list 'load-path (concat user-dir "/ensime_2.9.2-SNAPSHOT-0.9.3.RC2"))
+;; (add-to-list 'load-path (concat user-dir "/ensime_2.9.2/elisp"))
 (add-to-list 'load-path (concat user-dir "/vimpulse"))
 (add-to-list 'load-path (concat user-dir "/vimpulse-surround"))
 (add-to-list 'load-path (concat user-dir "/vimpulse-plugins"))
@@ -182,7 +187,6 @@ advice like this:
 ;; (autoload 'mo-git-blame-file "mo-git-blame" nil t)
 ;; (autoload 'mo-git-blame-current "mo-git-blame" nil t)
 
-(setq exec-path (append exec-path '("/usr/local/bin", "/Users/jz/ps/birdcage/bin")))
 
 (require 'one-key)
 (require 'lazy-search-extension)
@@ -541,6 +545,7 @@ cursor to the new line."
 (add-hook 'scala-mode-hook 'run-coding-hook)
 (add-hook 'scala-mode-hook
  (lambda ()
+   (define-key scala-mode-map (kbd "M-.") 'vimpulse-jump-to-tag-at-point)
    (define-key scala-mode-map (kbd "C-n") 'ensime-forward-note)
    (define-key scala-mode-map (kbd "C-p") 'ensime-backward-note)
    (define-key scala-mode-map (kbd "M-q") 'c-fill-paragraph)
@@ -557,14 +562,14 @@ cursor to the new line."
 (add-hook 'ensime-sbt-mode-hook (lambda () (setq left-fringe-width 5)))
 
 ;; Override default ensime ac for better completion
-(defun ensime-ac-enable ()
-  (setq ac-sources (append '(
-                             ac-source-yasnippet
-                             ac-source-ensime-package-decl-members
-                             ac-source-ensime-scope-names
-                             ac-source-ensime-members) ac-sources))
-  (auto-complete-mode 1)
-  )
+;; (defun ensime-ac-enable ()
+;;   (setq ac-sources (append '(
+;;                              ac-source-yasnippet
+;;                              ac-source-ensime-package-decl-members
+;;                              ac-source-ensime-scope-names
+;;                              ac-source-ensime-members) ac-sources))
+;;   (auto-complete-mode 1)
+;;   )
 
 ;; ECB support
 ;(require 'ensime-ecb)
@@ -1121,6 +1126,10 @@ cursor to the new line."
     (save-buffer))
   (ensime-sbt-action string))
 
+(defun scala-compile ()
+  (save-sbt-action "compile")
+  (next-error))
+
 (defun cur-dir ()
   (interactive)
   (file-name-directory (or load-file-name buffer-file-name)))
@@ -1149,22 +1158,22 @@ cursor to the new line."
 ;(vimpulse-map (kbd "C-m") 'call-last-kbd-macro) ;; This seems to intercept Enter
 
 ; SBT
-(vimpulse-map (kbd ",P") '(lambda () (interactive) (find-file (concat "/Users/jz/ps/birdcage/" (proj-name) "/pom.xml")))  'scala-mode 'thrift-mode 'comint-mode)
-(vimpulse-map (kbd ",p") '(lambda () (interactive) (save-sbt-action "pkg")) 'scala-mode 'thrift-mode 'comint-mode)
+(vimpulse-map (kbd ",P") '(lambda () (interactive) (find-file (concat "/Users/jz/ps/birdcage/" (proj-name) "/pom.xml")))  'scala-mode 'nxml-mode 'thrift-mode 'comint-mode)
+(vimpulse-map (kbd ",p") '(lambda () (interactive) (save-sbt-action "pkg")) 'scala-mode 'nxml-mode 'thrift-mode 'comint-mode)
 (vimpulse-map (kbd ",d") '(lambda () (interactive) (pwd)))
-(vimpulse-map (kbd ",.") '(lambda () (interactive) (save-sbt-action "compile"))  'scala-mode 'thrift-mode 'comint-mode)
-(vimpulse-map (kbd ",j") '(lambda () (interactive) (save-sbt-action (concat "test-only " (get-spec-class)))) 'scala-mode 'thrift-mode 'comint-mode)
-(vimpulse-map (kbd ",a") '(lambda () (interactive) (save-sbt-action "test-only")) 'scala-mode 'thrift-mode 'comint-mode)
-(vimpulse-map (kbd ",o") '(lambda () (interactive) (save-sbt-action "test-only")) 'scala-mode 'thrift-mode 'comint-mode)
-(vimpulse-map (kbd ",i") '(lambda () (interactive) (save-sbt-action "install")) 'scala-mode 'thrift-mode 'comint-mode)
-(vimpulse-map (kbd ",l") '(lambda () (interactive) (save-sbt-action "test-quick")) 'scala-mode 'thrift-mode 'comint-mode)
-(vimpulse-map (kbd ",;") '(lambda () (interactive) (save-sbt-action "test")) 'scala-mode 'thrift-mode 'comint-mode)
-(vimpulse-map (kbd ",m") '(lambda () (interactive) (save-sbt-action "!!")) 'scala-mode 'thrift-mode 'comint-mode)
-(vimpulse-map (kbd ",k") '(lambda () (interactive) (save-sbt-action "console")) 'scala-mode 'thrift-mode 'comint-mode)
-(vimpulse-map (kbd ",U") '(lambda () (interactive) (save-sbt-action "update")) 'scala-mode 'thrift-mode 'comint-mode)
-(vimpulse-map (kbd ",n") '(lambda () (interactive) (save-sbt-action "; clean ; update ; compile")) 'scala-mode 'thrift-mode 'comint-mode)
-(vimpulse-map (kbd ",R") '(lambda () (interactive) (save-sbt-action "generate-run-classpath")) 'scala-mode 'thrift-mode 'comint-mode)
-(vimpulse-map (kbd ",SPC") '(lambda () (interactive) (ensime-sbt-switch)) 'scala-mode 'thrift-mode 'comint-mode)
+(vimpulse-map (kbd ",.") '(lambda () (interactive) (scala-compile))  'scala-mode 'nxml-mode 'thrift-mode 'comint-mode)
+(vimpulse-map (kbd ",j") '(lambda () (interactive) (save-sbt-action (concat "test-only " (get-spec-class)))) 'scala-mode 'nxml-mode 'thrift-mode 'comint-mode)
+(vimpulse-map (kbd ",a") '(lambda () (interactive) (save-sbt-action "test-only")) 'scala-mode 'nxml-mode 'thrift-mode 'comint-mode)
+(vimpulse-map (kbd ",o") '(lambda () (interactive) (save-sbt-action "test-only")) 'scala-mode 'nxml-mode 'thrift-mode 'comint-mode)
+(vimpulse-map (kbd ",i") '(lambda () (interactive) (save-sbt-action "install")) 'scala-mode 'nxml-mode 'thrift-mode 'comint-mode)
+(vimpulse-map (kbd ",l") '(lambda () (interactive) (save-sbt-action "test-quick")) 'scala-mode 'nxml-mode 'thrift-mode 'comint-mode)
+(vimpulse-map (kbd ",;") '(lambda () (interactive) (save-sbt-action "test")) 'scala-mode 'nxml-mode 'thrift-mode 'comint-mode)
+(vimpulse-map (kbd ",m") '(lambda () (interactive) (save-sbt-action "!!")) 'scala-mode 'nxml-mode 'thrift-mode 'comint-mode)
+(vimpulse-map (kbd ",k") '(lambda () (interactive) (save-sbt-action "console")) 'scala-mode 'nxml-mode 'thrift-mode 'comint-mode)
+(vimpulse-map (kbd ",U") '(lambda () (interactive) (save-sbt-action "update")) 'scala-mode 'nxml-mode 'thrift-mode 'comint-mode)
+(vimpulse-map (kbd ",n") '(lambda () (interactive) (save-sbt-action "; clean ; update ; compile")) 'scala-mode 'nxml-mode 'thrift-mode 'comint-mode)
+(vimpulse-map (kbd ",R") '(lambda () (interactive) (save-sbt-action "generate-run-classpath")) 'scala-mode 'nxml-mode 'thrift-mode 'comint-mode)
+(vimpulse-map (kbd ",SPC") '(lambda () (interactive) (ensime-sbt-switch)) 'scala-mode 'nxml-mode 'thrift-mode 'comint-mode)
 
 ; Browsing cgit
 (vimpulse-map (kbd ",y") '(lambda () (interactive) (cgit-yank t)))
@@ -1337,3 +1346,39 @@ cursor to the new line."
    (lambda (arg) (search-backward ">" nil nil arg) (forward-char)) ; Look to the left for a ">" character
    (lambda (arg) (search-forward "<" nil nil arg) (backward-char)) ; Look to the right for a "<" character
    )) ; and return the distance between them!
+
+(defun my-increment-number-decimal (&optional arg)
+  "Increment the number forward from point by 'arg'."
+  (interactive "p*")
+  (save-excursion
+    (save-match-data
+      (let (inc-by field-width answer)
+        (setq inc-by (if arg arg 1))
+        (skip-chars-backward "0123456789")
+        (when (re-search-forward "[0-9]+" nil t)
+          (setq field-width (- (match-end 0) (match-beginning 0)))
+          (setq answer (+ (string-to-number (match-string 0) 10) inc-by))
+          (when (< answer 0)
+            (setq answer (+ (expt 10 field-width) answer)))
+          (replace-match (format (concat "%0" (int-to-string field-width) "d")
+                                 answer)))))))
+
+(defun my-decrement-number-decimal (&optional arg)
+  (interactive "p*")
+  (my-increment-number-decimal (if arg (- arg) -1)))
+
+(global-set-key (kbd "C-c +") 'my-increment-number-decimal)
+(global-set-key (kbd "C-c -") 'my-decrement-number-decimal)
+
+(defun save-macro (name)
+  "save a macro. Take a name as argument
+     and save the last defined macro under
+     this name at the end of your .emacs"
+  (interactive "SName of the macro :")  ; ask for the name of the macro
+  (kmacro-name-last-macro name)         ; use this name for the macro
+  (find-file (user-config-file))                   ; open ~/.emacs or other user init file
+  (goto-char (point-max))               ; go to the end of the .emacs
+  (newline)                             ; insert a newline
+  (insert-kbd-macro name)               ; copy the macro
+  (newline)                             ; insert a newline
+  (switch-to-buffer nil))               ; return to the initial buffer
