@@ -10,9 +10,9 @@
 ;; no graphic dialog
 (setq use-dialog-box nil)
 
-(setenv "PATH" "/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin:/Users/jz/play/Play20:/Users/jz/.rvm/gems/ree-1.8.7-2009.10/bin:/opt/local/lib/postgresql90/bin:/Users/jz/dotfiles/scripts:/Users/jz/ps/birdcage/bin:/opt/local/libexec/gnubin:/opt/local/bin:/opt/local/sbin:/Users/jz/bin:/Users/jz/workspace/twitter-utilities:/usr/local/mysql/bin:/Users/jz/.rvm/bin")
+(setenv "PATH" "/Users/jz/play/Play20:/Users/jz/.rvm/gems/ree-1.8.7-2009.10/bin:/opt/local/lib/postgresql90/bin:/Users/jz/dotfiles/scripts:/Users/jz/ps/birdcage/bin:/opt/local/libexec/gnubin:/opt/local/bin:/opt/local/sbin:/Users/jz/bin:/Users/jz/workspace/twitter-utilities:/usr/local/mysql/bin:/Users/jz/.rvm/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin")
 
-(setq exec-path (append exec-path '("/usr/local/bin" "/Users/jz/ps/birdcage/bin" "/opt/local/libexec/gnubin")))
+(setq exec-path (append exec-path '("/usr/local/bin" "/Users/jz/ps/birdcage/bin" "/opt/local/libexec/gnubin" "/opt/local/bin")))
 
 (add-to-list 'load-path (concat user-dir "/elisp"))
 (add-to-list 'load-path (concat user-dir "/apel-10.8"))
