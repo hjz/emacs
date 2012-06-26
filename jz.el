@@ -12,7 +12,7 @@
 
 (setenv "PATH" "/Users/jz/play/Play20:/Users/jz/.rvm/gems/ree-1.8.7-2009.10/bin:/opt/local/lib/postgresql90/bin:/Users/jz/dotfiles/scripts:/Users/jz/ps/birdcage/bin:/opt/local/libexec/gnubin:/opt/local/bin:/opt/local/sbin:/Users/jz/bin:/Users/jz/workspace/twitter-utilities:/usr/local/mysql/bin:/Users/jz/.rvm/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin")
 
-(setq exec-path (append exec-path '("/usr/local/bin" "/Users/jz/ps/birdcage/bin" "/opt/local/libexec/gnubin" "/opt/local/bin")))
+(setq exec-path (append exec-path '("/Users/jz/bin" "/Users/jz/ps/birdcage/bin" "/opt/local/libexec/gnubin" "/opt/local/bin" "/usr/local/bin" )))
 
 (add-to-list 'load-path (concat user-dir "/elisp"))
 (add-to-list 'load-path (concat user-dir "/apel-10.8"))
@@ -46,7 +46,6 @@
 (add-to-list 'load-path (concat user-dir "/switch-window"))
 (add-to-list 'load-path (concat user-dir "/org-jekyll"))
 (add-to-list 'load-path (concat user-dir "/ace-jump-mode"))
-;(add-to-list 'load-path (concat user-dir "/xgtags"))
 (add-to-list 'load-path (concat user-dir "/git-emacs"))
 
 ;(load (concat user-dir "/nxhtml/autostart.el"))
@@ -135,7 +134,9 @@ advice like this:
 (load-config "filecache")
 (load-config "aliases")
 (load-config "org")
-;(load-config "gtags")
+
+(add-to-list 'load-path (concat user-dir "/xgtags"))
+(load-config "gtags")
 
 (defadvice save-buffers-kill-emacs (around no-query-kill-emacs activate)
   "Prevent annoying \"Active processes exist\" query when you quit Emacs."
@@ -1252,7 +1253,7 @@ cursor to the new line."
                                     (if (> (frame-width) 150)
                                       (split-window-horizontally arg)
                                       (split-window-vertically arg))))
-(setq debug-on-error 'nil)
+(setq debug-on-error t)
 
 ;(remove-hook 'minibuffer-setup-hook 'viper-minibuffer-setup-sentinel)
 ;(defadvice viper-set-minibuffer-overlay (around vimpulse activate) nil)
