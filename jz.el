@@ -471,6 +471,18 @@ advice like this:
   "[\]}\)\"]"
   "If this regexp matches the text after the cursor, do an \"electric\" return.")
 
+(defvar electrify-return-match-html
+  "[\]}\)\"]<"
+  "If this regexp matches the text after the cursor, do an \"electric\" return.")
+
+(defun electrify-return-if-match-html (arg)
+  (interactive "P")
+  (let ((case-fold-search nil))
+    (if (looking-at electrify-return-match-html)
+        (save-excursion (newline-and-indent)))
+    (newline arg)
+    (indent-according-to-mode)))
+
 ;; elisp, return
 (defun electrify-return-if-match (arg)
   "If the text after the cursor matches `electrify-return-match' then
@@ -960,10 +972,11 @@ cursor to the new line."
 (vimpulse-map (kbd "<up>") 'comint-previous-input 'comint-mode)
 (vimpulse-map (kbd "<down>") 'comint-next-input 'comint-mode)
 
-(vimpulse-imap (kbd "RET") 'reindent-then-newline-and-indent)
+;; (vimpulse-imap (kbd "RET") 'reindent-then-newline-and-indent)
 
 (vimpulse-imap (kbd "RET") 'electrify-return-if-match-scala 'scala-mode)
 (vimpulse-imap (kbd "RET") 'newline-and-indent 'js-mode)
+(vimpulse-imap (kbd "RET") 'electrify-return-if-match-html 'html-mode)
 (vimpulse-imap (kbd "C-SPC") 'auto-complete 'scala-mode)
 
 (vimpulse-map (kbd "&") 'lazy-search-menu)
@@ -1096,7 +1109,7 @@ cursor to the new line."
 
 ;; onekey
 ;;
-(vimpulse-map (kbd "C-e") 'one-key-menu-ensime 'scala-mode)
+(vimpulse-map (kbd "C-e") 'one-key-menu-ensime 'scala-mode 'html-mode)
 ;(vimpulse-map (kbd "C-f") 'one-key-menu-find)
 
 (vimpulse-map (kbd "SPC") 'confluence-get-page-at-point 'confluence-mode)
@@ -1159,22 +1172,22 @@ cursor to the new line."
 ;(vimpulse-map (kbd "C-m") 'call-last-kbd-macro) ;; This seems to intercept Enter
 
 ; SBT
-(vimpulse-map (kbd ",P") '(lambda () (interactive) (find-file (concat "/Users/jz/ps/birdcage/" (proj-name) "/pom.xml")))  'scala-mode 'nxml-mode 'thrift-mode 'comint-mode)
-(vimpulse-map (kbd ",p") '(lambda () (interactive) (save-sbt-action "pkg")) 'scala-mode 'nxml-mode 'thrift-mode 'comint-mode)
+(vimpulse-map (kbd ",P") '(lambda () (interactive) (find-file (concat "/Users/jz/ps/birdcage/" (proj-name) "/pom.xml")))  'scala-mode 'html-mode 'nxml-mode 'thrift-mode 'comint-mode)
+(vimpulse-map (kbd ",p") '(lambda () (interactive) (save-sbt-action "pkg")) 'scala-mode 'html-mode 'nxml-mode 'thrift-mode 'comint-mode)
 (vimpulse-map (kbd ",d") '(lambda () (interactive) (pwd)))
-(vimpulse-map (kbd ",.") '(lambda () (interactive) (scala-compile))  'scala-mode 'nxml-mode 'thrift-mode 'comint-mode)
-(vimpulse-map (kbd ",j") '(lambda () (interactive) (save-sbt-action (concat "test-only " (get-spec-class)))) 'scala-mode 'nxml-mode 'thrift-mode 'comint-mode)
-(vimpulse-map (kbd ",a") '(lambda () (interactive) (save-sbt-action "test-only")) 'scala-mode 'nxml-mode 'thrift-mode 'comint-mode)
-(vimpulse-map (kbd ",o") '(lambda () (interactive) (save-sbt-action "test-only")) 'scala-mode 'nxml-mode 'thrift-mode 'comint-mode)
-(vimpulse-map (kbd ",i") '(lambda () (interactive) (save-sbt-action "install")) 'scala-mode 'nxml-mode 'thrift-mode 'comint-mode)
-(vimpulse-map (kbd ",l") '(lambda () (interactive) (save-sbt-action "test-quick")) 'scala-mode 'nxml-mode 'thrift-mode 'comint-mode)
-(vimpulse-map (kbd ",;") '(lambda () (interactive) (save-sbt-action "test")) 'scala-mode 'nxml-mode 'thrift-mode 'comint-mode)
-(vimpulse-map (kbd ",m") '(lambda () (interactive) (save-sbt-action "!!")) 'scala-mode 'nxml-mode 'thrift-mode 'comint-mode)
-(vimpulse-map (kbd ",k") '(lambda () (interactive) (save-sbt-action "console")) 'scala-mode 'nxml-mode 'thrift-mode 'comint-mode)
-(vimpulse-map (kbd ",U") '(lambda () (interactive) (save-sbt-action "update")) 'scala-mode 'nxml-mode 'thrift-mode 'comint-mode)
-(vimpulse-map (kbd ",n") '(lambda () (interactive) (save-sbt-action "; clean ; update ; compile")) 'scala-mode 'nxml-mode 'thrift-mode 'comint-mode)
-(vimpulse-map (kbd ",R") '(lambda () (interactive) (save-sbt-action "generate-run-classpath")) 'scala-mode 'nxml-mode 'thrift-mode 'comint-mode)
-(vimpulse-map (kbd ",SPC") '(lambda () (interactive) (ensime-sbt-switch)) 'scala-mode 'nxml-mode 'thrift-mode 'comint-mode)
+(vimpulse-map (kbd ",.") '(lambda () (interactive) (scala-compile))  'scala-mode 'html-mode 'nxml-mode 'thrift-mode 'comint-mode)
+(vimpulse-map (kbd ",j") '(lambda () (interactive) (save-sbt-action (concat "test-only " (get-spec-class)))) 'scala-mode 'html-mode 'nxml-mode 'thrift-mode 'comint-mode)
+(vimpulse-map (kbd ",a") '(lambda () (interactive) (save-sbt-action "test-only")) 'scala-mode 'html-mode 'nxml-mode 'thrift-mode 'comint-mode)
+(vimpulse-map (kbd ",o") '(lambda () (interactive) (save-sbt-action "test-only")) 'scala-mode 'html-mode 'nxml-mode 'thrift-mode 'comint-mode)
+(vimpulse-map (kbd ",i") '(lambda () (interactive) (save-sbt-action "install")) 'scala-mode 'html-mode 'nxml-mode 'thrift-mode 'comint-mode)
+(vimpulse-map (kbd ",l") '(lambda () (interactive) (save-sbt-action "test-quick")) 'scala-mode 'html-mode 'nxml-mode 'thrift-mode 'comint-mode)
+(vimpulse-map (kbd ",;") '(lambda () (interactive) (save-sbt-action "test")) 'scala-mode 'html-mode 'nxml-mode 'thrift-mode 'comint-mode)
+(vimpulse-map (kbd ",m") '(lambda () (interactive) (save-sbt-action "!!")) 'scala-mode 'html-mode 'nxml-mode 'thrift-mode 'comint-mode)
+(vimpulse-map (kbd ",k") '(lambda () (interactive) (save-sbt-action "console")) 'scala-mode 'html-mode 'nxml-mode 'thrift-mode 'comint-mode)
+(vimpulse-map (kbd ",U") '(lambda () (interactive) (save-sbt-action "update")) 'scala-mode 'html-mode 'nxml-mode 'thrift-mode 'comint-mode)
+(vimpulse-map (kbd ",n") '(lambda () (interactive) (save-sbt-action "; clean ; update ; compile")) 'scala-mode 'html-mode 'nxml-mode 'thrift-mode 'comint-mode)
+(vimpulse-map (kbd ",r") '(lambda () (interactive) (save-sbt-action "run")) 'scala-mode 'html-mode 'nxml-mode 'thrift-mode 'comint-mode)
+(vimpulse-map (kbd ",SPC") '(lambda () (interactive) (ensime-sbt-switch)) 'scala-mode 'html-mode 'nxml-mode 'thrift-mode 'comint-mode)
 
 ; Browsing cgit
 (vimpulse-map (kbd ",y") '(lambda () (interactive) (cgit-yank t)))
@@ -1186,7 +1199,8 @@ cursor to the new line."
 (vimpulse-map (kbd ",g") 'magit-status)
 (vimpulse-map (kbd ",/") 'minimap-toggle)
 (vimpulse-map (kbd ",t") 'jao-toggle-selective-display)
-(vimpulse-map (kbd ",r") '(lambda () (interactive)
+(vimpulse-map (kbd ",s") '(lambda () (interactive) (save-sbt-action "run")) 'scala-mode 'nxml-mode 'thrift-mode 'comint-mode)
+(vimpulse-map (kbd ",R") '(lambda () (interactive)
                             (when (get-buffer "*ensime-sbt*")
                                      (ensime-sbt-action "exit"))
                             (sleep-for 2)
@@ -1254,6 +1268,10 @@ cursor to the new line."
                                       (split-window-horizontally arg)
                                       (split-window-vertically arg))))
 (setq debug-on-error t)
+
+;; XXX turned off for sbt project
+;; (setq ensime-sbt-program-name "mvnsh")
+(setq ensime-sbt-program-name "play")
 
 ;(remove-hook 'minibuffer-setup-hook 'viper-minibuffer-setup-sentinel)
 ;(defadvice viper-set-minibuffer-overlay (around vimpulse activate) nil)
@@ -1383,3 +1401,25 @@ cursor to the new line."
   (insert-kbd-macro name)               ; copy the macro
   (newline)                             ; insert a newline
   (switch-to-buffer nil))               ; return to the initial buffer
+
+
+;; more scala configs
+;;
+(setq ensime-sem-high-faces
+  '(
+   (var . (:foreground "#ff2222"))
+   (val . (:foreground "#dddddd"))
+   (varField . (:foreground "#ff3333"))
+   (valField . (:foreground "#dddddd"))
+   (functionCall . (:foreground "#84BEE3"))
+   (param . (:foreground "#ffffff"))
+   (class . font-lock-type-face)
+   (trait . (:foreground "#084EA8"))
+   (object . (:foreground "#026DF7"))
+   (package . font-lock-preprocessor-face)
+   ))
+
+(defun make-play-doc-url (type &optional member)
+  (ensime-make-java-doc-url-helper
+   "http://www.playframework.org/documentation/api/2.0.2/scala/" type member))
+(add-to-list 'ensime-doc-lookup-map '("^play\\.api\\." . make-play-doc-url))

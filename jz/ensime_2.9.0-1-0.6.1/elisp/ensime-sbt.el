@@ -127,7 +127,7 @@
     (comint-mode)
 
     (set (make-local-variable 'compilation-error-regexp-alist)
-	 '(("^\\[ERROR\\] \\([_.a-zA-Z0-9/-]+[.]scala\\):\\([0-9]+\\):"
+	 '(("^\\[error\\] \\([_.a-zA-Z0-9/-]+[.]scala\\):\\([0-9]+\\):"
 	    1 2 nil 2 nil)))
     (set (make-local-variable 'compilation-mode-font-lock-keywords)
 	 '(("^\\[ERROR\\] Error running compile:"
@@ -209,7 +209,8 @@
 
 (defun ensime-sbt-project-dir-p (path)
   "Does a project/build.properties exists in the given path."
-  (file-exists-p (concat path "/pom.xml")))
+  (or   (file-exists-p (concat path "/pom.xml"))
+        (file-exists-p (concat path "/project/build.properties"))))
 
 (defun ensime-sbt-at-root (path)
   "Determine if the given path is root."

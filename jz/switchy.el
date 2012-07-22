@@ -13,7 +13,9 @@
         ))
 
 (defun filepath-to-package-name (s)
-  (reduce (lambda (acc val) (if acc (concat (concat acc val) ".") (when (string= val "scala") ""))) (split-string s "/") :initial-value nil))
+  (reduce (lambda (acc val)
+            (if acc (concat (concat acc val) ".")
+              (when (or (string= val "scala") (string= val "app")) ""))) (split-string s "/") :initial-value nil))
 
 (defun auto-update-scala-source-file ()
   (setq bse (file-name-sans-extension (file-name-nondirectory (buffer-file-name))))
