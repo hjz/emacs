@@ -1,9 +1,9 @@
 package PPP
 
-import org.specs.Specification
+import org.specs.SpecificationWithJUnit
 import org.specs.mock._
 
-object @@@ extends Specification with Mockito {
+class @@@ extends SpecificationWithJUnit with Mockito {
   "$$$" should {
     "" in {
     }

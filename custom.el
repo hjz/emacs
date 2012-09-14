@@ -10,6 +10,7 @@
  '(browse-kill-ring-highlight-inserted-item t)
  '(browse-kill-ring-quit-action (quote save-and-restore))
  '(browse-kill-ring-separator "-------------------")
+ '(coffee-tab-width 2)
  '(column-number-mode t)
  '(comint-input-ignoredups t)
  '(comint-process-echoes t)

@@ -1,4 +1,24 @@
-((("description" .
+((("fundamental-mode" .
+   [0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0])
+  ("winner-undo" .
+   [1 0 0 0 0 0 0 0 0 0 0])
+  ("ensime-sbt-project-dir-p" .
+   [0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0])
+  ("InvalidPromptId" .
+   [1 0 0 0 0 0 0 0 0 0 0 0 0 0 0])
+  ("getPromptInvalidUserCounter" .
+   [0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0])
+  ("DismissalsStore" .
+   [0 0 0 0 1 0 0 0 0 0 0 0 0 0 0])
+  ("ManhattanCoordinator" .
+   [1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0])
+  ("CustomDataStore" .
+   [1 0 0 0 0 0 0 0 0 0 0 0 0 0 0])
+  ("ManhattanStoreConfig" .
+   [2 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0])
+  ("maxWaiters" .
+   [0 0 0 0 0 0 0 0 0 1])
+  ("description" .
    [1 0 0 0 0 0 0 0 0 0 0])
   ("category" .
    [0 0 0 0 0 0 0 1])
@@ -291,4 +311,34 @@
   ("vimpulse-jump-to-tag-at-point" .
    [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1])
   ("electrify-return-if-match-base" .
-   [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1])))
+   [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1])
+  ("DefaultCampaign" .
+   [0 0 0 0 0 0 0 0 0 0 0 0 0 0 1])
+  ("DefaultUser" .
+   [1 0 0 0 0 0 0 0 0 0 0])
+  ("DefaultRequest" .
+   [0 0 0 0 0 0 0 0 0 0 0 0 0 1])
+  ("hasDefaultProfileImage" .
+   [1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0])
+  ("isGeoEnabled" .
+   [0 0 0 0 0 0 0 0 0 0 0 1])
+  ("NullInt" .
+   [0 0 0 0 0 0 1])
+  ("campaign" .
+   [1 0 0 0 0 0 0 0])
+  ("Prompts" .
+   [0 0 0 0 0 0 1])
+  ("null" .
+   [1 0 0 0])
+  ("nullPromptDecider" .
+   [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1])
+  ("falsePromptDecider" .
+   [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1])
+  ("truePromptDecider" .
+   [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2])
+  ("trueDecider" .
+   [0 0 0 0 0 0 0 0 0 0 1])
+  ("FoursquareApi" .
+   [1 0 0 0 0 0 0 0 0 0 0 0 0])
+  ("foursquareVenues" .
+   [1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0])))

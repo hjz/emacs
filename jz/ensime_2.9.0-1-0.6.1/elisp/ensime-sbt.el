@@ -127,10 +127,10 @@
     (comint-mode)
 
     (set (make-local-variable 'compilation-error-regexp-alist)
-	 '(("^\\[error\\] \\([_.a-zA-Z0-9/-]+[.]scala\\):\\([0-9]+\\):"
+	 '(("^\\[\\(?:ERROR\\|error\\)\\] \\([_.a-zA-Z0-9/-]+[.]scala\\):\\([0-9]+\\):"
 	    1 2 nil 2 nil)))
     (set (make-local-variable 'compilation-mode-font-lock-keywords)
-	 '(("^\\[ERROR\\] Error running compile:"
+	 '(("^\\[\\(?:ERROR\\|error\\)\\] Error running compile:"
 	    (0 compilation-error-face))
 	   ("^\\[WARNING\\][^\n]*"
 	    (0 compilation-warning-face))
@@ -208,8 +208,17 @@
    (concat action "\n")))
 
 (defun ensime-sbt-project-dir-p (path)
-  "Does a project/build.properties exists in the given path."
+  "Does a project/build.properties exists in the given path. Set executable properly"
+  (if (file-exists-p (concat path "/pom.xml"))
+      (setq ensime-sbt-program-name "mvnsh")
+    (if (file-exists-p (concat path "/conf/routes"))
+        (setq ensime-sbt-program-name "play")
+      (if (file-exists-p (concat path "/build.sbt"))
+          (setq ensime-sbt-program-name "sbt")
+        )
+      ))
   (or   (file-exists-p (concat path "/pom.xml"))
+        (file-exists-p (concat path "/build.sbt"))
         (file-exists-p (concat path "/project/build.properties"))))
 
 (defun ensime-sbt-at-root (path)

@@ -10,14 +10,15 @@
 ;; no graphic dialog
 (setq use-dialog-box nil)
 
-(setenv "PATH" "/Users/jz/play/Play20:/Users/jz/.rvm/gems/ree-1.8.7-2009.10/bin:/opt/local/lib/postgresql90/bin:/Users/jz/dotfiles/scripts:/Users/jz/ps/birdcage/bin:/opt/local/libexec/gnubin:/opt/local/bin:/opt/local/sbin:/Users/jz/bin:/Users/jz/workspace/twitter-utilities:/usr/local/mysql/bin:/Users/jz/.rvm/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin")
+(setenv "PATH" "/Users/jz/.rvm/gems/ree-1.8.7-2009.10/bin:/Users/jz/.rvm/gems/ree-1.8.7-2009.10@global/bin:/Users/jz/.rvm/rubies/ree-1.8.7-2009.10/bin:/Users/jz/.rvm/bin:/Users/jz/Downloads/crsh-standalone-1.1.0/crash/bin:/Users/jz/.rvm/gems/ree-1.8.7-2010.02/bin:/opt/local/lib/postgresql90/bin:/Users/jz/dotfiles/scripts:/Users/jz/ps/birdcage/bin:/opt/local/libexec/gnubin:/opt/local/bin:/opt/local/sbin:/Users/jz/bin:/Users/jz/workspace/twitter-utilities:/usr/local/mysql/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/Users/jz/.rvm/bin")
 
-(setq exec-path (append exec-path '("/Users/jz/bin" "/Users/jz/ps/birdcage/bin" "/opt/local/libexec/gnubin" "/opt/local/bin" "/usr/local/bin" )))
+(setq exec-path (append exec-path '("/Users/jz/.rvm/gems/ree-1.8.7-2009.10/bin" "/Users/jz/.rvm/gems/ree-1.8.7-2009.10@global/bin" "/Users/jz/.rvm/rubies/ree-1.8.7-2009.10/bin" "/Users/jz/.rvm/bin" "/Users/jz/bin" "/Users/jz/ps/birdcage/bin" "/opt/local/libexec/gnubin" "/opt/local/bin" "/usr/local/bin" )))
 
 (add-to-list 'load-path (concat user-dir "/elisp"))
 (add-to-list 'load-path (concat user-dir "/apel-10.8"))
 (add-to-list 'load-path (concat user-dir "/yasnippet-read-only"))
 (add-to-list 'load-path (concat user-dir "/ensime_2.9.0-1-0.6.1/elisp"))
+;; (add-to-list 'load-path (concat user-dir "/ensime_2.9.2-0.9.8.1/elisp"))
 ;; (add-to-list 'load-path (concat user-dir "/ensime_2.9.2/elisp"))
 (add-to-list 'load-path (concat user-dir "/vimpulse"))
 (add-to-list 'load-path (concat user-dir "/vimpulse-surround"))
@@ -96,8 +97,6 @@
      ((file-exists-p suffix)
       (require library)))))
 
-(vendor 'gist)
-
 (defvar ido-enable-replace-completing-read t
   "If t, use ido-completing-read instead of completing-read if possible.
 
@@ -134,6 +133,12 @@ advice like this:
 (load-config "filecache")
 (load-config "aliases")
 (load-config "org")
+(load-config "ido")
+
+;; Coffee
+(vendor 'coffee-mode)
+(vimpulse-map (kbd ",.") '(lambda () (interactive) (save-buffer) (coffee-compile-file))  'coffee-mode)
+(vimpulse-imap (kbd "RET") 'coffee-newline-and-indent 'coffee-mode)
 
 (add-to-list 'load-path (concat user-dir "/xgtags"))
 (load-config "gtags")
@@ -141,6 +146,22 @@ advice like this:
 (defadvice save-buffers-kill-emacs (around no-query-kill-emacs activate)
   "Prevent annoying \"Active processes exist\" query when you quit Emacs."
   (flet ((process-list ())) ad-do-it))
+
+;; set sbt programg correctl
+(defadvice ensime-play-maven (around ensime-sbt-project-dir-p activate)
+  "Prevent annoying \"Active processes exist\" query when you quit Emacs."
+  (if (file-exists-p (concat path "/pom.xml"))
+      (setq ensime-sbt-program-name "mvnsh")
+    (if (file-exists-p (concat path "/conf/routes"))
+        (setq ensime-sbt-program-name "play")
+      (if (file-exists-p (concat path "/build.sbt"))
+          (setq ensime-sbt-program-name "sbt")
+        )
+      ))
+  (or   (file-exists-p (concat path "/pom.xml"))
+        (file-exists-p (concat path "/build.sbt"))
+        (file-exists-p (concat path "/project/build.properties")))
+  )
 
 (defun toggle-kbd-macro-recording-on ()
   "One-key keyboard macros: turn recording on."
@@ -216,6 +237,7 @@ advice like this:
 (require 'smex)
 (smex-initialize)
 (global-set-key (kbd "M-x") 'smex)
+(global-set-key (kbd "M-t") 'ido-goto-symbol)
 (global-set-key (kbd "M-X") 'smex-major-mode-commands)
   ;; This is your old M-x.
 (global-set-key (kbd "C-c C-c M-x") 'execute-extended-command)
@@ -434,6 +456,13 @@ advice like this:
   (let ((v (current-word)))
     (delete-region (point) (+ (point) (length v)))
     (insert (camelize v))
+    ))
+
+(defun uncamelize-word ()
+  (interactive)
+  (let ((v (current-word)))
+    (delete-region (point) (+ (point) (length v)))
+    (insert (uncamel v))
     ))
 
 (require 'ecb)
@@ -913,6 +942,7 @@ cursor to the new line."
 (define-key my-keys-minor-mode-map (kbd "C-'") 'git-find-file)
 (define-key my-keys-minor-mode-map (kbd "C-f r") 'replace-regexp)
 (define-key my-keys-minor-mode-map (kbd "C-f l") 'lazy-search-menu)
+(define-key my-keys-minor-mode-map (kbd "C-f l") 'lazy-search-menu)
 (define-key my-keys-minor-mode-map (kbd "C-f p") 'find-grep-dired)
 (define-key my-keys-minor-mode-map (kbd "C-f n") 'find-name-dired)
 (define-key my-keys-minor-mode-map (kbd "C-f o") 'dired-do-moccur)
@@ -981,6 +1011,7 @@ cursor to the new line."
 
 (vimpulse-map (kbd "&") 'lazy-search-menu)
 (vimpulse-vmap (kbd "&") 'lazy-search-menu)
+(vimpulse-vmap (kbd ".") 'nxml-forward-element)
 (vimpulse-vmap (kbd "[") 'vimpulse-indent)
 (vimpulse-vmap (kbd "Q") 'query-replace-regexp)
 (vimpulse-map (kbd "Q") 'query-replace-regexp)
@@ -1163,6 +1194,7 @@ cursor to the new line."
         (setq proj (car (cdr (split-string rest "/"))))
           (when proj (save-sbt-action (concat "project " proj)))))
 
+
 (vimpulse-map "b" 'backward-word)
 
 ;; Scala stuff
@@ -1176,7 +1208,7 @@ cursor to the new line."
 (vimpulse-map (kbd ",p") '(lambda () (interactive) (save-sbt-action "pkg")) 'scala-mode 'html-mode 'nxml-mode 'thrift-mode 'comint-mode)
 (vimpulse-map (kbd ",d") '(lambda () (interactive) (pwd)))
 (vimpulse-map (kbd ",.") '(lambda () (interactive) (scala-compile))  'scala-mode 'html-mode 'nxml-mode 'thrift-mode 'comint-mode)
-(vimpulse-map (kbd ",j") '(lambda () (interactive) (save-sbt-action (concat "test-only " (get-spec-class)))) 'scala-mode 'html-mode 'nxml-mode 'thrift-mode 'comint-mode)
+(vimpulse-map (kbd ",j") '(lambda () (interactive) (save-sbt-action (concat "mvn -Dtest=" (get-spec-class) " test"))) 'scala-mode 'html-mode 'nxml-mode 'thrift-mode 'comint-mode)
 (vimpulse-map (kbd ",a") '(lambda () (interactive) (save-sbt-action "test-only")) 'scala-mode 'html-mode 'nxml-mode 'thrift-mode 'comint-mode)
 (vimpulse-map (kbd ",o") '(lambda () (interactive) (save-sbt-action "test-only")) 'scala-mode 'html-mode 'nxml-mode 'thrift-mode 'comint-mode)
 (vimpulse-map (kbd ",i") '(lambda () (interactive) (save-sbt-action "install")) 'scala-mode 'html-mode 'nxml-mode 'thrift-mode 'comint-mode)
@@ -1223,7 +1255,7 @@ cursor to the new line."
 (vimpulse-map (kbd "C-f a") 'ack)
 (vimpulse-map (kbd "C-f f") 'git-find-file)
 (vimpulse-map (kbd "C-f r") 'replace-regexp)
-(vimpulse-map (kbd "C-f l") 'lazy-search-menu)
+(vimpulse-map (kbd "C-f l") 'locate)
 (vimpulse-map (kbd "C-f p") 'find-grep-dired)
 (vimpulse-map (kbd "C-f n") 'find-name-dired)
 (vimpulse-map (kbd "C-f o") 'dired-do-moccur)
@@ -1241,7 +1273,7 @@ cursor to the new line."
 ;(vimpulse-imap (kbd "C-f f") 'find-file-in-project)
 (vimpulse-imap (kbd "C-f f") 'git-find-file)
 (vimpulse-imap (kbd "C-f r") 'replace-regexp)
-(vimpulse-imap (kbd "C-f l") 'lazy-search-menu)
+(vimpulse-imap (kbd "C-f m") 'lazy-search-menu)
 (vimpulse-imap (kbd "C-f p") 'find-grep-dired)
 (vimpulse-imap (kbd "C-f n") 'find-name-dired)
 (vimpulse-imap (kbd "C-f o") 'dired-do-moccur)
@@ -1271,7 +1303,7 @@ cursor to the new line."
 
 ;; XXX turned off for sbt project
 ;; (setq ensime-sbt-program-name "mvnsh")
-(setq ensime-sbt-program-name "play")
+;; (setq ensime-sbt-program-name "play")
 
 ;(remove-hook 'minibuffer-setup-hook 'viper-minibuffer-setup-sentinel)
 ;(defadvice viper-set-minibuffer-overlay (around vimpulse activate) nil)
