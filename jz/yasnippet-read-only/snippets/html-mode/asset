@@ -1,0 +1,4 @@
+#name : <script .. @routes ..>
+# --
+<script src="@routes.Assets.at("$0")"></script>
+
