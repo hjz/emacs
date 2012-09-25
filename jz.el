@@ -10,9 +10,9 @@
 ;; no graphic dialog
 (setq use-dialog-box nil)
 
-(setenv "PATH" "/Users/jz/.rvm/gems/ree-1.8.7-2009.10/bin:/Users/jz/.rvm/gems/ree-1.8.7-2009.10@global/bin:/Users/jz/.rvm/rubies/ree-1.8.7-2009.10/bin:/Users/jz/.rvm/bin:/Users/jz/Downloads/crsh-standalone-1.1.0/crash/bin:/Users/jz/.rvm/gems/ree-1.8.7-2010.02/bin:/opt/local/lib/postgresql90/bin:/Users/jz/dotfiles/scripts:/Users/jz/ps/birdcage/bin:/opt/local/libexec/gnubin:/opt/local/bin:/opt/local/sbin:/Users/jz/bin:/Users/jz/workspace/twitter-utilities:/usr/local/mysql/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/Users/jz/.rvm/bin")
+(setenv "PATH" "/Users/jz/Downloads/mvnsh-assembly-1.0.1-bin/mvnsh-1.0.1/bin:/Users/jz/.rvm/gems/ree-1.8.7-2009.10/bin:/Users/jz/.rvm/gems/ree-1.8.7-2009.10@global/bin:/Users/jz/.rvm/rubies/ree-1.8.7-2009.10/bin:/Users/jz/.rvm/bin:/Users/jz/Downloads/crsh-standalone-1.1.0/crash/bin:/Users/jz/.rvm/gems/ree-1.8.7-2010.02/bin:/opt/local/lib/postgresql90/bin:/Users/jz/dotfiles/scripts:/Users/jz/ps/birdcage/bin:/opt/local/libexec/gnubin:/opt/local/bin:/opt/local/sbin:/Users/jz/bin:/Users/jz/workspace/twitter-utilities:/usr/local/mysql/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/Users/jz/.rvm/bin")
 
-(setq exec-path (append exec-path '("/Users/jz/.rvm/gems/ree-1.8.7-2009.10/bin" "/Users/jz/.rvm/gems/ree-1.8.7-2009.10@global/bin" "/Users/jz/.rvm/rubies/ree-1.8.7-2009.10/bin" "/Users/jz/.rvm/bin" "/Users/jz/bin" "/Users/jz/ps/birdcage/bin" "/opt/local/libexec/gnubin" "/opt/local/bin" "/usr/local/bin" )))
+(setq exec-path (append exec-path '("/Users/jz/Downloads/mvnsh-assembly-1.0.1-bin/mvnsh-1.0.1/bin" "/Users/jz/.rvm/gems/ree-1.8.7-2009.10/bin" "/Users/jz/.rvm/gems/ree-1.8.7-2009.10@global/bin" "/Users/jz/.rvm/rubies/ree-1.8.7-2009.10/bin" "/Users/jz/.rvm/bin" "/Users/jz/bin" "/Users/jz/ps/birdcage/bin" "/opt/local/libexec/gnubin" "/opt/local/bin" "/usr/local/bin" )))
 
 (add-to-list 'load-path (concat user-dir "/elisp"))
 (add-to-list 'load-path (concat user-dir "/apel-10.8"))
@@ -137,6 +137,7 @@ advice like this:
 
 ;; Coffee
 (vendor 'coffee-mode)
+(vendor 'mustache-mode)
 (vimpulse-map (kbd ",.") '(lambda () (interactive) (save-buffer) (coffee-compile-file))  'coffee-mode)
 (vimpulse-imap (kbd "RET") 'coffee-newline-and-indent 'coffee-mode)
 

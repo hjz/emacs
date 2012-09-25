@@ -341,4 +341,12 @@
   ("FoursquareApi" .
    [1 0 0 0 0 0 0 0 0 0 0 0 0])
   ("foursquareVenues" .
-   [1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0])))
+   [1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0])
+  ("StatsReceiver" .
+   [1 0 0 0 0 0 0 0 0 0 0 0 0])
+  ("PromptRequest" .
+   [1 0 0 0 0 0 0 0 0 0 0 0 0])
+  ("PromptRequestTransformerFilter" .
+   [0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1])
+  ("statsReceiver" .
+   [0 0 0 0 0 0 0 0 0 0 0 0 1])))
