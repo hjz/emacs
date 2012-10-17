@@ -17,8 +17,8 @@
 (add-to-list 'load-path (concat user-dir "/elisp"))
 (add-to-list 'load-path (concat user-dir "/apel-10.8"))
 (add-to-list 'load-path (concat user-dir "/yasnippet-read-only"))
-(add-to-list 'load-path (concat user-dir "/ensime_2.9.0-1-0.6.1/elisp"))
-;; (add-to-list 'load-path (concat user-dir "/ensime_2.9.2-0.9.8.1/elisp"))
+;; (add-to-list 'load-path (concat user-dir "/ensime_2.9.0-1-0.6.1/elisp"))
+(add-to-list 'load-path (concat user-dir "/ensime_2.9.2-0.9.8.1/elisp"))
 ;; (add-to-list 'load-path (concat user-dir "/ensime_2.9.2/elisp"))
 (add-to-list 'load-path (concat user-dir "/vimpulse"))
 (add-to-list 'load-path (concat user-dir "/vimpulse-surround"))
@@ -182,9 +182,10 @@ advice like this:
     'toggle-kbd-macro-recording-on)
   (end-kbd-macro))
 
-(require 'dot-mode)
+;; (require 'dot-mode)
 
-(add-hook 'find-file-hooks 'dot-mode-on)
+;; (add-hook 'find-file-hooks 'dot-mode-on)
+
 ; C-. mapped to flyspell... remap it do dotmode
 (define-key (current-global-map) [remap flyspell-auto-correct-word] 'dot-mode-execute)
 
@@ -335,8 +336,9 @@ advice like this:
 (setq ring-bell-function 'ignore)
 
 ;; Theme
-(require 'color-theme)
+(add-to-list 'custom-theme-load-path (concat dotfiles-dir "themes"))
 (load-theme 'zenburn)
+
 (set-face-foreground 'vertical-border "#282828")
 
 ;(cua-mode 1) ;; Conflicts with org C-Enter
@@ -1141,7 +1143,7 @@ cursor to the new line."
 
 ;; onekey
 ;;
-(vimpulse-map (kbd "C-e") 'one-key-menu-ensime 'scala-mode 'html-mode)
+(vimpulse-map (kbd "C-e") 'one-key-menu-ensime 'scala-mode 'html-mode 'coffee-mode)
 ;(vimpulse-map (kbd "C-f") 'one-key-menu-find)
 
 (vimpulse-map (kbd "SPC") 'confluence-get-page-at-point 'confluence-mode)
@@ -1208,19 +1210,19 @@ cursor to the new line."
 (vimpulse-map (kbd ",P") '(lambda () (interactive) (find-file (concat "/Users/jz/ps/birdcage/" (proj-name) "/pom.xml")))  'scala-mode 'html-mode 'nxml-mode 'thrift-mode 'comint-mode)
 (vimpulse-map (kbd ",p") '(lambda () (interactive) (save-sbt-action "pkg")) 'scala-mode 'html-mode 'nxml-mode 'thrift-mode 'comint-mode)
 (vimpulse-map (kbd ",d") '(lambda () (interactive) (pwd)))
-(vimpulse-map (kbd ",.") '(lambda () (interactive) (scala-compile))  'scala-mode 'html-mode 'nxml-mode 'thrift-mode 'comint-mode)
-(vimpulse-map (kbd ",j") '(lambda () (interactive) (save-sbt-action (concat "mvn -Dtest=" (get-spec-class) " test"))) 'scala-mode 'html-mode 'nxml-mode 'thrift-mode 'comint-mode)
-(vimpulse-map (kbd ",a") '(lambda () (interactive) (save-sbt-action "test-only")) 'scala-mode 'html-mode 'nxml-mode 'thrift-mode 'comint-mode)
-(vimpulse-map (kbd ",o") '(lambda () (interactive) (save-sbt-action "test-only")) 'scala-mode 'html-mode 'nxml-mode 'thrift-mode 'comint-mode)
-(vimpulse-map (kbd ",i") '(lambda () (interactive) (save-sbt-action "install")) 'scala-mode 'html-mode 'nxml-mode 'thrift-mode 'comint-mode)
-(vimpulse-map (kbd ",l") '(lambda () (interactive) (save-sbt-action "test-quick")) 'scala-mode 'html-mode 'nxml-mode 'thrift-mode 'comint-mode)
-(vimpulse-map (kbd ",;") '(lambda () (interactive) (save-sbt-action "test")) 'scala-mode 'html-mode 'nxml-mode 'thrift-mode 'comint-mode)
-(vimpulse-map (kbd ",m") '(lambda () (interactive) (save-sbt-action "!!")) 'scala-mode 'html-mode 'nxml-mode 'thrift-mode 'comint-mode)
-(vimpulse-map (kbd ",k") '(lambda () (interactive) (save-sbt-action "console")) 'scala-mode 'html-mode 'nxml-mode 'thrift-mode 'comint-mode)
-(vimpulse-map (kbd ",U") '(lambda () (interactive) (save-sbt-action "update")) 'scala-mode 'html-mode 'nxml-mode 'thrift-mode 'comint-mode)
-(vimpulse-map (kbd ",n") '(lambda () (interactive) (save-sbt-action "; clean ; update ; compile")) 'scala-mode 'html-mode 'nxml-mode 'thrift-mode 'comint-mode)
-(vimpulse-map (kbd ",r") '(lambda () (interactive) (save-sbt-action "run")) 'scala-mode 'html-mode 'nxml-mode 'thrift-mode 'comint-mode)
-(vimpulse-map (kbd ",SPC") '(lambda () (interactive) (ensime-sbt-switch)) 'scala-mode 'html-mode 'nxml-mode 'thrift-mode 'comint-mode)
+(vimpulse-map (kbd ",.") '(lambda () (interactive) (scala-compile))  'scala-mode 'coffee-mode 'html-mode 'nxml-mode 'thrift-mode 'comint-mode)
+(vimpulse-map (kbd ",j") '(lambda () (interactive) (save-sbt-action (concat "mvn -Dtest=" (get-spec-class) " test"))) 'scala-mode 'coffee-mode 'html-mode 'nxml-mode 'thrift-mode 'comint-mode)
+(vimpulse-map (kbd ",a") '(lambda () (interactive) (save-sbt-action "test-only")) 'scala-mode 'coffee-mode 'html-mode 'nxml-mode 'thrift-mode 'comint-mode)
+(vimpulse-map (kbd ",o") '(lambda () (interactive) (save-sbt-action "test-only")) 'scala-mode 'coffee-mode 'html-mode 'nxml-mode 'thrift-mode 'comint-mode)
+(vimpulse-map (kbd ",i") '(lambda () (interactive) (save-sbt-action "install")) 'scala-mode 'coffee-mode 'html-mode 'nxml-mode 'thrift-mode 'comint-mode)
+(vimpulse-map (kbd ",l") '(lambda () (interactive) (save-sbt-action "test-quick")) 'scala-mode 'coffee-mode 'html-mode 'nxml-mode 'thrift-mode 'comint-mode)
+(vimpulse-map (kbd ",;") '(lambda () (interactive) (save-sbt-action "test")) 'scala-mode 'coffee-mode 'html-mode 'nxml-mode 'thrift-mode 'comint-mode)
+(vimpulse-map (kbd ",m") '(lambda () (interactive) (save-sbt-action "!!")) 'scala-mode 'coffee-mode 'html-mode 'nxml-mode 'thrift-mode 'comint-mode)
+(vimpulse-map (kbd ",k") '(lambda () (interactive) (save-sbt-action "console")) 'scala-mode 'coffee-mode 'html-mode 'nxml-mode 'thrift-mode 'comint-mode)
+(vimpulse-map (kbd ",U") '(lambda () (interactive) (save-sbt-action "update")) 'scala-mode 'coffee-mode 'html-mode 'nxml-mode 'thrift-mode 'comint-mode)
+(vimpulse-map (kbd ",n") '(lambda () (interactive) (save-sbt-action "; clean ; update ; compile")) 'scala-mode 'coffee-mode 'html-mode 'nxml-mode 'thrift-mode 'comint-mode)
+(vimpulse-map (kbd ",r") '(lambda () (interactive) (save-sbt-action "run")) 'scala-mode 'coffee-mode 'html-mode 'nxml-mode 'thrift-mode 'comint-mode)
+(vimpulse-map (kbd ",SPC") '(lambda () (interactive) (ensime-sbt-switch)) 'scala-mode 'coffee-mode 'html-mode 'nxml-mode 'thrift-mode 'comint-mode)
 
 ; Browsing cgit
 (vimpulse-map (kbd ",y") '(lambda () (interactive) (cgit-yank t)))

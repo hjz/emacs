@@ -1,8 +1,8 @@
 (custom-set-variables
-  ;; custom-set-variables was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
  '(ansi-color-names-vector ["#1f1f1f" "#dca3a3" "#7f9f7f" "#f0dfaf" "#7cb8bb" "#7f3194" "#93e0e3" "#dcdccc"])
  '(blink-cursor-mode t)
  '(browse-kill-ring-display-duplicates nil)
@@ -22,6 +22,7 @@
  '(confluence-save-page-minor-edits t)
  '(confluence-search-max-results 64)
  '(confluence-url "http://confluence.local.twitter.com/rpc/xmlrpc")
+ '(custom-safe-themes (quote ("5d370ee46aa10063cae8a36293f73807b17aaf65292e55ef9d22749545f86da5" "639dfc83ec5da6f14ea67803061c6079a8af05b6ff9fe74aa2197aa2fc9b3eba" "f02eec2fd7a07e24020d9bb94dca28731dbc2307456d4f625a5c6cbd52cdc9d3" default)))
  '(desktop-base-file-name ".emacs.desktop")
  '(desktop-lazy-idle-delay 3)
  '(desktop-lazy-verbose t)
@@ -135,19 +136,17 @@
  '(yas/triggers-in-field t)
  '(yas/wrap-around-region t))
 (custom-set-faces
-  ;; custom-set-faces was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :background "#1f1f1f" :foreground "#dcdccc" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 120 :width normal :foundry "apple" :family "Monaco"))))
- '(ack-file ((((background dark)) (:background "#282828" :foreground "#7cb8bb"))))
- '(ack-line ((((background dark)) (:background "#282828" :foreground "#b6b6b6"))))
- '(ack-match ((default nil) (((background dark)) (:background "#385f38" :foreground "#dcdccc"))))
- '(campfire-my-message-face ((t (:background "#2b2b2b" :foreground "white"))))
- '(campfire-my-user-face ((t (:foreground "white" :box (:line-width 2 :color "blue" :style released-button)))))
- '(campfire-other-user-face ((t (:background "#2f2f2f" :foreground "#9fc59f"))))
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(ack-file ((((background dark)) (:background "#282828" :foreground "#7cb8bb"))) t)
+ '(ack-line ((((background dark)) (:background "#282828" :foreground "#b6b6b6"))) t)
+ '(ack-match ((default nil) (((background dark)) (:background "#385f38" :foreground "#dcdccc"))) t)
+ '(campfire-my-message-face ((t (:background "#2b2b2b" :foreground "white"))) t)
+ '(campfire-my-user-face ((t (:foreground "white" :box (:line-width 2 :color "blue" :style released-button)))) t)
+ '(campfire-other-user-face ((t (:background "#2f2f2f" :foreground "#9fc59f"))) t)
  '(confluence-panel-face ((((class color) (background dark)) (:background "#2f2f2f"))))
- '(cursor ((t (:weight bold))))
  '(diredp-file-name ((((background dark)) nil)))
  '(ecb-default-general-face ((((class color) (background dark)) nil)))
  '(elscreen-tab-background-face ((((class color)) (:background "#282828"))))
@@ -156,23 +155,17 @@
  '(elscreen-tab-other-screen-face ((((class color)) (:background "#3D3D3D" :foreground "white"))))
  '(ensime-errline ((((class color) (background dark)) nil)))
  '(ensime-errline-highlight ((t (:underline "firebrick2"))))
- '(erc-default-face ((t (:foreground "#dcdccc"))))
- '(erc-header-line ((t (:inherit elscreen-tab-other-screen-face))))
- '(erc-prompt-face ((t (:background "#1f1f1f" :foreground "#daa17c" :weight bold))))
  '(fg:erc-color-face5 ((t nil)))
- '(flyspell-incorrect ((t (:underline "#cc9393" :weight bold))))
- '(font-lock-variable-name-face ((t (:foreground "#dcdccc"))))
  '(highlight-80+ ((((background dark)) (:background "#3f3f3f" :foreground "#afd8af" :weight bold))))
  '(highlight-80+-line ((t nil)) t)
  '(lazy-highlight ((((class color) (min-colors 88) (background dark)) (:background "#284f28" :foreground "#ffffe0"))))
  '(linum ((t (:background "#282828" :foreground "#b6b6b6"))))
  '(magit-item-highlight ((((class color) (background dark)) (:background "#2f2f2f"))))
- '(minimap-active-region-background ((((background dark)) (:background "#233323"))))
- '(minimap-font-face ((default (:height 30 :family "Proggyfont Tiny")) (nil nil)))
+ '(minimap-active-region-background ((((background dark)) (:background "#233323"))) t)
+ '(minimap-font-face ((default (:height 30 :family "Proggyfont Tiny")) (nil nil)) t)
  '(moccur-face ((t (:background "#385f38" :foreground "#dcdccc" :weight bold))))
  '(one-key-keystroke ((t (:background "#2f2f2f" :foreground "#9fc59f"))))
  '(one-key-prompt ((t (:foreground "#5f7f5f"))))
  '(one-key-title ((t (:foreground "#5f7f5f"))))
- '(show-paren-mismatch ((t (:background "red" :foreground "white"))))
  '(sml-modeline-end-face ((t (:inherit match))))
  '(sml-modeline-vis-face ((t (:background "#2f2f2f" :foreground "#bfebbf")))))
