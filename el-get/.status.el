@@ -13,6 +13,13 @@
                     (autoload 'ack-find-file "full-ack" nil t)
                     (autoload 'ack-find-same-file "full-ack" nil t)
                     (autoload 'ack-same "full-ack" nil t))))
+ (magit status "installed" recipe
+        (:name magit :website "https://github.com/magit/magit#readme" :description "It's Magit! An Emacs mode for Git." :type github :pkgname "magit/magit" :info "." :autoloads
+               ("50magit")
+               :build
+               (("make" "all"))
+               :build/darwin
+               `(,(concat "make EMACS=" el-get-emacs " all"))))
  (pos-tip status "installed" recipe
           (:name pos-tip :description "Show tooltip at point" :type emacswiki))
  (scala-mode status "removed" recipe nil)

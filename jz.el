@@ -37,7 +37,7 @@
 (add-to-list 'load-path (concat user-dir "/twittering-mode"))
 (add-to-list 'load-path (concat user-dir "/browse-kill-ring"))
 (add-to-list 'load-path (concat user-dir "/one-key-menus"))
-(add-to-list 'load-path (concat user-dir "/magit-1.0.0"))
+;; (add-to-list 'load-path (concat user-dir "/magit-1.0.0"))
 (add-to-list 'load-path (concat user-dir "/confluence-mode"))
 (add-to-list 'load-path (concat user-dir "/minimap"))
 (add-to-list 'load-path (concat user-dir "/google-weather"))
