@@ -156,6 +156,7 @@
  '(ensime-errline ((((class color) (background dark)) nil)))
  '(ensime-errline-highlight ((t (:underline "firebrick2"))))
  '(fg:erc-color-face5 ((t nil)))
+ '(font-lock-constant-face ((t (:inherit zenburn-primary-4))))
  '(highlight-80+ ((((background dark)) (:background "#3f3f3f" :foreground "#afd8af" :weight bold))))
  '(highlight-80+-line ((t nil)) t)
  '(lazy-highlight ((((class color) (min-colors 88) (background dark)) (:background "#284f28" :foreground "#ffffe0"))))
