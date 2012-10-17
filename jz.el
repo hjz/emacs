@@ -18,7 +18,7 @@
 (add-to-list 'load-path (concat user-dir "/apel-10.8"))
 (add-to-list 'load-path (concat user-dir "/yasnippet-read-only"))
 ;; (add-to-list 'load-path (concat user-dir "/ensime_2.9.0-1-0.6.1/elisp"))
-(add-to-list 'load-path (concat user-dir "/ensime_2.9.2-0.9.8.1/elisp"))
+(add-to-list 'load-path (concat user-dir "/ensime_2.10.0-SNAPSHOT-0.9.7/elisp"))
 ;; (add-to-list 'load-path (concat user-dir "/ensime_2.9.2/elisp"))
 (add-to-list 'load-path (concat user-dir "/vimpulse"))
 (add-to-list 'load-path (concat user-dir "/vimpulse-surround"))
