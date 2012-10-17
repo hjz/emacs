@@ -1,6 +1,8 @@
 ((ace-jump-mode status "installed" recipe
                 (:name ace-jump-mode :website "https://github.com/winterTTr/ace-jump-mode/wiki" :description "A quick cursor location minor mode for emacs" :type github :pkgname "winterTTr/ace-jump-mode" :features ace-jump-mode))
  (ack status "removed" recipe nil)
+ (edit-server status "installed" recipe
+              (:name edit-server :description "Emacs edit-server. This provides an edit server to respond to requests from the Chrome Emacs Chrome plugin." :type http :url "http://github.com/stsquad/emacs_chrome/raw/master/servers/edit-server.el"))
  (el-get status "installed" recipe
          (:name el-get :website "https://github.com/dimitri/el-get#readme" :description "Manage the external elisp bits and pieces you depend upon." :type github :branch "4.stable" :pkgname "dimitri/el-get" :features el-get :info "." :load "el-get.el"))
  (evil status "removed" recipe nil)
@@ -13,12 +15,7 @@
                     (autoload 'ack-same "full-ack" nil t))))
  (pos-tip status "installed" recipe
           (:name pos-tip :description "Show tooltip at point" :type emacswiki))
- (scala-mode status "installed" recipe
-             (:name scala-mode :description "Major mode for editing Scala code." :type svn :url "http://lampsvn.epfl.ch/svn-repos/scala/scala-tool-support/trunk/src/emacs/" :build
-                    ("make")
-                    :load-path
-                    (".")
-                    :features scala-mode-auto))
+ (scala-mode status "removed" recipe nil)
  (undo-tree status "installed" recipe
             (:name undo-tree :description "Treat undo history as a tree" :type git :url "http://www.dr-qubit.org/git/undo-tree.git" :prepare
                    (progn

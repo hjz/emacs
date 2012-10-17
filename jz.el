@@ -28,6 +28,7 @@
 ;; (add-to-list 'load-path (concat user-dir "/anything-config"))
 (add-to-list 'load-path (concat user-dir "/elscreen-1.4.6"))
 (add-to-list 'load-path (concat user-dir "/yaml-mode"))
+(add-to-list 'load-path (concat user-dir "/scala-mode"))
 (add-to-list 'load-path (concat user-dir "/moccur"))
 (add-to-list 'load-path (concat user-dir "/popwin"))
 (add-to-list 'load-path (concat user-dir "/auto-complete"))
